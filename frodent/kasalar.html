@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Kasalar - Şansını Dene!</title>
+    <link rel="icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Global & Arka Plan */
+        * { font-family: 'Poppins', sans-serif; box-sizing: border-box; }
+        body {
+            overflow-x: hidden !important;
+            min-height: 100vh;
+            background-image: linear-gradient(180deg, rgba(8, 12, 26, 0.6), rgba(8, 12, 26, 0.8)), url('assets/arkaplan.png');
+            background-color: #080c1a;
+            background-repeat: no-repeat, repeat;
+            background-size: cover, 900px auto;
+            background-attachment: fixed;
+            background-position: center;
+            color: #e8e8f0;
+            margin: 0;
+        }
+
+        /* HEADER (Index ile birebir) */
+        .frontend-header {
+            background: rgba(13, 16, 36, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+        .header-content {
+            max-width: 1400px; margin: 0 auto; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo-section { display: flex; flex-direction: column; text-decoration: none; }
+        .logo {
+            font-size: 22px; font-weight: 800; letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #fff, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .logo-subtitle { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; }
+
+        .header-right-actions { display: flex; align-items: center; gap: 16px; }
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #f1be04; width: 42px; height: 42px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            font-size: 18px; transition: all 0.3s ease;
+        }
+        .theme-toggle-btn:hover { background: rgba(255, 255, 255, 0.08); transform: scale(1.05); box-shadow: 0 0 12px rgba(241, 190, 4, 0.2); }
+        .auth-buttons { display: flex; align-items: center; gap: 10px; }
+        .btn-login {
+            background: transparent; border: 1px solid rgba(255, 255, 255, 0.15); color: #fff;
+            padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; gap: 8px;
+        }
+        .btn-login:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.25); }
+        .btn-register {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899); border: none; color: #fff;
+            padding: 11px 22px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; gap: 8px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+        }
+        .btn-register:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35); }
+
+        /* CANLI DROP AKIŞI (MARQUEE) */
+        .live-drops-strip {
+            background: rgba(10, 13, 28, 0.85); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 0; overflow: hidden; display: flex; position: relative;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4); z-index: 10; backdrop-filter: blur(10px);
+        }
+        .live-drops-strip::before, .live-drops-strip::after {
+            content: ''; position: absolute; top: 0; bottom: 0; width: 100px; z-index: 2; pointer-events: none;
+        }
+        .live-drops-strip::before { left: 0; background: linear-gradient(to right, rgba(10,13,28,1), transparent); }
+        .live-drops-strip::after { right: 0; background: linear-gradient(to left, rgba(10,13,28,1), transparent); }
+        
+        .drops-track { display: flex; gap: 15px; animation: scrollDrops 40s linear infinite; }
+        .drops-track:hover { animation-play-state: paused; }
+        
+        .drop-item {
+            display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 8px;
+            min-width: max-content; transition: 0.3s; cursor: pointer;
+        }
+        .drop-item:hover { background: rgba(255,255,255,0.08); border-color: rgba(139, 92, 246, 0.4); transform: translateY(-2px); }
+        .drop-img { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
+        .drop-info { display: flex; flex-direction: column; }
+        .drop-user { font-size: 10px; color: #9ca3af; font-weight: 600; }
+        .drop-name { font-size: 12px; font-weight: 700; color: #fff; }
+        
+        .drop-item.legendary { border-color: #f1be04; background: rgba(241, 190, 4, 0.05); }
+        .drop-item.legendary .drop-name { color: #f1be04; text-shadow: 0 0 8px rgba(241, 190, 4, 0.4); }
+        
+        @keyframes scrollDrops { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* ANA İÇERİK KAPSAYICI */
+        .container { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
+        
+        /* HERO KISMI */
+        .cases-hero {
+            text-align: center; margin-bottom: 50px; position: relative;
+        }
+        .cases-hero h1 {
+            font-size: 48px; font-weight: 900; margin: 0 0 10px 0; text-transform: uppercase;
+            background: linear-gradient(to right, #8b5cf6, #ec4899, #f1be04);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 15px rgba(236, 72, 153, 0.3));
+        }
+        .cases-hero p { font-size: 16px; color: #9ca3af; max-width: 600px; margin: 0 auto; }
+
+        /* KASA GRID YAPISI */
+        .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+
+        /* KASA KARTI */
+        .case-card {
+            background: rgba(18, 20, 36, 0.6); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px; padding: 30px 20px; text-align: center; position: relative;
+            backdrop-filter: blur(10px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .case-card::before {
+            content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 2px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.1), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+        }
+        .case-card:hover { transform: translateY(-10px); background: rgba(24, 27, 45, 0.8); box-shadow: 0 20px 40px rgba(0,0,0,0.5); border-color: rgba(139, 92, 246, 0.3); }
+
+        /* Havada Süzülen Kasa Görseli */
+        .case-image-wrapper { width: 160px; height: 160px; margin: 0 auto 20px auto; position: relative; }
+        .case-image-wrapper img {
+            width: 100%; height: 100%; object-fit: contain;
+            animation: float 4s ease-in-out infinite;
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.5));
+        }
+        .case-shadow {
+            position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+            width: 80px; height: 15px; background: rgba(0,0,0,0.6);
+            border-radius: 50%; filter: blur(8px); animation: shadowPulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes shadowPulse { 0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.6; } 50% { transform: translateX(-50%) scale(0.8); opacity: 0.3; } }
+
+        .case-title { font-size: 20px; font-weight: 800; color: #fff; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px; }
+        .case-subtitle { font-size: 12px; color: #9ca3af; margin: 0 0 20px 0; }
+
+        .case-price {
+            display: inline-block; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981;
+            color: #34d399; font-size: 18px; font-weight: 800; padding: 6px 20px;
+            border-radius: 12px; margin-bottom: 20px;
+        }
+
+        .btn-open {
+            width: 100%; background: linear-gradient(135deg, #8b5cf6, #6d28d9); border: none;
+            color: #fff; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 700;
+            cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;
+            position: relative; overflow: hidden;
+        }
+        .btn-open::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.5s ease;
+        }
+        .btn-open:hover::before { left: 100%; }
+        .btn-open:hover { transform: scale(1.03); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5); }
+
+        /* Premium Kasa Kartı Özel Süslemeleri */
+        .case-card.premium { background: rgba(241, 190, 4, 0.03); border-color: rgba(241, 190, 4, 0.2); }
+        .case-card.premium:hover { border-color: #f1be04; box-shadow: 0 20px 40px rgba(241, 190, 4, 0.15); }
+        .case-card.premium .case-title { color: #f1be04; text-shadow: 0 0 10px rgba(241, 190, 4, 0.4); }
+        .case-card.premium .btn-open { background: linear-gradient(135deg, #f1be04, #d97706); color: #000; }
+        .case-card.premium .case-image-wrapper img { filter: drop-shadow(0 15px 30px rgba(241, 190, 4, 0.3)); }
+
+        /* MÜKEMMEL RULET MODALI (KASA AÇILIMI) */
+        .roulette-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(4, 6, 15, 0.95); backdrop-filter: blur(15px);
+            z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .roulette-overlay.show { display: flex; opacity: 1; }
+
+        .roulette-title { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .roulette-container {
+            width: 900px; max-width: 95vw; height: 180px; background: rgba(255,255,255,0.02);
+            border: 2px solid rgba(255,255,255,0.1); border-radius: 16px; position: relative;
+            overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8) inset;
+        }
+        /* Rulet Ortasındaki Hedef Çizgisi */
+        .roulette-container::after {
+            content: ''; position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 4px; background: #f1be04; box-shadow: 0 0 15px #f1be04; z-index: 10; border-radius: 2px;
+        }
+
+        .roulette-track {
+            display: flex; height: 100%; align-items: center; width: max-content;
+            /* JS ile transform: translateX uygulanacak */
+        }
+
+        .roulette-item {
+            width: 140px; height: 140px; margin: 0 5px; background: rgba(30, 34, 53, 0.8);
+            border: 1px solid rgba(255,255,255,0.05); border-radius: 12px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 10px; transition: 0.3s;
+        }
+        .roulette-item img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; }
+        .roulette-item span { font-size: 11px; font-weight: 700; color: #fff; text-align: center; }
+
+        /* Nadirlik Renkleri (Border) */
+        .roulette-item.common { border-bottom: 4px solid #9ca3af; }
+        .roulette-item.rare { border-bottom: 4px solid #3b82f6; }
+        .roulette-item.epic { border-bottom: 4px solid #8b5cf6; }
+        .roulette-item.legendary { border-bottom: 4px solid #f1be04; background: rgba(241, 190, 4, 0.1); }
+
+        /* Kazanan Ekrani Popup */
+        .winner-popup {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -40%) scale(0.8);
+            background: linear-gradient(135deg, #1e1b4b, #312e81); border: 1px solid #8b5cf6;
+            padding: 40px; border-radius: 24px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            z-index: 20; opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .winner-popup.show { transform: translate(-50%, -50%) scale(1); opacity: 1; visibility: visible; }
+        .winner-popup img { width: 150px; height: 150px; object-fit: contain; filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.8)); animation: float 3s infinite; }
+        .winner-popup h2 { font-size: 32px; color: #fff; margin: 20px 0 5px 0; }
+        .winner-popup p { color: #f1be04; font-weight: 700; font-size: 18px; margin: 0 0 25px 0; }
+
+        .balance-popup {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -40%) scale(0.8);
+            background: linear-gradient(135deg, #2a0a0a, #1a0a0a);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 40px; border-radius: 24px; text-align: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            z-index: 20; opacity: 0; visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: none;
+        }
+        .balance-popup.show { transform: translate(-50%, -50%) scale(1); opacity: 1; visibility: visible; display: flex; flex-direction: column; align-items: center; }
+        
+        .btn-claim {
+            background: #fff; color: #000; border: none; padding: 12px 30px; border-radius: 12px;
+            font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.3s;
+        }
+        .btn-claim:hover { background: #f1be04; transform: scale(1.05); }
+
+    </style>
+</head>
+<body>
+
+    <header class="frontend-header">
+        <div class="header-content">
+            <a href="index.html" class="logo-section">
+                <span class="logo">Epin Hesabım</span>
+                <span class="logo-subtitle">Güvenli Alışverişin Adresi</span>
+            </a>
+            <div class="header-right-actions">
+                <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()" title="Temayı Değiştir">
+                    <i class="ri-moon-line" id="themeIcon"></i>
+                </button>
+                <div class="auth-buttons">
+                    <button class="btn-login" onclick="window.location.href='login.html'">
+                        <i class="fas fa-sign-in-alt"></i><span>Giriş Yap</span>
+                    </button>
+                    <button class="btn-register" onclick="window.location.href='register.html'">
+                        <i class="fas fa-user-plus"></i><span>Kayıt Ol</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="live-drops-strip">
+        <div class="drops-track" id="liveDropTrack">
+            </div>
+    </div>
+
+    <div class="container">
+        <div class="cases-hero">
+            <h1>Efsanevi Eşyaları Çıkar!</h1>
+            <p>En yüksek droplu premium kasalarımızla şansını dene. Her kasadan en az bir nadir ürün garantisi!</p>
+        </div>
+
+        <div class="cases-grid">
+            
+            <div class="case-card">
+                <div class="case-image-wrapper">
+                    <img src="assets/uploads/servers/key3513e6cd-fe5f-4fc3-8084-.png" alt="Standart Kasa">
+                    <div class="case-shadow"></div>
+                </div>
+                <h3 class="case-title">Başlangıç Kasası</h3>
+                <p class="case-subtitle">Genel E-Pinler ve Random Keyler</p>
+                <div class="case-price">475.00 ₺</div>
+                <button class="btn-open" onclick="startRoulette('basic')">Kasayı Aç</button>
+            </div>
+
+            <div class="case-card">
+                <div class="case-image-wrapper">
+                    <img src="assets/uploads/servers/vp47feb065-2b2b-4daf-9189-.png" alt="Valorant Kasası" style="filter: hue-rotate(320deg);">
+                    <div class="case-shadow"></div>
+                </div>
+                <h3 class="case-title">Ajan Kasası</h3>
+                <p class="case-subtitle">Sadece Valorant VP Dropları</p>
+                <div class="case-price">520.00 ₺</div>
+                <button class="btn-open" onclick="startRoulette('valorant')">Kasayı Aç</button>
+            </div>
+
+            <div class="case-card premium">
+                <div class="case-image-wrapper">
+                    <img src="assets/uploads/servers/sns2f74e87a-842a-.png" alt="Premium Kasa">
+                    <div class="case-shadow"></div>
+                </div>
+                <h3 class="case-title">Kraliyet Kasası</h3>
+                <p class="case-subtitle">%40 İhtimalle Mega Ödül Garantili</p>
+                <div class="case-price" style="color:#f1be04; background: rgba(241,190,4,0.15); border-color:#f1be04;">915.00 ₺</div>
+                <button class="btn-open" onclick="startRoulette('premium')">Kasayı Aç</button>
+            </div>
+
+            <div class="case-card">
+                <div class="case-image-wrapper">
+                    <img src="assets/uploads/servers/pbgks954fd9ee-0e9d-c.png" alt="PUBG Kasası" style="filter: hue-rotate(180deg);">
+                    <div class="case-shadow"></div>
+                </div>
+                <h3 class="case-title">Airdrop Kasası</h3>
+                <p class="case-subtitle">Sadece PUBG Mobile UC Dropları</p>
+                <div class="case-price">710.00 ₺</div>
+                <button class="btn-open" onclick="startRoulette('pubg')">Kasayı Aç</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="roulette-overlay" id="rouletteModal">
+        <h2 class="roulette-title">Kasa Açılıyor...</h2>
+        
+        <div class="roulette-container">
+            <div class="roulette-track" id="rouletteTrack">
+                </div>
+        </div>
+
+        <div class="winner-popup" id="winnerPopup">
+            <h2 id="winTitle">Tebrikler!</h2>
+            <img src="" id="winImage" alt="Kazanılan">
+            <p id="winItemName">Item Adı</p>
+            <button class="btn-claim" onclick="closeRoulette()">Envantere Ekle</button>
+        </div>
+
+        <div class="balance-popup" id="balancePopup">
+            <h2 style="color:#f87171;">Bakiye Yetersiz</h2>
+            <div style="font-size:48px; margin: 10px 0;">❌</div>
+            <p id="balancePopupText" style="color:#cbd5e1;">Bakiyeniz bu kasayı açmak için yeterli değil.</p>
+            <button class="btn-claim" onclick="closeBalancePopup()" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">Tamam</button>
+        </div>
+    </div>
+
+    <script>
+        /* TEMA AYARLARI */
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            updateThemeIcon(currentTheme);
+            initLiveDrops();
+        });
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            let targetTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', targetTheme);
+            localStorage.setItem('theme', targetTheme);
+            updateThemeIcon(targetTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            if (theme === 'light') {
+                icon.className = 'ri-sun-line';
+                document.getElementById('themeToggle').style.color = '#ff9800';
+            } else {
+                icon.className = 'ri-moon-line';
+                document.getElementById('themeToggle').style.color = '#f1be04';
+            }
+        }
+
+        /* --- SAHTE VERİ TABANI (MOCK DATA) --- */
+        const itemDatabase = {
+            basic: [
+                { name: '150 Valorant VP', rarity: 'common', img: 'https://cdn-icons-png.flaticon.com/512/5836/5836262.png' },
+                { name: 'Steam Random Key', rarity: 'common', img: 'https://cdn-icons-png.flaticon.com/512/5836/5836262.png' },
+                { name: '60 PUBG UC', rarity: 'rare', img: 'https://cdn-icons-png.flaticon.com/512/5836/5836262.png' },
+                { name: '1200 Valorant VP', rarity: 'epic', img: 'https://cdn-icons-png.flaticon.com/512/5836/5836262.png' },
+                { name: '500 TL Steam Cüzdan', rarity: 'legendary', img: 'https://cdn-icons-png.flaticon.com/512/5836/5836262.png' }
+            ],
+            premium: [
+                { name: '1200 Valorant VP', rarity: 'rare', img: 'https://cdn-icons-png.flaticon.com/512/5836/5836262.png' },
+                { name: '660 PUBG UC', rarity: 'rare', img: 'https://cdn-icons-png.flaticon.com/512/5836/5836262.png' },
+                { name: '5400 Valorant VP', rarity: 'legendary', img: 'https://cdn-icons-png.flaticon.com/512/5836/5836262.png' },
+                { name: 'Bıçak - Asil Karambit', rarity: 'legendary', img: 'https://cdn-icons-png.flaticon.com/512/5836/5836262.png' }
+            ]
+        };
+        // Kolaylık olsun diye tüm görselleri placeholder yaptık. Gerçekte oyun ikonları URL'si koyabilirsiniz.
+
+        /* CANLI DROP AKIŞI MOTORU */
+        function initLiveDrops() {
+            const track = document.getElementById('liveDropTrack');
+            const users = ['Zımbacı', 'XenonTr', 'KralBaba', 'Ghost', 'Ninja', 'Tetikci'];
+            const pools = [...itemDatabase.basic, ...itemDatabase.premium];
+            
+            let html = '';
+            // Marquee kesintisiz dönsün diye çok sayıda ekliyoruz
+            for(let i=0; i<20; i++){
+                let user = users[Math.floor(Math.random() * users.length)];
+                let item = pools[Math.floor(Math.random() * pools.length)];
+                let legClass = item.rarity === 'legendary' ? 'legendary' : '';
+                
+                html += `
+                <div class="drop-item ${legClass}">
+                    <img src="${item.img}" class="drop-img">
+                    <div class="drop-info">
+                        <span class="drop-user">${user}</span>
+                        <span class="drop-name">${item.name}</span>
+                    </div>
+                </div>`;
+            }
+            // Çiftliyoruz ki css animasyonu pürüzsüz tekrarlasın
+            track.innerHTML = html + html; 
+        }
+
+        /* MÜKEMMEL RULET SİSTEMİ BAŞLANGICI */
+        const rouletteModal = document.getElementById('rouletteModal');
+        const rouletteTrack = document.getElementById('rouletteTrack');
+        const winnerPopup = document.getElementById('winnerPopup');
+        const winTitle = document.querySelector('.roulette-title');
+
+        // Ses efektleri (Tarayıcı izin verirse çalar)
+        const tickSound = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU'); // Temsili kısa ses
+
+        const casePrices = {
+            basic: 475,
+            valorant: 520,
+            premium: 915,
+            pubg: 710
+        };
+
+        async function startRoulette(caseType) {
+            const token = localStorage.getItem('token');
+            const userRaw = localStorage.getItem('user');
+            if (!token || !userRaw) {
+                alert('Kasa açmak için lütfen giriş yapın.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Bakiye kontrolü
+            let balance = 0;
+            try {
+                const res = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } });
+                if (res.ok) {
+                    const data = await res.json();
+                    balance = parseFloat(data.balance || 0);
+                    localStorage.setItem('user', JSON.stringify(data));
+                } else {
+                    const parsed = JSON.parse(userRaw);
+                    balance = parseFloat(parsed.balance || 0);
+                }
+            } catch (e) {
+                const parsed = JSON.parse(userRaw);
+                balance = parseFloat(parsed.balance || 0);
+            }
+
+            const price = casePrices[caseType] || 0;
+            if (balance < price) {
+                const popup = document.getElementById('balancePopup');
+                const text = document.getElementById('balancePopupText');
+                text.innerHTML = `Mevcut bakiyeniz: <strong>₺${balance.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong><br>Kasa fiyatı: <strong>₺${price.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong><br>Bakiyeniz yetersiz.`;
+                rouletteModal.classList.add('show');
+                winnerPopup.classList.remove('show');
+                document.querySelector('.roulette-container').style.display = 'none';
+                document.querySelector('.roulette-title').style.display = 'none';
+                popup.classList.add('show');
+                return;
+            }
+
+            // Modalı göster
+            rouletteModal.classList.add('show');
+            winnerPopup.classList.remove('show');
+            document.getElementById('balancePopup').classList.remove('show');
+            document.querySelector('.roulette-container').style.display = 'block';
+            document.querySelector('.roulette-title').style.display = 'block';
+            winTitle.innerText = "Kasa Açılıyor...";
+            
+            // Track'i sıfırla
+            rouletteTrack.style.transition = 'none';
+            rouletteTrack.style.transform = `translateX(0px)`;
+            rouletteTrack.innerHTML = '';
+
+            // Hangi havuzdan çekeceğiz?
+            const pool = itemDatabase[caseType] || itemDatabase.basic;
+            
+            // 70 adet kart oluştur (Ruletin dönmesi için uzun bir yol lazım)
+            const totalItems = 70;
+            // Kazanan öğeyi belirle (Sondan 5. öğe hedef olsun)
+            const winningIndex = 65; 
+            const winningItem = pool[Math.floor(Math.random() * pool.length)]; // Gerçekte backendden gelir
+
+            let trackHtml = '';
+            for(let i=0; i<totalItems; i++) {
+                let currentItem;
+                if(i === winningIndex) {
+                    currentItem = winningItem;
+                } else {
+                    currentItem = pool[Math.floor(Math.random() * pool.length)];
+                }
+
+                trackHtml += `
+                <div class="roulette-item ${currentItem.rarity}" id="card-${i}">
+                    <img src="${currentItem.img}">
+                    <span>${currentItem.name}</span>
+                </div>`;
+            }
+            rouletteTrack.innerHTML = trackHtml;
+
+            // DOM'un renderlanmasını bekle ve animasyonu başlat
+            setTimeout(() => {
+                // Her kart 140px width + 10px margin = 150px yer kaplar
+                const cardWidth = 150;
+                
+                // Ruletin ortasına gelmesi için ekran genişliğinin yarısını çıkar, kazanan kartın tam ortasına hizala
+                // Kapsayıcı 900px genişliğinde, yarısı 450px
+                const containerCenter = 450;
+                // Kazanan indexin başlangıç x konumu
+                const winningPos = (winningIndex * cardWidth) + (cardWidth / 2);
+                
+                // Kaydırma mesafesi = -(hedef konum - container merkezi) + ufak bir randomize durma payı
+                const randomOffset = Math.floor(Math.random() * 80) - 40; // Tam ortada durmasın azıcık sağ/sol yapsın heyecan için
+                const finalTranslate = -(winningPos - containerCenter) + randomOffset;
+
+                // Animasyon ayarları (Cubic-bezier ile giderek yavaşlayan harika bir fren efekti)
+                rouletteTrack.style.transition = 'transform 6s cubic-bezier(0.15, 0.85, 0.1, 1)';
+                rouletteTrack.style.transform = `translateX(${finalTranslate}px)`;
+
+                // Animasyon bitiminde popup'ı göster
+                setTimeout(() => {
+                    winTitle.innerText = "Kasa Açıldı!";
+                    document.getElementById('winImage').src = winningItem.img;
+                    document.getElementById('winItemName').innerText = winningItem.name;
+                    
+                    if(winningItem.rarity === 'legendary') {
+                        document.getElementById('winItemName').style.color = '#f1be04';
+                        document.getElementById('winItemName').style.textShadow = '0 0 10px rgba(241,190,4,0.5)';
+                    } else {
+                        document.getElementById('winItemName').style.color = '#fff';
+                        document.getElementById('winItemName').style.textShadow = 'none';
+                    }
+
+                    winnerPopup.classList.add('show');
+                }, 6200);
+
+            }, 100);
+        }
+
+        function closeBalancePopup() {
+            document.getElementById('balancePopup').classList.remove('show');
+            rouletteModal.classList.remove('show');
+            document.querySelector('.roulette-container').style.display = 'block';
+            document.querySelector('.roulette-title').style.display = 'block';
+        }
+
+        function closeRoulette() {
+            rouletteModal.classList.remove('show');
+            document.getElementById('balancePopup').classList.remove('show');
+            setTimeout(() => {
+                winnerPopup.classList.remove('show');
+                rouletteTrack.style.transition = 'none';
+                rouletteTrack.style.transform = `translateX(0px)`;
+            }, 300); // fade out süresini bekle
+        }
+
+        /* --- OTURUM YÖNETİMİ --- */
+        function renderAuthButtons() {
+            const authContainer = document.querySelector('.auth-buttons');
+            if (!authContainer) return;
+            const userRaw = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            if (userRaw && token) {
+                try {
+                    const user = JSON.parse(userRaw);
+                    const username = user.username || 'Kullanıcı';
+                    const balance = parseFloat(user.balance || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    authContainer.innerHTML = `
+                        <div class="user-logged" style="display:flex;align-items:center;gap:12px;color:#fff;">
+                            <span style="font-weight:600;font-size:14px;">${username}</span>
+                            <span style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);padding:6px 12px;border-radius:8px;font-size:13px;font-weight:700;">₺${balance}</span>
+                            <button class="btn-login" onclick="logoutUser()" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.4);color:#f87171;"><i class="fas fa-sign-out-alt"></i><span>Çıkış</span></button>
+                        </div>
+                    `;
+                } catch (e) {
+                    authContainer.innerHTML = `
+                        <button class="btn-login" onclick="window.location.href='login.html'"><i class="fas fa-sign-in-alt"></i><span>Giriş Yap</span></button>
+                        <button class="btn-register" onclick="window.location.href='register.html'"><i class="fas fa-user-plus"></i><span>Kayıt Ol</span></button>
+                    `;
+                }
+            } else {
+                authContainer.innerHTML = `
+                    <button class="btn-login" onclick="window.location.href='login.html'"><i class="fas fa-sign-in-alt"></i><span>Giriş Yap</span></button>
+                    <button class="btn-register" onclick="window.location.href='register.html'"><i class="fas fa-user-plus"></i><span>Kayıt Ol</span></button>
+                `;
+            }
+        }
+        function logoutUser() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            renderAuthButtons();
+            window.location.reload();
+        }
+        window.addEventListener('storage', renderAuthButtons);
+        document.addEventListener('DOMContentLoaded', renderAuthButtons);
+    </script>
+</body>
+</html>

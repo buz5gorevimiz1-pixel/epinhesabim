@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sık Sorulan Sorular - Epin Hesabım</title>
+    <link rel="icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+
+    <style>
+        * { font-family: 'Poppins', sans-serif; box-sizing: border-box; }
+        body {
+            overflow-x: hidden !important;
+            min-height: 100vh;
+            background-image: linear-gradient(180deg, rgba(8, 12, 26, 0.4), rgba(8, 12, 26, 0.5)), url('assets/arkaplan.png');
+            background-repeat: no-repeat, repeat;
+            background-size: cover, 900px auto;
+            background-attachment: fixed;
+            background-position: center;
+            color: #e8e8f0;
+            margin: 0;
+        }
+
+        /* Header */
+        .frontend-header {
+            background: rgba(13, 16, 36, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-section { display: flex; flex-direction: column; text-decoration: none; }
+        .logo {
+            font-size: 22px; font-weight: 800; letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #fff, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .logo-subtitle { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; }
+
+        .header-right-actions { display: flex; align-items: center; gap: 16px; }
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #f1be04;
+            width: 42px; height: 42px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: scale(1.05);
+            box-shadow: 0 0 12px rgba(241, 190, 4, 0.2);
+        }
+        .auth-buttons { display: flex; align-items: center; gap: 10px; }
+        .btn-login {
+            background: transparent; border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff; padding: 10px 20px; border-radius: 10px;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.3s ease; text-decoration: none;
+        }
+        .btn-login:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.25); }
+        .btn-register {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border: none; color: #fff;
+            padding: 11px 22px; border-radius: 10px;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+            text-decoration: none;
+        }
+        .btn-register:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35); }
+
+        /* User Dropdown */
+        .user-dropdown { position: relative; display: none; align-items: center; }
+        .user-dropdown-trigger {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; padding: 6px 14px; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .user-dropdown-trigger:hover { background: rgba(255,255,255,0.07); border-color: rgba(139,92,246,0.3); }
+        .user-avatar { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(139,92,246,0.3); }
+        .user-info { display: flex; flex-direction: column; line-height: 1.2; }
+        .user-name { font-size: 13px; font-weight: 600; color: #fff; }
+        .user-balance { font-size: 11px; color: #a78bfa; font-weight: 500; }
+        .dropdown-menu {
+            position: absolute; top: calc(100% + 8px); right: 0;
+            background: rgba(18, 20, 36, 0.95); backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 14px;
+            padding: 8px; min-width: 200px; opacity: 0; visibility: hidden;
+            transform: translateY(-8px); transition: all 0.25s ease; z-index: 1001;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .user-dropdown.open .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border-radius: 10px; color: #e8e8f0;
+            font-size: 13px; font-weight: 500; text-decoration: none;
+            transition: all 0.2s ease; cursor: pointer; border: none; background: transparent; width: 100%;
+        }
+        .dropdown-item:hover { background: rgba(139,92,246,0.1); color: #fff; }
+        .dropdown-item i { width: 18px; text-align: center; color: #a78bfa; }
+        .dropdown-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 6px 0; }
+        .dropdown-item.logout { color: #f87171; }
+        .dropdown-item.logout:hover { background: rgba(239,68,68,0.1); }
+        .dropdown-item.logout i { color: #f87171; }
+
+        /* Main */
+        main { max-width: 900px; margin: 0 auto; padding: 0 20px 60px; }
+
+        /* Hero */
+        .faq-hero {
+            position: relative;
+            background: linear-gradient(135deg, rgba(24, 12, 50, 0.85), rgba(139, 92, 246, 0.25));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 24px;
+            padding: 60px 40px 50px;
+            text-align: center;
+            overflow: hidden;
+            margin: 40px 0 40px;
+            box-shadow: inset 0 0 30px rgba(139, 92, 246, 0.2), 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .faq-hero::before {
+            content: ''; position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 60%);
+            animation: pulseBg 8s infinite linear;
+            pointer-events: none;
+        }
+        @keyframes pulseBg {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-10%, -10%) rotate(180deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+        .faq-hero h1 {
+            font-size: 40px; font-weight: 800; margin: 0 0 12px 0;
+            background: linear-gradient(135deg, #fff, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            position: relative; z-index: 1;
+        }
+        .faq-hero p { font-size: 16px; color: rgba(232, 232, 240, 0.7); margin: 0 0 30px 0; position: relative; z-index: 1; }
+
+        /* Search */
+        .search-box {
+            position: relative; z-index: 1; max-width: 520px; margin: 0 auto;
+        }
+        .search-box input {
+            width: 100%; padding: 16px 20px 16px 48px;
+            background: rgba(13, 16, 36, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: #fff; font-size: 15px; font-family: 'Poppins', sans-serif;
+            outline: none; transition: all 0.3s ease;
+        }
+        .search-box input::placeholder { color: rgba(232, 232, 240, 0.4); }
+        .search-box input:focus {
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+            background: rgba(13, 16, 36, 0.9);
+        }
+        .search-box i {
+            position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+            color: #a78bfa; font-size: 16px;
+        }
+
+        /* Categories */
+        .cat-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+            margin-bottom: 40px;
+        }
+        .cat-btn {
+            background: rgba(24, 27, 51, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 16px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #e8e8f0;
+        }
+        .cat-btn:hover { border-color: rgba(139, 92, 246, 0.3); background: rgba(24, 27, 51, 0.8); }
+        .cat-btn.active {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.15);
+        }
+        .cat-btn i { font-size: 22px; color: #a78bfa; margin-bottom: 8px; display: block; }
+        .cat-btn span { font-size: 13px; font-weight: 600; }
+
+        /* FAQ Accordion */
+        .faq-item {
+            background: rgba(24, 27, 51, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover { border-color: rgba(139, 92, 246, 0.2); }
+        .faq-item.hidden { display: none; }
+        .faq-question {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 24px;
+            cursor: pointer;
+            font-size: 15px; font-weight: 600; color: #fff;
+            transition: all 0.3s ease;
+            gap: 16px;
+        }
+        .faq-question:hover { color: #a78bfa; }
+        .faq-question-text { display: flex; align-items: center; gap: 14px; flex: 1; }
+        .faq-question-text i { color: #a78bfa; font-size: 14px; width: 18px; }
+        .faq-icon {
+            width: 28px; height: 28px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: #a78bfa;
+            transition: all 0.3s ease; min-width: 28px;
+        }
+        .faq-item.open .faq-icon {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            color: #fff;
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), padding 0.3s ease;
+            padding: 0 24px;
+        }
+        .faq-item.open .faq-answer {
+            max-height: 400px;
+            padding: 0 24px 22px 24px;
+        }
+        .faq-answer p {
+            margin: 0; font-size: 14px; color: rgba(232, 232, 240, 0.65);
+            line-height: 1.8;
+        }
+        .faq-answer p + p { margin-top: 10px; }
+
+        /* No Results */
+        .no-results {
+            text-align: center; padding: 60px 20px; display: none;
+        }
+        .no-results i { font-size: 48px; color: rgba(139, 92, 246, 0.3); margin-bottom: 16px; display: block; }
+        .no-results h3 { font-size: 20px; color: #fff; margin: 0 0 8px; }
+        .no-results p { color: #9ca3af; font-size: 14px; margin: 0; }
+
+        /* Footer */
+        .site-footer {
+            background: rgba(13, 16, 36, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 40px 0;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        .site-footer a { color: #a78bfa; text-decoration: none; }
+
+        /* Reveal */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cat-grid { grid-template-columns: repeat(2, 1fr); }
+            .faq-hero { padding: 40px 24px; }
+            .faq-hero h1 { font-size: 28px; }
+            .faq-question { padding: 16px 18px; font-size: 14px; }
+            .faq-item.open .faq-answer { padding: 0 18px 18px 18px; }
+            .btn-login span, .btn-register span { display: none; }
+            .btn-login, .btn-register { padding: 10px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="frontend-header">
+        <div class="header-content">
+            <a href="index.html" class="logo-section">
+                <span class="logo">Epin Hesabım</span>
+                <span class="logo-subtitle">Güvenli Alışverişin Adresi</span>
+            </a>
+            <div class="header-right-actions">
+                <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()" title="Temayı Değiştir">
+                    <i id="themeIcon" class="ri-moon-line"></i>
+                </button>
+                <div class="auth-buttons" id="authButtons">
+                    <a href="login.html" class="btn-login"><i class="fas fa-sign-in-alt"></i> <span>Giriş Yap</span></a>
+                    <a href="register.html" class="btn-register"><i class="fas fa-user-plus"></i> <span>Kayıt Ol</span></a>
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="user-dropdown-trigger" id="userDropdownTrigger">
+                        <img src="assets/img/avatar-1.png" alt="Profil" class="user-avatar" id="userAvatar">
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Kullanıcı</span>
+                            <span class="user-balance" id="userBalance">₺0.00</span>
+                        </div>
+                        <i class="fas fa-chevron-down" style="font-size:10px; color:#9ca3af; margin-left:4px;"></i>
+                    </div>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="profilim.html" class="dropdown-item"><i class="fas fa-user"></i> Profilim</a>
+                        <a href="ilanlarım.html" class="dropdown-item"><i class="fas fa-list"></i> İlanlarım</a>
+                        <a href="bakiye-ekle.html" class="dropdown-item"><i class="fas fa-plus-circle"></i> Bakiye Yükle</a>
+                        <a href="ayarlar.html" class="dropdown-item"><i class="fas fa-cog"></i> Ayarlar</a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item logout" onclick="confirmLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="faq-hero reveal">
+            <h1>Sık Sorulan Sorular</h1>
+            <p>Merak ettiğiniz her şey burada! Arama yaparak veya kategorilere göz atarak hızlıca cevap bulabilirsiniz.</p>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="faqSearch" placeholder="Bir soru arayın... (örn: bakiye, sipariş, hesap)" oninput="filterFAQ()">
+            </div>
+        </section>
+
+        <div class="cat-grid reveal" id="catGrid">
+            <button class="cat-btn active" data-cat="all" onclick="setCategory('all', this)">
+                <i class="fas fa-th-large"></i>
+                <span>Tümü</span>
+            </button>
+            <button class="cat-btn" data-cat="hesap" onclick="setCategory('hesap', this)">
+                <i class="fas fa-user-circle"></i>
+                <span>Hesap</span>
+            </button>
+            <button class="cat-btn" data-cat="bakiye" onclick="setCategory('bakiye', this)">
+                <i class="fas fa-wallet"></i>
+                <span>Bakiye</span>
+            </button>
+            <button class="cat-btn" data-cat="siparis" onclick="setCategory('siparis', this)">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Sipariş</span>
+            </button>
+            <button class="cat-btn" data-cat="guvenlik" onclick="setCategory('guvenlik', this)">
+                <i class="fas fa-shield-alt"></i>
+                <span>Güvenlik</span>
+            </button>
+            <button class="cat-btn" data-cat="satici" onclick="setCategory('satici', this)">
+                <i class="fas fa-store"></i>
+                <span>Satıcı</span>
+            </button>
+            <button class="cat-btn" data-cat="cekilis" onclick="setCategory('cekilis', this)">
+                <i class="fas fa-gift"></i>
+                <span>Çekiliş</span>
+            </button>
+            <button class="cat-btn" data-cat="diger" onclick="setCategory('diger', this)">
+                <i class="fas fa-ellipsis-h"></i>
+                <span>Diğer</span>
+            </button>
+        </div>
+
+        <div class="faq-list reveal" id="faqList">
+            <div class="faq-item" data-cat="hesap">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Nasıl üye olabilirim?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>Ana sayfadaki "Kayıt Ol" butonuna tıklayarak adınızı, e-posta adresinizi ve şifrenizi girerek 30 saniye içinde ücretsiz hesap oluşturabilirsiniz.</p></div>
+            </div>
+            <div class="faq-item" data-cat="hesap">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Şifremi unuttum, ne yapmalıyım?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>Giriş sayfasındaki "Şifremi Unuttum" bağlantısına tıklayın. E-posta adresinize gönderilen bağlantı ile yeni bir şifre belirleyebilirsiniz.</p></div>
+            </div>
+            <div class="faq-item" data-cat="hesap">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Kullanıcı adımı değiştirebilir miyim?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>Evet, ayarlar sayfasından profil bilgilerinizi güncelleyebilirsiniz. Ancak kullanıcı adı değişikliği ayda bir kez ile sınırlıdır.</p></div>
+            </div>
+            <div class="faq-item" data-cat="bakiye">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Bakiye nasıl yüklerim?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>"Bakiye Yükle" sayfasından kredi kartı, banka havalesi veya havale/EFT yöntemleri ile bakiye yükleyebilirsiniz. Ödemeler genellikle anında hesabınıza yansır.</p></div>
+            </div>
+            <div class="faq-item" data-cat="bakiye">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Para çekme işlemi ne kadar sürer?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>Para çekme talepleriniz genellikle 1-24 saat içinde işleme alınır. Hafta sonları ve resmi tatillerde bu süre biraz uzayabilir.</p></div>
+            </div>
+            <div class="faq-item" data-cat="bakiye">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Minimum para çekme limiti nedir?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>Minimum para çekme limiti 50 TL'dir. Bu tutarın altındaki bakiyelerinizi ürün satın almak için kullanabilirsiniz.</p></div>
+            </div>
+            <div class="faq-item" data-cat="siparis">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Siparişim ne zaman teslim edilir?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>Dijital ürünler genellikle satın alındıktan sonra birkaç dakika içinde otomatik olarak teslim edilir. Bazı durumlarda satıcı onayı gerekebilir.</p></div>
+            </div>
+            <div class="faq-item" data-cat="siparis">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Siparişimi iptal edebilir miyim?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>Teslim edilmemiş siparişlerinizi sipariş detay sayfasından iptal edebilirsiniz. Teslim edilen siparişlerde iade talebi oluşturmanız gerekir.</p></div>
+            </div>
+            <div class="faq-item" data-cat="siparis">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Aldığım ürün çalışmıyorsa ne olur?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>Çalışmayan veya eksik ürünlerde 48 saat içinde destek talebi oluşturabilirsiniz. Yetkililerimiz en kısa sürede sizinle iletişime geçecektir.</p></div>
+            </div>
+            <div class="faq-item" data-cat="guvenlik">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Kişisel bilgilerim güvende mi?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>Tüm kişisel verileriniz 256-bit SSL şifreleme ile korunmaktadır. Bilgileriniz asla üçüncü taraflarla paylaşılmaz ve satılmaz.</p></div>
+            </div>
+            <div class="faq-item" data-cat="guvenlik">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> İki faktörlü doğrulama nedir ve nasıl açarım?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>İki faktörlü doğrulama (2FA), hesabınıza ekstra güvenlik katmanı ekler. Ayarlar > Güvenlik bölümünden telefon numaranızı doğrulayarak aktif edebilirsiniz.</p></div>
+            </div>
+            <div class="faq-item" data-cat="satici">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Nasıl satıcı olabilirim?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>Tüm kullanıcılarımız otomatik olarak satıcı statüsüne sahiptir. "İlan Ekle" butonuna tıklayarak ürünlerinizi listeleyebilirsiniz.</p></div>
+            </div>
+            <div class="faq-item" data-cat="satici">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Satıcı komisyon oranı nedir?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>Platform komisyon oranı %5'tir. Bu oran piyasa standartlarının oldukça altındadır ve rekabetçi fiyat avantajı sağlar.</p></div>
+            </div>
+            <div class="faq-item" data-cat="cekilis">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Çekilişlere nasıl katılabilirim?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>Çekiliş sayfasından aktif çekilişleri görüntüleyebilir ve bilet satın alarak katılabilirsiniz. Her çekilişin kendi kuralları ve bilet fiyatı vardır.</p></div>
+            </div>
+            <div class="faq-item" data-cat="cekilis">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Çekiliş sonuçları şeffaf mı?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>Evet, tüm çekilişlerimiz blockchain tabanlı rastgele sayı üreteci ile adil bir şekilde sonuçlandırılır. Kazananlar herkese açık olarak ilan edilir.</p></div>
+            </div>
+            <div class="faq-item" data-cat="diger">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Mobil uygulamanız var mı?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>Şu an için mobil uygulamamız bulunmamaktadır ancak web sitemiz tamamen mobil uyumludur. Tarayıcınızdan sorunsuz bir şekilde alışveriş yapabilirsiniz.</p></div>
+            </div>
+            <div class="faq-item" data-cat="diger">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <div class="faq-question-text"><i class="fas fa-question-circle"></i> Destek ekibiyle nas iletişime geçebilirim?</div>
+                    <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="faq-answer"><p>7/24 canlı destek hattımızdan veya iletişim sayfasındaki form aracılığıyla bize ulaşabilirsiniz. Ortalama yanıt süremiz 15 dakikadır.</p></div>
+            </div>
+        </div>
+
+        <div class="no-results" id="noResults">
+            <i class="fas fa-search"></i>
+            <h3>Sonuç bulunamadı</h3>
+            <p>Farklı bir anahtar kelime ile aramayı deneyin.</p>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div><span class="logo" style="font-size: 18px; display: inline-block; margin-bottom: 10px;">Epin Hesabım</span></div>
+        <p> &copy; 2024 Epin Hesabım. Tüm hakları saklıdır.</p>
+        <p style="margin-top: 8px; font-size: 13px;">
+            <a href="hakkimizda.html">Hakkımızda</a> &bull; 
+            <a href="iletisim.html">İletişim</a> &bull; 
+            <a href="gizlilik.html">Gizlilik Politikası</a> &bull; 
+            <a href="kullanim-kosullari.html">Kullanım Koşulları</a>
+        </p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            updateThemeIcon(currentTheme);
+            initScrollReveal();
+            updateAuthDisplay();
+            fetchUserData();
+            setInterval(fetchUserData, 10000);
+        });
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            let targetTheme = 'dark';
+            if (html.getAttribute('data-theme') === 'dark') targetTheme = 'light';
+            html.setAttribute('data-theme', targetTheme);
+            localStorage.setItem('theme', targetTheme);
+            updateThemeIcon(targetTheme);
+        }
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            if (theme === 'light') { icon.className = 'ri-sun-line'; document.getElementById('themeToggle').style.color = '#ff9800'; }
+            else { icon.className = 'ri-moon-line'; document.getElementById('themeToggle').style.color = '#f1be04'; }
+        }
+
+        function initScrollReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        // FAQ Accordion
+        function toggleFaq(el) {
+            const item = el.closest('.faq-item');
+            const isOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+            if (!isOpen) item.classList.add('open');
+        }
+
+        // Category Filter
+        let currentCategory = 'all';
+        function setCategory(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterFAQ();
+        }
+
+        // Search + Category Filter
+        function filterFAQ() {
+            const query = document.getElementById('faqSearch').value.toLowerCase().trim();
+            const items = document.querySelectorAll('.faq-item');
+            let visible = 0;
+
+            items.forEach(item => {
+                const cat = item.getAttribute('data-cat');
+                const text = item.textContent.toLowerCase();
+                const matchesCat = currentCategory === 'all' || cat === currentCategory;
+                const matchesSearch = !query || text.includes(query);
+
+                if (matchesCat && matchesSearch) {
+                    item.classList.remove('hidden');
+                    visible++;
+                } else {
+                    item.classList.add('hidden');
+                    item.classList.remove('open');
+                }
+            });
+
+            document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+        }
+
+        // ========== AUTH SYSTEM ==========
+        function updateAuthDisplay() {
+            const user = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            const authButtons = document.getElementById('authButtons');
+            const userDropdown = document.getElementById('userDropdown');
+            if (user && token) {
+                try {
+                    const userData = JSON.parse(user);
+                    if (authButtons) authButtons.style.display = 'none';
+                    if (userDropdown) {
+                        userDropdown.style.display = 'flex';
+                        document.getElementById('userName').textContent = userData.username || 'Kullanıcı';
+                        document.getElementById('userBalance').textContent = '₺' + parseFloat(userData.balance || '0.00').toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        document.getElementById('userAvatar').src = userData.avatar || 'assets/img/avatar-1.png';
+                    }
+                } catch (e) { console.error('Auth display error:', e); }
+            } else {
+                if (authButtons) authButtons.style.display = 'flex';
+                if (userDropdown) userDropdown.style.display = 'none';
+            }
+        }
+        async function fetchUserData() {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            try {
+                const response = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } });
+                if (!response.ok) return;
+                const userData = await response.json();
+                if (userData && userData._id) {
+                    const existing = localStorage.getItem('user');
+                    localStorage.setItem('user', JSON.stringify(existing ? { ...JSON.parse(existing), ...userData } : userData));
+                    updateAuthDisplay();
+                }
+            } catch (e) { console.error('fetchUserData error:', e); }
+        }
+        function confirmLogout() {
+            const popup = document.createElement('div');
+            popup.innerHTML = `
+                <div id="logoutOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);z-index:10000;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s ease;">
+                    <div id="logoutBox" style="background:linear-gradient(135deg,rgba(18,20,36,0.95),rgba(24,12,50,0.95));border:1px solid rgba(139,92,246,0.3);border-radius:24px;padding:40px 36px;max-width:380px;width:90%;text-align:center;box-shadow:0 25px 60px rgba(0,0,0,0.5);transform:scale(0.9);transition:transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275);">
+                        <div style="width:64px;height:64px;background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(236,72,153,0.2));border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:26px;color:#a78bfa;">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </div>
+                        <h3 style="margin:0 0 10px;font-size:22px;font-weight:700;color:#fff;">Çıkış Yap</h3>
+                        <p style="margin:0 0 28px;font-size:15px;color:rgba(232,232,240,0.65);line-height:1.6;">Hesabınızdan çıkış yapmak istediğinizden emin misiniz?</p>
+                        <div style="display:flex;gap:12px;justify-content:center;">
+                            <button id="logoutCancel" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e8e8f0;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s ease;font-family:'Poppins',sans-serif;">İptal</button>
+                            <button id="logoutConfirm" style="background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s ease;box-shadow:0 4px 15px rgba(139,92,246,0.25);font-family:'Poppins',sans-serif;">Evet, Çıkış Yap</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(popup);
+            const overlay = document.getElementById('logoutOverlay');
+            const box = document.getElementById('logoutBox');
+            requestAnimationFrame(() => { overlay.style.opacity = '1'; box.style.transform = 'scale(1)'; });
+            function closePopup() { overlay.style.opacity = '0'; box.style.transform = 'scale(0.9)'; setTimeout(() => popup.remove(), 300); }
+            document.getElementById('logoutCancel').addEventListener('click', closePopup);
+            document.getElementById('logoutConfirm').addEventListener('click', () => {
+                localStorage.removeItem('user'); localStorage.removeItem('token');
+                closePopup(); setTimeout(() => window.location.reload(), 250);
+            });
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) closePopup(); });
+        }
+
+        // Dropdown toggle
+        document.getElementById('userDropdownTrigger').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('userDropdown').classList.toggle('open');
+        });
+        document.addEventListener('click', function() {
+            document.getElementById('userDropdown').classList.remove('open');
+        });
+    </script>
+</body>
+</html>

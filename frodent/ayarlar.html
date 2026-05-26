@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mağaza Ayarları - Premium Itemci</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Profilim.html Premium Değişkenleri */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            --accent-color: #a855f7;
+            --bg-color: #030305;
+            --glass-bg: rgba(13, 14, 21, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        html, body {
+            min-height: 100%;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Dinamik Arka Plan Efekti */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 50% 30%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 40%);
+            z-index: -1;
+            animation: rotateBg 30s linear infinite;
+        }
+
+        @keyframes rotateBg {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3, h4, h5, .stat-card strong {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Üst Menü Tasarımı */
+        .frontend-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(3, 3, 5, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .btn-back-home:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-3px);
+            border-color: var(--accent-color);
+        }
+
+        .theme-toggle-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+        }
+
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(15deg);
+        }
+
+        /* Ana Taşıyıcı */
+        .page-shell {
+            max-width: 1300px;
+            margin: 40px auto;
+            padding: 0 24px 60px;
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 30px;
+        }
+
+        /* Yüzen Cam Kartlar */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.03), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.7s ease;
+        }
+
+        .glass-card:hover::before {
+            left: 200%;
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 15px 45px rgba(168, 85, 247, 0.15);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        /* Sol Sidebar */
+        .settings-sidebar {
+            padding: 24px;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .marketplace-badge {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .marketplace-badge .logo-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+            position: relative;
+        }
+
+        .vendor-info h4 {
+            margin: 0;
+            font-size: 18px;
+            color: var(--text-main);
+        }
+
+        .vendor-info span {
+            font-size: 12px;
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+            padding: 2px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        .nav-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item i {
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+        }
+
+        /* Sağ İçerik */
+        .settings-content {
+            padding: 40px;
+        }
+
+        .section-header {
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-size: 32px;
+            margin: 0 0 8px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* Görsel Yükleme Premium Alanı */
+        .branding-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .branding-section:hover {
+            border-color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .avatar-upload {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 24px;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .avatar-upload:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+            transform: scale(1.05);
+        }
+
+        .avatar-upload img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            z-index: 2;
+            position: absolute;
+        }
+
+        .upload-overlay {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 11px;
+            gap: 4px;
+            transition: opacity 0.3s ease;
+        }
+
+        .upload-overlay i {
+            font-size: 24px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .branding-meta h5 {
+            font-size: 18px;
+            margin: 0 0 8px;
+            color: var(--text-main);
+        }
+
+        .branding-meta p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Form Yapısı */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .form-control {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-control label {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .input-wrapper input, .input-wrapper textarea {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-main);
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .input-wrapper textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .input-wrapper input:focus, .input-wrapper textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.15);
+        }
+
+        .input-wrapper input::placeholder, .input-wrapper textarea::placeholder {
+            color: rgba(148, 163, 184, 0.5);
+        }
+
+        /* Butonlar (Profilim'deki gibi) */
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            padding-top: 24px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Bildirimler (Toast) */
+        .toast-container {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .toast {
+            min-width: 300px;
+            padding: 16px 20px;
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.95);
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: auto;
+            border-left: 4px solid;
+        }
+
+        .toast.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast-success { border-color: var(--success); }
+        .toast-error { border-color: var(--danger); }
+        .toast-info { border-color: #3b82f6; }
+        .toast-warning { border-color: var(--warning); }
+
+        @media (max-width: 992px) {
+            .settings-grid { grid-template-columns: 1fr; }
+            .settings-sidebar { position: relative; top: 0; margin-bottom: 20px; }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .action-bar { flex-direction: column-reverse; }
+            .action-bar .btn { width: 100%; justify-content: center; }
+            .settings-content { padding: 24px; }
+            .branding-section { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="frontend-header">
+        <div class="header-left">
+            <a href="/" class="btn-back-home">
+                <i class="fas fa-arrow-left"></i> Anasayfaya Dön
+            </a>
+        </div>
+        <div>
+            <button class="theme-toggle-btn" id="themeToggleBtn" title="Tema değiştir">
+                <i class="fas fa-sun" id="themeIcon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="page-shell">
+        <div class="settings-grid">
+            
+            <aside class="settings-sidebar glass-card">
+                <div class="marketplace-badge">
+                    <div class="logo-icon" id="sidebarAvatar">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div class="vendor-info">
+                        <h4 id="sidebarUserName">Kullanıcı</h4>
+                        <span id="sidebarUserStatus"><i class="fas fa-check-circle"></i> Aktif Üye</span>
+                    </div>
+                </div>
+                
+                <nav class="nav-list">
+                    <a href="#" class="nav-item active">
+                        <i class="fas fa-cog"></i>
+                        <span>Mağaza Ayarları</span>
+                    </a>
+                    <a href="para-çek.html" class="nav-item">
+                        <i class="fas fa-wallet"></i>
+                        <span>Bakiye Çek</span>
+                    </a>
+                    <a href="bakiye-ekle.html" class="nav-item">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Bakiye Yükle</span>
+                    </a>
+                    <a href="ilanlarım.html" class="nav-item">
+                        <i class="fas fa-box-open"></i>
+                        <span>Ürün Yönetimi</span>
+                    </a>
+                    <a href="hesap-onay.html" class="nav-item">
+                        <i class="fas fa-id-card"></i>
+                        <span>Hesap Onay</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <div class="settings-content glass-card">
+                <div class="section-header">
+                    <h2>Epin Hesabım Profilinizi Yönetin</h2>
+                    <p>Müşterilerinize görünecek mağaza bilgilerinizi ve operasyonel detaylarınızı optimize edin.</p>
+                </div>
+
+                <form action="#" method="POST" id="settingsForm">
+                    <input type="hidden" id="userId">
+                    
+                    <div class="branding-section">
+                        <div class="avatar-upload" onclick="triggerAvatarUpload()">
+                            <div class="upload-overlay" id="uploadOverlay">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Görsel Seç</span>
+                            </div>
+                            <img id="avatarPreview" src="" alt="Profil Fotoğrafı">
+                            <input type="file" id="avatarFile" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="branding-meta">
+                            <h5>Profil Fotoğrafı</h5>
+                            <p>Mağazanızın vitrini için en iyi görselinizi seçin.<br>Önerilen boyut: 500x500px (Kare). Maksimum 2MB.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        
+                        <div class="form-control">
+                            <label>Kullanıcı Adı</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="fieldUsername" value="" placeholder="Kullanıcı adınız" required>
+                            </div>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Ad Soyad</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="fieldFullName" value="" placeholder="Adınız ve soyadınız">
+                            </div>
+                        </div>
+
+                        <div class="form-control">
+                            <label>E-posta Adresi</label>
+                            <div class="input-wrapper">
+                                <input type="email" id="fieldEmail" value="" placeholder="ornek@email.com" required>
+                            </div>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Telefon Numarası</label>
+                            <div class="input-wrapper">
+                                <input type="tel" id="fieldPhone" value="" placeholder="05xx xxx xx xx">
+                            </div>
+                        </div>
+
+                        <div class="form-control full-width">
+                            <label>Hakkımda / Mağaza Açıklaması</label>
+                            <div class="input-wrapper">
+                                <textarea id="fieldBio" placeholder="Müşterilerinize kendinizden veya mağazanızın kalitesinden bahsedin..."></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="action-bar">
+                        <button type="button" class="btn btn-secondary" onclick="resetUserData()"><i class="fas fa-undo"></i> Değişiklikleri Geri Al</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Ayarları Güncelle</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script>
+        // --- Tema ve Ortak JS Değişkenleri ---
+        const htmlTag = document.documentElement;
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = document.getElementById('themeIcon');
+        const toastContainer = document.getElementById('toastContainer');
+
+        // --- Toast (Bildirim) Sistemi (Profilim.html'den alındı) ---
+        function showToast(message, type = 'success') {
+            if (!toastContainer) return;
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            let iconClass = 'fa-check-circle';
+            if (type === 'error' || type === 'danger') iconClass = 'fa-times-circle';
+            else if (type === 'warning') iconClass = 'fa-exclamation-triangle';
+            else if (type === 'info') iconClass = 'fa-info-circle';
+
+            toast.innerHTML = `<i class="fas ${iconClass}" style="margin-right:8px;"></i> ${message}`;
+            toastContainer.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.add('visible');
+            });
+
+            setTimeout(() => {
+                toast.classList.remove('visible');
+                toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+            }, 3500);
+        }
+
+        // --- Tema İşlemleri ---
+        function updateThemeIcon() {
+            const current = htmlTag.getAttribute('data-theme');
+            themeIcon.className = current === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        function toggleTheme() {
+            const next = htmlTag.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            htmlTag.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateThemeIcon();
+            showToast(`Tema ${next === 'dark' ? 'Karanlık' : 'Aydınlık'} moda geçirildi.`, 'info');
+        }
+
+        // Sayfa yüklendiğinde hafızadaki temayı kur
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        htmlTag.setAttribute('data-theme', savedTheme);
+        updateThemeIcon();
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+
+        // --- Görsel Yükleme ve Anlık Önizleme ---
+        const fileInput = document.getElementById('avatarFile');
+        const previewImg = document.getElementById('avatarPreview');
+        const overlay = document.getElementById('uploadOverlay');
+
+        function triggerAvatarUpload() {
+            fileInput.click();
+        }
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    showToast('Dosya boyutu 2MB\'dan büyük olamaz!', 'warning');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    previewImg.src = event.target.result;
+                    previewImg.style.display = 'block';
+                    overlay.style.opacity = '0'; // Hover efekti bozulmasın diye şeffaflaştır
+                    showToast('Görsel başarıyla seçildi. Kaydetmeyi unutmayın.', 'info');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // --- Formu veriyle doldur (hem API hem localStorage) ---
+        function fillForm(user) {
+            if (!user) return;
+            document.getElementById('userId').value = user._id || user.id || '';
+            document.getElementById('fieldUsername').value = user.username || '';
+            document.getElementById('fieldFullName').value = user.fullName || '';
+            document.getElementById('fieldEmail').value = user.email || '';
+            document.getElementById('fieldPhone').value = user.phone || '';
+            document.getElementById('fieldBio').value = user.bio || '';
+
+            if (user.avatar) {
+                previewImg.src = user.avatar;
+                previewImg.style.display = 'block';
+                overlay.style.opacity = '0';
+            }
+
+            const sidebarName = document.getElementById('sidebarUserName');
+            const sidebarStatus = document.getElementById('sidebarUserStatus');
+            const sidebarAvatar = document.getElementById('sidebarAvatar');
+            if (sidebarName) sidebarName.textContent = user.username || 'Kullanıcı';
+            if (sidebarStatus) sidebarStatus.innerHTML = `<i class="fas fa-check-circle"></i> ${(user.status === 'active' ? 'Aktif' : user.status) + ' Üye'}`;
+            if (sidebarAvatar && user.avatar) {
+                sidebarAvatar.innerHTML = '<img src="' + user.avatar + '" style="width:100%;height:100%;object-fit:cover;border-radius:14px;">';
+                sidebarAvatar.style.background = 'transparent';
+                sidebarAvatar.style.boxShadow = 'none';
+            }
+        }
+
+        // --- Orijinal veriyi sakla ---
+        let originalUserData = null;
+
+        async function loadUserData() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                showToast('Giriş yapmanız gerekiyor.', 'warning');
+                setTimeout(() => { window.location.href = 'login.html'; }, 1500);
+                return;
+            }
+
+            // Önce localStorage'dan hızlı doldur
+            const storedUser = localStorage.getItem('user');
+            let parsedUser = null;
+            if (storedUser) {
+                try { parsedUser = JSON.parse(storedUser); } catch (e) {}
+            }
+            if (parsedUser) {
+                fillForm(parsedUser);
+                originalUserData = JSON.parse(JSON.stringify(parsedUser));
+            }
+
+            // Sonra API'den güncelle
+            try {
+                const response = await fetch('/api/auth/me', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!response.ok) throw new Error('Kullanıcı bilgileri alınamadı');
+                const user = await response.json();
+                if (!user || !user._id) throw new Error('Geçersiz kullanıcı verisi');
+                fillForm(user);
+                localStorage.setItem('user', JSON.stringify(user));
+                originalUserData = JSON.parse(JSON.stringify(user));
+            } catch (err) {
+                console.error('Kullanıcı verisi yükleme hatası:', err);
+                if (!parsedUser) {
+                    showToast('Bilgiler yüklenemedi. Lütfen tekrar giriş yapın.', 'error');
+                }
+            }
+        }
+
+        // --- Değişiklikleri Geri Al ---
+        function resetUserData() {
+            if (!originalUserData) {
+                showToast('Orijinal veriler yüklenemedi.', 'warning');
+                return;
+            }
+            fillForm(originalUserData);
+            fileInput.value = '';
+            showToast('Değişiklikler geri alındı.', 'info');
+        }
+
+        // --- API - Form gönderildiğinde güncelle ---
+        document.getElementById('settingsForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            if (!token) { showToast('Giriş yapmanız gerekiyor.', 'warning'); return; }
+
+            const body = {
+                username: document.getElementById('fieldUsername').value.trim(),
+                fullName: document.getElementById('fieldFullName').value.trim(),
+                email: document.getElementById('fieldEmail').value.trim(),
+                phone: document.getElementById('fieldPhone').value.trim(),
+                bio: document.getElementById('fieldBio').value.trim()
+            };
+
+            // Butonu yükleniyor durumuna al (Opsiyonel görsel geri bildirim)
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Kaydediliyor...';
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/user/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(body)
+                });
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    showToast('Profil bilgileriniz başarıyla güncellendi!', 'success');
+                    
+                    // localStorage'daki user verisini de güncelle
+                    const existing = localStorage.getItem('user');
+                    let merged = body;
+                    if (existing) {
+                        merged = { ...JSON.parse(existing), ...body };
+                        localStorage.setItem('user', JSON.stringify(merged));
+                    }
+                    // Orijinal referansı da güncelle ki "Geri Al" yeni veriye dönsün
+                    originalUserData = JSON.parse(JSON.stringify(merged));
+
+                    // Sidebar ismini anlık güncelle
+                    document.getElementById('sidebarUserName').textContent = body.username || 'Kullanıcı';
+                    
+                } else {
+                    showToast(result.error || 'Güncelleme başarısız oldu.', 'error');
+                }
+            } catch (err) {
+                console.error('Profil güncelleme hatası:', err);
+                showToast('Bağlantı hatası. Lütfen tekrar deneyin.', 'error');
+            } finally {
+                // Butonu eski haline getir
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Sayfa yüklendiğinde veriyi çek
+        document.addEventListener('DOMContentLoaded', loadUserData);
+    </script>
+</body>
+</html>

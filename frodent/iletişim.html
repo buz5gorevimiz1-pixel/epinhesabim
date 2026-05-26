@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İletişim - Epin Hesabım Premium</title>
+    <link rel="stylesheet" href="assets/listings.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-base: #050507;
+            --bg-surface: rgba(20, 20, 25, 0.4);
+            --bg-surface-hover: rgba(30, 30, 40, 0.6);
+            --primary: #8b5cf6;
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --border-light: rgba(255, 255, 255, 0.08);
+            --border-focus: rgba(139, 92, 246, 0.5);
+            --glow-primary: 0 0 20px rgba(139, 92, 246, 0.3);
+            --glow-secondary: 0 0 20px rgba(236, 72, 153, 0.3);
+            --transition-speed: 0.4s;
+        }
+
+        /* Gündüz Modu (Light Mode) Ayarları */
+        :root.light-mode {
+            --bg-base: #f3f4f6;
+            --bg-surface: rgba(255, 255, 255, 0.7);
+            --bg-surface-hover: rgba(255, 255, 255, 0.9);
+            --text-main: #111827;
+            --text-muted: #4b5563;
+            --border-light: rgba(0, 0, 0, 0.08);
+            --border-focus: rgba(139, 92, 246, 0.6);
+            --glow-primary: 0 10px 25px rgba(139, 92, 246, 0.15);
+            --glow-secondary: 0 10px 25px rgba(236, 72, 153, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.05), transparent 25%);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(139, 92, 246, 0.6); }
+
+        /* Navbar */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 5, 7, 0.3);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-light);
+            transition: background var(--transition-speed) ease, border-color var(--transition-speed) ease;
+        }
+
+        :root.light-mode header { background: rgba(243, 244, 246, 0.4); }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left { display: flex; align-items: center; gap: 16px; }
+
+        .back-home-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 15px;
+            padding: 10px 18px;
+            border-radius: 12px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .back-home-btn:hover {
+            transform: translateX(-4px);
+            border-color: var(--border-focus);
+            box-shadow: var(--glow-primary);
+        }
+
+        .nav-brand {
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: none;
+        }
+
+        @media (min-width: 768px) { .nav-brand { display: block; } }
+
+        .theme-toggle-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            transform: scale(1.05) rotate(8deg);
+            border-color: var(--border-focus);
+            box-shadow: var(--glow-primary);
+        }
+
+        /* Hero Section */
+        .contact-hero {
+            position: relative;
+            padding: 60px 24px 40px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-bg-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            height: 60vw;
+            max-width: 800px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 40%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .contact-hero h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, #fff 20%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        :root.light-mode .contact-hero h1 {
+            background: linear-gradient(135deg, #111827 20%, #4f46e5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .contact-hero p {
+            font-size: 16px;
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Layout Grid */
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 24px 80px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+            animation: fadeUpIn 0.6s ease forwards;
+        }
+
+        @keyframes fadeUpIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Contact Info Cards */
+        .info-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 32px 24px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card:hover {
+            border-color: var(--border-focus);
+            transform: translateY(-5px);
+            box-shadow: var(--glow-primary);
+        }
+
+        .info-icon {
+            width: 54px;
+            height: 54px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover .info-icon {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .info-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .info-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .info-link {
+            display: inline-block;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: color 0.3s;
+        }
+
+        .info-link:hover { color: var(--secondary); }
+
+        /* Contact Form */
+        .form-wrapper {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        :root.light-mode .form-wrapper {
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .form-header { margin-bottom: 32px; }
+        .form-header h2 { font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 8px; }
+        .form-header p { color: var(--text-muted); font-size: 14px; }
+
+        .input-group { margin-bottom: 24px; position: relative; }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            transition: color 0.3s;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(10, 10, 15, 0.4);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 16px;
+            color: var(--text-main);
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        :root.light-mode .form-control { background: rgba(255, 255, 255, 0.5); }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(15, 15, 20, 0.6);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        }
+
+        .form-control::placeholder { color: rgba(156, 163, 175, 0.4); }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: var(--glow-secondary);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(236, 72, 153, 0.4), var(--glow-secondary);
+        }
+
+        .submit-btn:active { transform: translateY(0); }
+
+        /* Toasts */
+        .toast-container {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            display: grid;
+            gap: 12px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .toast {
+            min-width: 300px;
+            padding: 16px 20px;
+            border-radius: 16px;
+            background: rgba(15, 15, 20, 0.95);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid var(--border-focus);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), var(--glow-primary);
+            opacity: 0;
+            transform: translateX(50px) scale(0.9);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        :root.light-mode .toast {
+            background: rgba(255, 255, 255, 0.95);
+            color: #111827;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        .toast::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .toast.toast-success::before { content: '\f058'; color: #10b981; }
+        .toast.visible { opacity: 1; transform: translateX(0) scale(1); }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .contact-container { grid-template-columns: 1fr; }
+            .info-wrapper { flex-direction: row; flex-wrap: wrap; }
+            .info-card { flex: 1; min-width: 250px; }
+        }
+
+        @media (max-width: 768px) {
+            .contact-hero h1 { font-size: 32px; }
+            .input-row { grid-template-columns: 1fr; gap: 0; }
+            .form-wrapper { padding: 24px; border-radius: 20px; }
+            .info-wrapper { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="index.html" class="back-home-btn">
+                    <i class="ri-arrow-left-line"></i>
+                    <span>Anasayfa</span>
+                </a>
+                <div class="nav-brand">İletişim</div>
+            </div>
+            
+            <button id="themeToggle" class="theme-toggle-btn" title="Temayı Değiştir">
+                <i class="ri-moon-clear-line"></i>
+            </button>
+        </div>
+    </header>
+
+    <section class="contact-hero">
+        <div class="hero-bg-glow"></div>
+        <h1>Bize Ulaşın</h1>
+        <p>Görüş, öneri veya işbirlikleri için aşağıdaki kanallardan bize dilediğiniz an ulaşabilirsiniz. Ekibimiz en kısa sürede dönüş yapacaktır.</p>
+    </section>
+
+    <div class="contact-container">
+        
+        <div class="info-wrapper">
+            <div class="info-card">
+                <div class="info-icon"><i class="ri-mail-send-line"></i></div>
+                <h3>E-Posta Adresimiz</h3>
+                <p>Genel sorularınız, işbirlikleri ve resmi talepleriniz için bize mail atabilirsiniz.</p>
+                <a href="mailto:destek@itemsatis.com" class="info-link">destek@epinhesabim.com</a>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon"><i class="ri-discord-fill"></i></div>
+                <h3>Discord Topluluğumuz</h3>
+                <p>Hızlı destek almak, çekilişlere katılmak ve diğer oyuncularla sohbet etmek için sunucumuza katılın.</p>
+                <a href="#" class="info-link">discord.gg/epinhesabim</a>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon"><i class="ri-map-pin-line"></i></div>
+                <h3>Ofis Adresimiz</h3>
+                <p>Resmi yazışmalar ve kargo gönderimleri için merkez ofis adresimiz.</p>
+                <span class="info-link" style="color:var(--text-main); font-weight:500;">Levent Mah. Teknoloji Sok. No:4<br>Beşiktaş, İstanbul</span>
+            </div>
+        </div>
+
+        <div class="form-wrapper">
+            <div class="form-header">
+                <h2>Mesaj Gönderin</h2>
+                <p>Sorununuzu detaylı bir şekilde açıklayarak hızlıca çözüm bulmamıza yardımcı olun.</p>
+            </div>
+
+            <form id="contactForm">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label class="input-label">Adınız Soyadınız</label>
+                        <input type="text" class="form-control" placeholder="Örn: Ahmet Yılmaz" required>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">E-Posta Adresiniz</label>
+                        <input type="email" class="form-control" placeholder="Örn: ahmet@mail.com" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Konu Başlığı</label>
+                    <input type="text" class="form-control" placeholder="Mesajınızın konusu nedir?" required>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Mesajınız</label>
+                    <textarea class="form-control" placeholder="Lütfen iletmek istediğiniz mesajı detaylıca yazın..." required></textarea>
+                </div>
+
+                <button type="submit" id="submitBtn" class="submit-btn">
+                    <i class="ri-send-plane-fill"></i>
+                    <span>Mesajı Gönder</span>
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // Gece / Gündüz Modülü (Theme Toggle)
+        const themeToggle = document.getElementById('themeToggle');
+        
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.classList.add('light-mode');
+            themeToggle.innerHTML = '<i class="ri-sun-line"></i>';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('light-mode');
+            if (document.documentElement.classList.contains('light-mode')) {
+                themeToggle.innerHTML = '<i class="ri-sun-line"></i>';
+                localStorage.setItem('theme', 'light');
+            } else {
+                themeToggle.innerHTML = '<i class="ri-moon-clear-line"></i>';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Form Submit Animasyonu ve Toast
+        const contactForm = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const toastContainer = document.getElementById('toastContainer');
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.add('visible');
+            });
+
+            setTimeout(() => {
+                toast.classList.remove('visible');
+                toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+            }, 3500);
+        }
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Sayfanın yenilenmesini engelle
+
+            // Butonu yükleniyor durumuna al
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="ri-loader-4-line fa-spin"></i> Mesaj İletiliyor...';
+
+            // Simüle edilmiş sunucu gecikmesi
+            setTimeout(() => {
+                showToast('Mesajınız başarıyla iletildi. Ekibimiz en kısa sürede dönüş yapacaktır!', 'success');
+                contactForm.reset(); // Formu temizle
+                
+                // Butonu eski haline getir
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalContent;
+            }, 1500);
+        });
+
+        // Input Focus Efektleri (Label Renklendirme)
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.previousElementSibling.style.color = 'var(--primary)';
+            });
+            input.addEventListener('blur', () => {
+                input.previousElementSibling.style.color = 'var(--text-muted)';
+            });
+        });
+    </script>
+</body>
+</html>

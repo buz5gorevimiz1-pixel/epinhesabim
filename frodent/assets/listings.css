@@ -1,0 +1,353 @@
+/**
+ * MARKETPLACE LISTINGS STYLES
+ * Responsive grid, loading skeleton, empty/error states
+ */
+
+/* ============ LISTINGS CONTAINER ============ */
+#listings-container {
+  width: 100%;
+}
+
+/* ============ GRID LAYOUT ============ */
+.listings-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+/* Mevcut .ipcard styling (tasarım korunur) */
+.listings-grid .ipcard {
+  display: flex;
+  flex-direction: column;
+  background: rgba(24, 27, 51, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  color: inherit;
+  height: 100%;
+}
+
+.listings-grid .ipcard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ============ CARD CONTENT ============ */
+.listings-grid .ipthumb {
+  position: relative;
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.listings-grid .ipthumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.listings-grid .ipcard:hover .ipthumb img {
+  transform: scale(1.05);
+}
+
+.listings-grid .ipprice {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(168, 85, 247, 0.9);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 10;
+}
+
+.listings-grid .ipbody {
+  flex: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.listings-grid .iptitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.3;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.listings-grid .ipsub {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.listings-grid .ipmeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+}
+
+.listings-grid .ipdel,
+.listings-grid .ipstatus {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.listings-grid .ipstatus {
+  font-weight: 600;
+}
+
+.listings-grid .ipfoot {
+  padding: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.listings-grid .ipstore {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.listings-grid .ipstoreavatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.listings-grid .ipstoredetail {
+  flex: 1;
+  min-width: 0;
+}
+
+.listings-grid .ipstorename {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listings-grid .ipstorerating {
+  margin: 0;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ============ LOADING SKELETON ============ */
+.listings-skeleton {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+.skeleton-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: skeleton-loading 1s infinite;
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+  animation: skeleton-wave 1.5s infinite;
+}
+
+.skeleton-title {
+  width: 100%;
+  height: 12px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: skeleton-wave 1.5s infinite;
+}
+
+.skeleton-price {
+  width: 60%;
+  height: 14px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: skeleton-wave 1.5s infinite;
+}
+
+@keyframes skeleton-wave {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ============ EMPTY STATE ============ */
+.listings-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.empty-description {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ============ ERROR STATE ============ */
+.listings-error {
+  text-align: center;
+  padding: 60px 20px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.error-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.error-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ff6b6b;
+  margin-bottom: 8px;
+}
+
+.error-description {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 20px;
+}
+
+.error-retry-btn {
+  background: rgba(168, 85, 247, 0.8);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.error-retry-btn:hover {
+  background: rgba(168, 85, 247, 1);
+}
+
+/* ============ RESPONSIVE DESIGN ============ */
+
+/* Tablet: 2-3 sütun */
+@media (max-width: 1024px) {
+  .listings-grid,
+  .listings-skeleton {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Telefon Yatay: 2 sütun */
+@media (max-width: 768px) {
+  .listings-grid,
+  .listings-skeleton {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .listings-grid .ipthumb {
+    height: 120px;
+  }
+  
+  .listings-grid .ipbody {
+    padding: 10px;
+    gap: 6px;
+  }
+  
+  .listings-grid .iptitle {
+    font-size: 13px;
+  }
+  
+  .listings-grid .ipsub {
+    font-size: 11px;
+  }
+}
+
+/* Telefon Dikey: 1 sütun */
+@media (max-width: 480px) {
+  .listings-grid,
+  .listings-skeleton {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .listings-grid .ipthumb {
+    height: 160px;
+  }
+  
+  .listings-grid .ipbody {
+    padding: 12px;
+  }
+  
+  .listings-grid .ipfoot {
+    padding: 10px;
+  }
+  
+  /* Touch-friendly kartlar */
+  .listings-grid .ipcard {
+    border-radius: 8px;
+  }
+}
+
+/* ============ ANIMATIONS ============ */
+@keyframes skeleton-loading {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ============ ACCESSIBILITY ============ */
+@media (prefers-reduced-motion: reduce) {
+  .listings-grid .ipcard,
+  .listings-grid .ipthumb img,
+  .skeleton-item {
+    transition: none;
+    animation: none;
+  }
+}

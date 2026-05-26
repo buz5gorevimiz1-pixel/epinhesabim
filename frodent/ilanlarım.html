@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlanlarım | Premium Satıcı Paneli</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Gelişmiş Premium Tema Değişkenleri --- */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            --accent-color: #a855f7;
+            --bg-color: #030305;
+            --glass-bg: rgba(18, 18, 24, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #f43f5e;
+            --warning: #f59e0b;
+            --navbar-bg: rgba(10, 10, 14, 0.8);
+            --card-bg: rgba(30, 30, 38, 0.4);
+        }
+
+        html, body {
+            min-height: 100%;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* 3D Ritmik Arka Plan Işıltısı */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.06) 0%, transparent 40%);
+            z-index: -1;
+            animation: rotateBg 40s linear infinite;
+        }
+
+        @keyframes rotateBg {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3, th, .stats-box strong, .logo {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* --- Üst Menü Tasarımı --- */
+        .navbar {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar .logo {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .navbar a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 10px 22px;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover, .navbar a.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .navbar a.active {
+            background: var(--primary-gradient);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.25);
+        }
+
+        /* --- Ana Shell --- */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Üst Başlık Bloğu */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .header-section h1 {
+            font-size: 42px;
+            margin: 0 0 8px;
+            letter-spacing: -1px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-section p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        /* --- Premium Cam Kartlar (Glassmorphism) --- */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 30px;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+        }
+
+        /* --- İstatistik Kartları Grid Yapısı --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stats-box {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stats-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.02), transparent);
+            transform: skewX(-25deg);
+            transition: left 0.7s ease;
+        }
+
+        .stats-box:hover::before { left: 200%; }
+
+        .stats-box:hover {
+            transform: translateY(-5px);
+            border-color: rgba(168, 85, 247, 0.3);
+            box-shadow: 0 15px 35px rgba(168, 85, 247, 0.12);
+        }
+
+        .stats-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            font-size: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--accent-color);
+            transition: all 0.3s ease;
+        }
+
+        .stats-box:hover .stats-icon-wrapper {
+            background: var(--primary-gradient);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+        }
+
+        .stats-box div h3 {
+            margin: 0;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .stats-box div strong {
+            font-size: 32px;
+            color: #fff;
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* --- İlan Tablosu Tasarımı (Cyberpunk Style) --- */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 18px 24px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        td {
+            padding: 18px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            color: var(--text-muted);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+            color: #fff;
+        }
+
+        /* İlan Görseli ve Detay Grubu */
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .item-img {
+            width: 54px;
+            height: 54px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #111;
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: #fff;
+            font-size: 15px;
+            margin-bottom: 2px;
+        }
+
+        .item-category {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Durum Rozetleri */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid transparent;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.08);
+            color: var(--success);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .status-passive {
+            background: rgba(244, 63, 94, 0.08);
+            color: var(--danger);
+            border-color: rgba(244, 63, 94, 0.2);
+        }
+
+        /* İşlem Butonları */
+        .action-btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .btn-edit:hover { background: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.4); border-color: #3b82f6; }
+        .btn-toggle:hover { background: var(--warning); box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); border-color: var(--warning); }
+        .btn-delete:hover { background: var(--danger); box-shadow: 0 0 10px rgba(244, 63, 94, 0.4); border-color: var(--danger); }
+
+        /* Ana Buton Stilleri */
+        .btn {
+            padding: 12px 26px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
+        }
+
+        .btn-close {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- Gelişmiş Modal Tasarımı (Neon Formlar) --- */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 3, 5, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: grid;
+            place-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 550px;
+            max-height: 85vh;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            margin: 0;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Form Yapıları */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+        }
+
+        /* Dosya Yükleme Alanı */
+        .upload-zone {
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.01);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: var(--accent-color);
+            background: rgba(168, 85, 247, 0.04);
+        }
+
+        .upload-zone i {
+            font-size: 32px;
+            color: var(--accent-color);
+            margin-bottom: 12px;
+        }
+
+        .upload-zone p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .preview-container {
+            margin-top: 12px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .preview-img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* --- Bildirim Toast Yapısı --- */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 3000;
+        }
+
+        .toast {
+            background: rgba(15, 23, 42, 0.9);
+            color: #fff;
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar { padding: 16px 20px; flex-direction: column; gap: 16px; }
+            .header-section { flex-direction: column; align-items: flex-start; }
+            .btn { width: 100%; justify-content: center; }
+            td, th { padding: 14px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">ITEM<span style="color: #a855f7;">CI</span></div>
+        <div class="nav-links">
+            <a href="index.html">Ana Sayfa</a>
+            <a href="profilim.html">Profilim</a>
+            <a href="ilanlarım.html" class="active">İlanlarım</a>
+            <a href="#">Ayarlar</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <header class="header-section">
+            <div>
+                <h1>İlan Yönetim Merkezi</h1>
+                <p>Oyun içi varlıklarınızı, ilanlarınızı ve satış metriklerinizi buradan anlık olarak izleyin.</p>
+            </div>
+            <button class="btn btn-primary" onclick="window.location.href='ilan-olustur.html'">
+                <i class="fa-solid fa-plus"></i> Yeni İlan Oluştur
+            </button>
+        </header>
+
+        <section class="stats-grid">
+            <div class="glass-card stats-box">
+                <div class="stats-icon-wrapper"><i class="fa-solid fa-layer-group"></i></div>
+                <div>
+                    <h3>Toplam İlan</h3>
+                    <strong id="totalItemsCount">0</strong>
+                </div>
+            </div>
+            <div class="glass-card stats-box">
+                <div class="stats-icon-wrapper" style="color: var(--success);"><i class="fa-solid fa-circle-check"></i></div>
+                <div>
+                    <h3>Aktif Pazar</h3>
+                    <strong id="activeItemsCount" style="color: var(--success);">0</strong>
+                </div>
+            </div>
+            <div class="glass-card stats-box">
+                <div class="stats-icon-wrapper" style="color: var(--danger);"><i class="fa-solid fa-circle-minus"></i></div>
+                <div>
+                    <h3>Pasif / Yayında Değil</h3>
+                    <strong id="passiveItemsCount" style="color: var(--danger);">0</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card" style="padding: 20px;">
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ürün Bilgisi</th>
+                            <th>Kategori</th>
+                            <th>Fiyat</th>
+                            <th>Stok</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listingsTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div id="addModal" class="modal">
+        <div class="glass-card modal-content">
+            <div class="modal-header">
+                <h2>Yeni İlan Oluştur</h2>
+                <button class="action-btn" onclick="closeModal('addModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="addListingForm" onsubmit="saveNewListing(event)">
+                <div class="form-group">
+                    <label>İlan Başlığı</label>
+                    <input type="text" id="addTitle" required placeholder="Örn: 5400 VALORANT VP Kaçırılmayacak Fiyat">
+                </div>
+                <div class="form-group">
+                    <label>Oyun / Kategori</label>
+                    <select id="addCategory" required>
+                        <option value="Valorant">Valorant</option>
+                        <option value="League of Legends">League of Legends</option>
+                        <option value="Steam">Steam</option>
+                        <option value="CS:GO / CS2">CS:GO / CS2</option>
+                        <option value="Diğer">Diğer</option>
+                    </select>
+                </div>
+                <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label>Fiyat (₺)</label>
+                        <input type="number" id="addPrice" step="0.01" required placeholder="0.00">
+                    </div>
+                    <div>
+                        <label>Stok Adeti</label>
+                        <input type="number" id="addStock" required placeholder="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Ürün Görseli</label>
+                    <div class="upload-zone" id="addUploadZone" onclick="document.getElementById('addImageFile').click()">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <p>Görseli buraya sürükleyin veya tıklayarak seçin</p>
+                        <input type="file" id="addImageFile" accept="image/*" style="display: none;" onchange="handleFile(this, 'add')">
+                    </div>
+                    <div class="preview-container" id="addPreviewContainer"></div>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;">
+                    <button type="button" class="btn btn-close" onclick="closeModal('addModal')">İptal</button>
+                    <button type="submit" class="btn btn-primary">İlanı Yayınla</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="glass-card modal-content">
+            <div class="modal-header">
+                <h2>İlanı Düzenle</h2>
+                <button class="action-btn" onclick="closeModal('editModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="editListingForm" onsubmit="saveEditListing(event)">
+                <input type="hidden" id="editListingId">
+                <div class="form-group">
+                    <label>İlan Başlığı</label>
+                    <input type="text" id="editTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Oyun / Kategori</label>
+                    <select id="editCategory" required>
+                        <option value="Valorant">Valorant</option>
+                        <option value="League of Legends">League of Legends</option>
+                        <option value="Steam">Steam</option>
+                        <option value="CS:GO / CS2">CS:GO / CS2</option>
+                        <option value="Diğer">Diğer</option>
+                    </select>
+                </div>
+                <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label>Fiyat (₺)</label>
+                        <input type="number" id="editPrice" step="0.01" required>
+                    </div>
+                    <div>
+                        <label>Stok Adeti</label>
+                        <input type="number" id="editStock" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Ürün Görseli (Değiştirmek istemiyorsanız boş bırakın)</label>
+                    <div class="upload-zone" id="editUploadZone" onclick="document.getElementById('editImageFile').click()">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <p>Yeni görsel seçmek için tıklayın veya sürükleyin</p>
+                        <input type="file" id="editImageFile" accept="image/*" style="display: none;" onchange="handleFile(this, 'edit')">
+                    </div>
+                    <div class="preview-container" id="editPreviewContainer"></div>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;">
+                    <button type="button" class="btn btn-close" onclick="closeModal('editModal')">Vazgeç</button>
+                    <button type="submit" class="btn btn-primary">Değişiklikleri Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script>
+        let listings = [];
+        let currentBase64Image = "";
+
+        // Örnek Başlangıç Verileri (Eğer localStorage boşsa)
+        const defaultListings = [
+            { id: "1", title: "Valorant 2500 VP - Anında Teslim", category: "Valorant", price: 240.00, stock: 15, status: "active", image: "" },
+            { id: "2", title: "League of Legends 10'lu Kutu Hesabı", category: "League of Legends", price: 120.50, stock: 3, status: "passive", image: "" }
+        ];
+
+        async function loadListings() {
+            const userRaw = localStorage.getItem('user');
+            if (!userRaw) {
+                const tbody = document.getElementById('listingsTableBody');
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 40px; color: var(--text-muted); font-size:15px;">
+                    <i class="fa-solid fa-user-lock" style="display:block; font-size:32px; margin-bottom:10px; color: var(--accent-color);"></i>İlanlarınızı görmek için lütfen giriş yapın.</td></tr>`;
+                updateStats();
+                return;
+            }
+
+            let user;
+            try {
+                user = JSON.parse(userRaw);
+            } catch (e) {
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const sellerId = user.id || user._id;
+            if (!sellerId) {
+                showToast("Kullanıcı bilgisi eksik.", "error");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/my-products/${sellerId}`);
+                if (!response.ok) throw new Error('Veri alınamadı');
+                listings = await response.json();
+                renderTable();
+                updateStats();
+            } catch (err) {
+                console.error('İlanlar yüklenirken hata:', err);
+                showToast("İlanlar yüklenirken bir hata oluştu.", "error");
+                const tbody = document.getElementById('listingsTableBody');
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 40px; color: var(--text-muted); font-size:15px;">
+                    <i class="fa-solid fa-triangle-exclamation" style="display:block; font-size:32px; margin-bottom:10px; color: var(--danger);"></i>İlanlar yüklenemedi.</td></tr>`;
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('totalItemsCount').textContent = listings.length;
+            document.getElementById('activeItemsCount').textContent = listings.filter(item => item.status === 'approved' && item.saleStatus === 'available').length;
+            document.getElementById('passiveItemsCount').textContent = listings.filter(item => item.status !== 'approved' || item.saleStatus !== 'available').length;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('listingsTableBody');
+            tbody.innerHTML = "";
+
+            if(listings.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 40px; color: var(--text-muted); font-size:15px;">
+                    <i class="fa-solid fa-folder-open" style="display:block; font-size:32px; margin-bottom:10px; color: var(--accent-color);"></i>Henüz bir ilan paylaşmadınız.</td></tr>`;
+                return;
+            }
+
+            listings.forEach(item => {
+                const tr = document.createElement('tr');
+                
+                let imgSrc = "https://via.placeholder.com/100/1a1a24/a855f7?text=ITEM";
+                if (item.image) {
+                    if (item.image.startsWith('data:') || item.image.startsWith('http')) {
+                        imgSrc = item.image;
+                    } else if (item.image.startsWith('/')) {
+                        imgSrc = item.image;
+                    } else {
+                        imgSrc = '/' + item.image;
+                    }
+                }
+                
+                const dbStatus = item.status || 'pending';
+                const saleStatus = item.saleStatus || 'available';
+                
+                let statusClass = 'status-passive';
+                let statusText = 'Beklemede';
+                
+                if (dbStatus === 'approved') {
+                    if (saleStatus === 'available') {
+                        statusClass = 'status-active';
+                        statusText = 'Aktif';
+                    } else {
+                        statusClass = 'status-passive';
+                        statusText = 'Satıldı - Teslimat Bekleniyor';
+                    }
+                } else if (dbStatus === 'rejected') {
+                    statusClass = 'status-passive';
+                    statusText = 'Reddedildi';
+                }
+                
+                const stockText = item.stock ? `${item.stock} Adet` : (saleStatus === 'sold' ? 'Tükendi' : 'Belirtilmemiş');
+                const itemId = item.id || item._id;
+
+                tr.innerHTML = `
+                    <td>
+                        <div class="item-info">
+                            <img src="${imgSrc}" class="item-img" alt="item" onerror="this.src='https://via.placeholder.com/100/1a1a24/a855f7?text=ITEM'">
+                            <div>
+                                <div class="item-title">${escapeHtml(item.title)}</div>
+                                <div class="item-category">ID: #${itemId}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span style="color:#fff; font-weight:500;">${item.category || 'Genel'}</span></td>
+                    <td><span style="color: var(--success); font-weight: 700;">₺${parseFloat(item.price).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></td>
+                    <td><span style="font-weight: 600;">${stockText}</span></td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <div class="action-btn-group">
+                            <button class="action-btn btn-edit" title="Detayları Gör" onclick="window.open('ilan-detay.html?id=${itemId}', '_blank')"><i class="fa-solid fa-eye"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+            currentBase64Image = ""; 
+            if(id === 'addModal') {
+                document.getElementById('addListingForm').reset();
+                document.getElementById('addPreviewContainer').innerHTML = "";
+            }
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function handleFile(input, mode) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentBase64Image = e.target.result;
+                const container = document.getElementById(`${mode}PreviewContainer`);
+                container.innerHTML = `<img src="${currentBase64Image}" class="preview-img" alt="Önizleme">`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveNewListing(e) {
+            e.preventDefault();
+            showToast("Yeni ilan ekleme ilan-olustur.html üzerinden yapılmalıdır.", "info");
+            closeModal('addModal');
+            setTimeout(() => { window.location.href = 'ilan-olustur.html'; }, 800);
+        }
+
+        function openEditModal(id) {
+            showToast("Düzenleme özelliği yakında aktif olacaktır.", "info");
+        }
+
+        function saveEditListing(e) {
+            e.preventDefault();
+            showToast("Düzenleme özelliği yakında aktif olacaktır.", "info");
+            closeModal('editModal');
+        }
+
+        function toggleStatus(id) {
+            showToast("Durum değiştirme özelliği yakında aktif olacaktır.", "info");
+        }
+
+        function deleteListing(id) {
+            showToast("Silme özelliği yakında aktif olacaktır.", "info");
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            if(!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            
+            let color = 'var(--accent-color)';
+            let icon = '<i class="fa-solid fa-circle-info"></i>';
+            
+            if (type === 'success') { color = 'var(--success)'; icon = '<i class="fa-solid fa-circle-check"></i>'; }
+            if (type === 'error') { color = 'var(--danger)'; icon = '<i class="fa-solid fa-triangle-exclamation"></i>'; }
+            
+            toast.style.borderLeftColor = color;
+            toast.innerHTML = `${icon} <span style="margin-left: 8px;">${message}</span>`;
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(0)';
+            });
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        // Sürükle Bırak Eventleri (Mimarisi korundu, tasarımsal sınıf bağlandı)
+        ['addUploadZone', 'editUploadZone'].forEach(id => {
+            const zone = document.getElementById(id);
+            if(!zone) return;
+            zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+            zone.addEventListener('dragleave', (e) => { e.preventDefault(); zone.classList.remove('dragover'); });
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault(); zone.classList.remove('dragover');
+                const fileInputId = id === 'addUploadZone' ? 'addImageFile' : 'editImageFile';
+                const input = document.getElementById(fileInputId);
+                if (e.dataTransfer.files.length > 0) {
+                    input.files = e.dataTransfer.files;
+                    handleFile(input, id === 'addUploadZone' ? 'add' : 'edit');
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', loadListings);
+    </script>
+</body>
+</html>

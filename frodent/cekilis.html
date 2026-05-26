@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Çekilişler - Epin Hesabım</title>
+    <link rel="icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+
+    <style>
+        /* Global & Tema Uyumluluğu */
+        * { font-family: 'Poppins', sans-serif; box-sizing: border-box; }
+        body {
+            overflow-x: hidden !important;
+            min-height: 100vh;
+            background-image: linear-gradient(180deg, rgba(8, 12, 26, 0.4), rgba(8, 12, 26, 0.5)), url('assets/arkaplan.png');
+            background-repeat: no-repeat, repeat;
+            background-size: cover, 900px auto;
+            background-attachment: fixed;
+            background-position: center;
+            color: #e8e8f0;
+            margin: 0;
+        }
+
+        /* Entegre Üst Menü (Navbar) Tasarımı */
+        .frontend-header {
+            background: rgba(13, 16, 36, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #fff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo-subtitle {
+            font-size: 10px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Sağ Taraf: Tema ve Oturum Alanı */
+        .header-right-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Gece - Gündüz Modu Butonu */
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #f1be04;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: scale(1.05);
+            box-shadow: 0 0 12px rgba(241, 190, 4, 0.2);
+        }
+
+        /* Giriş Yap & Kayıt Ol Butonları */
+        .auth-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-login {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-login:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+        .btn-register {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border: none;
+            color: #fff;
+            padding: 11px 22px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+        }
+        .btn-register:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
+        }
+
+        /* Ana Çekiliş İstasyonu Paneli */
+        main {
+            background: rgba(9, 11, 26, 0.65) !important;
+            backdrop-filter: blur(14px) !important;
+            -webkit-backdrop-filter: blur(14px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            border-radius: 24px;
+            padding: 40px 24px;
+            margin: 40px auto;
+            max-width: 1400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        /* Premium Kahraman Banner Alanı */
+        .giveaway-hero {
+            position: relative;
+            background: linear-gradient(135deg, rgba(24, 12, 50, 0.85), rgba(139, 92, 246, 0.25));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: inset 0 0 30px rgba(139, 92, 246, 0.2), 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .giveaway-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 60%);
+            animation: pulseBg 8s infinite linear;
+            pointer-events: none;
+        }
+        @keyframes pulseBg {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-10%, -10%) rotate(180deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+        .hero-info h1 {
+            font-size: 36px; font-weight: 800; margin: 0 0 10px 0;
+            background: linear-gradient(135deg, #fff, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero-info p { color: rgba(232, 232, 240, 0.7); margin: 0; font-size: 15px; }
+
+        .hero-stats { display: flex; gap: 16px; }
+        .stat-box {
+            background: rgba(18, 20, 32, 0.75);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px; padding: 16px 24px; text-align: center;
+            min-width: 130px; backdrop-filter: blur(6px);
+        }
+        .stat-box .count { font-size: 24px; font-weight: 700; color: #ec4899; display: block; }
+        .stat-box .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #9ca3af; }
+
+        /* Filtreler Grubu */
+        .filter-wrapper {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px; gap: 15px; flex-wrap: wrap;
+        }
+        .filter-pills {
+            display: flex; background: rgba(18, 20, 32, 0.8); padding: 6px;
+            border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .filter-btn {
+            background: transparent; border: none; color: #9ca3af; padding: 10px 20px;
+            font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .filter-btn.active {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899); color: #fff;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Çekiliş Grid Sistemi */
+        .giveaway-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px;
+        }
+
+        /* Premium Çekiliş Kartı */
+        .giveaway-card {
+            position: relative; background: rgba(24, 27, 51, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 20px;
+            overflow: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; flex-direction: column; height: 100%;
+        }
+        .giveaway-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15);
+        }
+
+        /* Mega Çekiliş Sınır Işığı */
+        .giveaway-card.featured::after {
+            content: ''; position: absolute; inset: 0; border-radius: 20px;
+            padding: 2px; background: linear-gradient(135deg, #8b5cf6, #ec4899, #3b82f6, #8b5cf6);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            pointer-events: none; z-index: 2; opacity: 0.8;
+        }
+        
+        .card-banner { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+        .card-banner img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .giveaway-card:hover .card-banner img { transform: scale(1.06); }
+        
+        .badge-layer {
+            position: absolute; top: 12px; left: 12px; right: 12px;
+            display: flex; justify-content: space-between; align-items: center; z-index: 3;
+        }
+        .badge-status {
+            padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700;
+            letter-spacing: 0.5px; text-transform: uppercase; backdrop-filter: blur(8px);
+        }
+        .badge-status.active { background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; }
+        .badge-status.ended { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #f87171; }
+        
+        .badge-type {
+            background: rgba(241, 190, 4, 0.2); border: 1px solid #f1be04; color: #fbbf24;
+            padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700;
+        }
+
+        .card-body { padding: 24px; display: flex; flex-direction: column; flex-grow: 1; position: relative; }
+        .card-title { font-size: 18px; font-weight: 700; margin: 0 0 12px 0; color: #fff; line-height: 1.4; }
+        
+        /* Geri Sayım Kutusu */
+        .timer-row {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+            background: rgba(13, 16, 36, 0.5); padding: 10px; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.04); margin-bottom: 20px; text-align: center;
+        }
+        .timer-unit .num { font-size: 16px; font-weight: 700; color: #fff; display: block; }
+        .timer-unit .lbl { font-size: 9px; color: #9ca3af; text-transform: uppercase; }
+
+        /* İlerleme Çubuğu */
+        .progress-container { margin-bottom: 20px; }
+        .progress-meta { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; color: #9ca3af; }
+        .progress-meta strong { color: #fff; }
+        .progress-bar-bg { background: rgba(255,255,255,0.05); height: 8px; border-radius: 999px; overflow: hidden; position: relative; }
+        .progress-bar-fill {
+            height: 100%; width: 0%; 
+            background: linear-gradient(90deg, #8b5cf6, #ec4899);
+            border-radius: 999px; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        .progress-bar-fill::after {
+            content: ''; position: absolute; top:0; left:0; right:0; bottom:0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+        .btn-action {
+            width: 100%; border: none; padding: 14px; border-radius: 12px; font-size: 14px;
+            font-weight: 700; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; gap: 8px; transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .btn-action.join-style {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+            border: 1px solid rgba(139, 92, 246, 0.4); color: #fff;
+        }
+        .btn-action.join-style:hover {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+            transform: scale(1.02);
+        }
+        .btn-action.disabled-style {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.05); color: #6b7280; cursor: not-allowed;
+        }
+
+        /* Son Kazananlar Şeridi */
+        .winners-marquee-box {
+            background: rgba(18, 20, 32, 0.8); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px; padding: 15px; margin-top: 40px; overflow: hidden;
+            display: flex; align-items: center; gap: 20px;
+        }
+        .marquee-title {
+            font-size: 13px; font-weight: 700; color: #f1be04; display: flex; align-items: center;
+            gap: 6px; white-space: nowrap; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 20px;
+        }
+        .marquee-container { overflow: hidden; width: 100%; position: relative; display: flex; }
+        .marquee-content { display: flex; gap: 30px; animation: ticker 25s infinite linear; white-space: nowrap; }
+        .marquee-content:hover { animation-play-state: paused; }
+        .winner-pill { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.8); }
+        .winner-pill i { color: #34d399; }
+        .winner-pill strong { color: #fff; }
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+
+        .confetti-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        @media(max-width: 768px) {
+            .header-content { flex-direction: column; gap: 15px; text-align: center; }
+            .giveaway-hero { flex-direction: column; text-align: center; gap: 20px; padding: 24px; }
+            .hero-stats { width: 100%; justify-content: center; }
+            main { padding: 20px 14px; margin: 20px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="frontend-header">
+        <div class="header-content">
+            <a href="index.html" class="logo-section">
+                <span class="logo">Epin Hesabım</span>
+                <span class="logo-subtitle">Güvenli Alışverişin Adresi</span>
+            </a>
+
+            <div class="header-right-actions">
+                <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()" title="Temayı Değiştir">
+                    <i class="ri-moon-line" id="themeIcon"></i>
+                </button>
+
+                <div class="auth-buttons">
+                    <button class="btn-login" onclick="window.location.href='login.html'">
+                        <i class="fas fa-sign-in-alt"></i><span>Giriş Yap</span>
+                    </button>
+                    <button class="btn-register" onclick="window.location.href='register.html'">
+                        <i class="fas fa-user-plus"></i><span>Kayıt Ol</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" style="max-width: 1400px; margin: 0 auto; padding: 0 20px;">
+        <main>
+            <div class="giveaway-hero">
+                <div class="hero-info">
+                    <h1>Şansını Katla, Ödülleri Topla!</h1>
+                    <p>Platform üyelerine özel, her hafta binlerce VP, UC ve E-pin ödülleri ücretsiz dağıtılıyor.</p>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-box">
+                        <span class="count">2</span>
+                        <span class="label">Aktif Çekiliş</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="count" style="color:#8b5cf6;">372</span>
+                        <span class="label">Toplam Katılım</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-wrapper">
+                <div class="filter-pills">
+                    <button class="filter-btn active" onclick="filterGiveaways('all', this)">Tüm Çekilişler</button>
+                    <button class="filter-btn" onclick="filterGiveaways('active', this)">Aktif</button>
+                    <button class="filter-btn" onclick="filterGiveaways('ended', this)">Sonuçlananlar</button>
+                </div>
+                <div style="font-size: 13px; color: #9ca3af; background: rgba(255,255,255,0.03); padding: 8px 16px; border-radius: 8px; border:1px solid rgba(255,255,255,0.05)">
+                    <i class="fas fa-shield-alt" style="color:#f1be04"></i> Çekilişler adil ve şeffaf olarak yapılmaktadır.
+                </div>
+            </div>
+
+            <div class="giveaway-grid">
+                
+                <div class="giveaway-card featured" data-status="active">
+                    <div class="card-banner">
+                        <div class="badge-layer">
+                            <span class="badge-status active">Aktif Çekiliş</span>
+                            <span class="badge-type"><i class="fas fa-crown"></i> Mega Ödül</span>
+                        </div>
+                        <img src="assets/uploads/servers/vlrnt09583961-9dab-.png" alt="Valorant VP">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">5 Adet Valorant 5400 VP E-Pin Ödüllü Büyük Sezon Çekilişi</h3>
+                        
+                        <div class="timer-row" data-countdown="2026-06-01T20:00:00">
+                            <div class="timer-unit"><span class="num" id="d-1">00</span><span class="lbl">Gün</span></div>
+                            <div class="timer-unit"><span class="num" id="h-1">00</span><span class="lbl">Saat</span></div>
+                            <div class="timer-unit"><span class="num" id="m-1">00</span><span class="lbl">Dk</span></div>
+                            <div class="timer-unit"><span class="num" id="s-1">00</span><span class="lbl">Sn</span></div>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-meta">
+                                <span>Katılımcı Sayısı</span>
+                                <span><strong id="slots-current-1">3.420</strong> / 5.000 Bilet</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: 68.4%;"></div>
+                            </div>
+                        </div>
+
+                        <button class="btn-action join-style" onclick="joinGiveaway(this, '1')">
+                            <i class="fas fa-ticket-alt"></i> <span>Çekilişe Katıl</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="giveaway-card" data-status="active">
+                    <div class="card-banner">
+                        <div class="badge-layer">
+                            <span class="badge-status active">Aktif Çekiliş</span>
+                            <span class="badge-type" style="background:rgba(236,72,153,0.2); border-color:#ec4899; color:#f472b6;"><i class="fas fa-bolt"></i> Popüler</span>
+                        </div>
+                        <img src="assets/uploads/servers/pbguc3dca31a6-c1de-.png" alt="PUBG Mobile UC">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">3 Adet PUBG Mobile 3800 UC Ödüllü Haftalık Fırsat Çekilişi</h3>
+                        
+                        <div class="timer-row" data-countdown="2026-05-28T18:00:00">
+                            <div class="timer-unit"><span class="num" id="d-2">00</span><span class="lbl">Gün</span></div>
+                            <div class="timer-unit"><span class="num" id="h-2">00</span><span class="lbl">Saat</span></div>
+                            <div class="timer-unit"><span class="num" id="m-2">00</span><span class="lbl">Dk</span></div>
+                            <div class="timer-unit"><span class="num" id="s-2">00</span><span class="lbl">Sn</span></div>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-meta">
+                                <span>Katılımcı Sayısı</span>
+                                <span><strong>1.102</strong> / 2.000 Bilet</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: 55.1%;"></div>
+                            </div>
+                        </div>
+
+                        <button class="btn-action join-style" onclick="joinGiveaway(this, '2')">
+                            <i class="fas fa-ticket-alt"></i> <span>Çekilişe Katıl</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="giveaway-card" data-status="ended">
+                    <div class="card-banner" style="filter: grayscale(0.4);">
+                        <div class="badge-layer">
+                            <span class="badge-status ended">Sonuçlandı</span>
+                        </div>
+                        <img src="assets/uploads/servers/vlrtne8bd876e1-097d-.png" alt="Valorant 2400 VP">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">4 Adet Valorant 2400 VP E-Pin Ödüllü Gece Çekilişi</h3>
+                        
+                        <div class="timer-row" style="background: rgba(239,68,68,0.05); border-color: rgba(239,68,68,0.15);">
+                            <div class="timer-unit" style="grid-column: span 4; color: #f87171; font-weight:600; font-size:13px;">
+                                <i class="fas fa-calendar-check"></i> Çekiliş Sonuçlandı ve Kodlar Teslim Edildi
+                            </div>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-meta">
+                                <span>Toplam Katılımcı</span>
+                                <span><strong>4.500 / 4.500</strong></span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: 100%; background: #ef4444;"></div>
+                            </div>
+                        </div>
+
+                        <button class="btn-action disabled-style" disabled>
+                            <i class="fas fa-trophy" style="color:#f1be04"></i> <span>Kazananlar: @XenonTr ve 3 Kişi</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="winners-marquee-box">
+                <div class="marquee-title">
+                    <i class="fas fa-circle" style="color:#10b981; font-size:9px; animation: blink 1s infinite;"></i> Son Kazananlar
+                </div>
+                <div class="marquee-container">
+                    <div class="marquee-content">
+                        <div class="winner-pill"><i class="fas fa-trophy"></i> <strong>@VolkanX</strong> - 5400 VP Kazandı</div>
+                        <div class="winner-pill"><i class="fas fa-trophy"></i> <strong>@GamerGirl99</strong> - 3800 UC Kazandı</div>
+                        <div class="winner-pill"><i class="fas fa-trophy"></i> <strong>@CrewMaster</strong> - 2400 VP Kazandı</div>
+                        <div class="winner-pill"><i class="fas fa-trophy"></i> <strong>@Aslan_1905</strong> - PUBG Mobile 660 UC Kazandı</div>
+                        <div class="winner-pill"><i class="fas fa-trophy"></i> <strong>@XenonTr</strong> - 2400 VP Kazandı</div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <canvas id="confetti" class="confetti-canvas"></canvas>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initCountdowns();
+            
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            updateThemeIcon(currentTheme);
+        });
+
+        // Gece / Gündüz Geçiş Motoru
+        function toggleTheme() {
+            const html = document.documentElement;
+            let targetTheme = 'dark';
+            
+            if (html.getAttribute('data-theme') === 'dark') {
+                targetTheme = 'light';
+            }
+            
+            html.setAttribute('data-theme', targetTheme);
+            localStorage.setItem('theme', targetTheme);
+            updateThemeIcon(targetTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            if (theme === 'light') {
+                icon.className = 'ri-sun-line';
+                document.getElementById('themeToggle').style.color = '#ff9800';
+            } else {
+                icon.className = 'ri-moon-line';
+                document.getElementById('themeToggle').style.color = '#f1be04';
+            }
+        }
+
+        // Sayaç Motoru
+        function initCountdowns() {
+            const timers = document.querySelectorAll('[data-countdown]');
+            timers.forEach((timer) => {
+                const countdownDate = new Date(timer.getAttribute('data-countdown')).getTime();
+                const dText = timer.querySelector('.timer-unit:nth-child(1) .num');
+                const hText = timer.querySelector('.timer-unit:nth-child(2) .num');
+                const mText = timer.querySelector('.timer-unit:nth-child(3) .num');
+                const sText = timer.querySelector('.timer-unit:nth-child(4) .num');
+
+                const interval = setInterval(() => {
+                    const now = new Date().getTime();
+                    const distance = countdownDate - now;
+
+                    if (distance < 0) {
+                        clearInterval(interval);
+                        timer.innerHTML = `<div class="timer-unit" style="grid-column: span 4; color: #9ca3af;">Süre Tamamlandı!</div>`;
+                        return;
+                    }
+
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    dText.innerText = days < 10 ? '0' + days : days;
+                    hText.innerText = hours < 10 ? '0' + hours : hours;
+                    mText.innerText = minutes < 10 ? '0' + minutes : minutes;
+                    sText.innerText = seconds < 10 ? '0' + seconds : seconds;
+                }, 1000);
+            });
+        }
+
+        // Filtreleme
+        function filterGiveaways(status, element) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+
+            const cards = document.querySelectorAll('.giveaway-card');
+            cards.forEach(card => {
+                if (status === 'all') {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = card.getAttribute('data-status') === status ? 'flex' : 'none';
+                }
+            });
+        }
+
+        // Bilet Katılımı ve Konfeti Tetikleyici
+        function joinGiveaway(btn, id) {
+            if(btn.classList.contains('joined')) return;
+
+            btn.style.pointerEvents = 'none';
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>Bilet Alınıyor...</span>`;
+
+            setTimeout(() => {
+                btn.innerHTML = `<i class="fas fa-check-circle" style="color:#34d399"></i> <span>Katıldınız!</span>`;
+                btn.className = 'btn-action disabled-style joined';
+                
+                const countEl = document.getElementById(`slots-current-${id}`);
+                if (countEl) {
+                    let val = parseInt(countEl.innerText.replace('.',''));
+                    val += 1;
+                    countEl.innerText = val.toLocaleString('tr-TR');
+                }
+                fireConfetti();
+            }, 1000);
+        }
+
+        // Konfeti Motoru
+        function fireConfetti() {
+            const canvas = document.getElementById('confetti');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let particles = [];
+            const colors = ['#8b5cf6', '#ec4899', '#3b82f6', '#f1be04', '#10b981'];
+
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: canvas.height + Math.random() * 20,
+                    r: Math.random() * 6 + 4,
+                    d: Math.random() * canvas.height,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    tilt: Math.random() * 10 - 5,
+                    tiltAngleIncremental: Math.random() * 0.07 + 0.02,
+                    tiltAngle: 0
+                });
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((p, index) => {
+                    p.tiltAngle += p.tiltAngleIncremental;
+                    p.y -= (Math.cos(p.tiltAngle) + 3 + p.r / 2) / 2;
+                    p.x += Math.sin(p.tiltAngle);
+                    p.tilt = Math.sin(p.tiltAngle - index / 3) * 15;
+
+                    ctx.beginPath();
+                    ctx.lineWidth = p.r;
+                    ctx.strokeStyle = p.color;
+                    ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+                    ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+                    ctx.stroke();
+                });
+
+                particles = particles.filter(p => p.y > -20);
+                if (particles.length > 0) requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        /* --- OTURUM YÖNETİMİ --- */
+        function renderAuthButtons() {
+            const authContainer = document.querySelector('.auth-buttons');
+            if (!authContainer) return;
+            const userRaw = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            if (userRaw && token) {
+                try {
+                    const user = JSON.parse(userRaw);
+                    const username = user.username || 'Kullanıcı';
+                    const balance = parseFloat(user.balance || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    authContainer.innerHTML = `
+                        <div class="user-logged" style="display:flex;align-items:center;gap:12px;color:#fff;">
+                            <span style="font-weight:600;font-size:14px;">${username}</span>
+                            <span style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);padding:6px 12px;border-radius:8px;font-size:13px;font-weight:700;">₺${balance}</span>
+                            <button class="btn-login" onclick="logoutUser()" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.4);color:#f87171;"><i class="fas fa-sign-out-alt"></i><span>Çıkış</span></button>
+                        </div>
+                    `;
+                } catch (e) {
+                    authContainer.innerHTML = `
+                        <button class="btn-login" onclick="window.location.href='login.html'"><i class="fas fa-sign-in-alt"></i><span>Giriş Yap</span></button>
+                        <button class="btn-register" onclick="window.location.href='register.html'"><i class="fas fa-user-plus"></i><span>Kayıt Ol</span></button>
+                    `;
+                }
+            } else {
+                authContainer.innerHTML = `
+                    <button class="btn-login" onclick="window.location.href='login.html'"><i class="fas fa-sign-in-alt"></i><span>Giriş Yap</span></button>
+                    <button class="btn-register" onclick="window.location.href='register.html'"><i class="fas fa-user-plus"></i><span>Kayıt Ol</span></button>
+                `;
+            }
+        }
+        function logoutUser() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            renderAuthButtons();
+            window.location.reload();
+        }
+        window.addEventListener('storage', renderAuthButtons);
+        document.addEventListener('DOMContentLoaded', renderAuthButtons);
+    </script>
+</body>
+</html>

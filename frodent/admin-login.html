@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITEMCI Admin Girişi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #070816;
+            --surface: #121520;
+            --surface-glass: rgba(18, 21, 32, 0.85);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        html, body { height: 100%; }
+        body {
+            background: var(--bg);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        /* Background glow */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -10%; left: -10%;
+            width: 50%; height: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15), transparent 60%);
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: absolute;
+            bottom: -10%; right: -10%;
+            width: 50%; height: 50%;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.1), transparent 60%);
+            z-index: 0;
+        }
+        .login-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 440px;
+            padding: 0 20px;
+        }
+        .login-card {
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px 36px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+        }
+        .logo-area {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .logo-area h1 {
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .logo-area p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0 16px;
+            height: 54px;
+            transition: border-color 0.3s;
+        }
+        .input-wrapper:focus-within {
+            border-color: var(--primary);
+        }
+        .input-wrapper i {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-right: 12px;
+        }
+        .input-wrapper input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text-color);
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .input-wrapper input::placeholder {
+            color: rgba(148, 163, 184, 0.5);
+        }
+        .toggle-password {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px;
+        }
+        .toggle-password:hover { color: var(--text-color); }
+
+        .login-btn {
+            width: 100%;
+            height: 52px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s, box-shadow 0.3s;
+            margin-top: 8px;
+        }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .login-btn .spinner {
+            width: 20px; height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error-msg {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            margin-top: 16px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+        .error-msg.show { display: flex; }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--text-color); }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px; right: 20px;
+            z-index: 10000;
+            background: var(--surface-glass);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary);
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            max-width: 400px;
+            animation: slideIn 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .notification.success { border-left-color: var(--success); }
+        .notification.error { border-left-color: var(--danger); }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (max-width: 480px) {
+            .login-card { padding: 32px 24px; }
+            .logo-area h1 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo-area">
+                <h1><i class="fas fa-shield-alt" style="margin-right:8px;"></i>ITEMCI ADMIN</h1>
+                <p>Yönetici paneline giriş yapın</p>
+            </div>
+
+            <form id="loginForm" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="identifier">E-posta veya Kullanıcı Adı</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="text" id="identifier" placeholder="admin@example.com" autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Şifre</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+                        <button type="button" class="toggle-password" onclick="togglePassword()">
+                            <i class="fas fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn" id="loginBtn" onclick="handleLogin()">
+                    <span id="btnText">Giriş Yap</span>
+                </button>
+
+                <div class="error-msg" id="errorMsg">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorText"></span>
+                </div>
+            </form>
+
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Ana Sayfaya Dön
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Eğer zaten admin token varsa dashboard'a yönlendir
+        (function checkExistingAuth() {
+            const adminToken = localStorage.getItem('adminToken');
+            if (adminToken) {
+                fetch('http://localhost:3000/api/auth/me', {
+                    headers: { 'Authorization': 'Bearer ' + adminToken }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data && (data.role === 'admin' || data.role === 'super_admin')) {
+                        window.location.href = 'admin-dashboard2.html';
+                    } else {
+                        localStorage.removeItem('adminToken');
+                    }
+                })
+                .catch(() => { localStorage.removeItem('adminToken'); });
+            }
+        })();
+
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            document.getElementById('errorText').textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 5000);
+        }
+
+        async function handleLogin() {
+            const identifier = document.getElementById('identifier').value.trim();
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+
+            if (!identifier) { showError('E-posta veya kullanıcı adı girin.'); return; }
+            if (!password) { showError('Şifre girin.'); return; }
+
+            btn.disabled = true;
+            btnText.innerHTML = '<div class="spinner"></div>';
+
+            try {
+                const response = await fetch('http://localhost:3000/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ identifier, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showError(data.error || 'Giriş başarısız.');
+                    btn.disabled = false;
+                    btnText.textContent = 'Giriş Yap';
+                    return;
+                }
+
+                // Admin token'i ayri key'de sakla (normal site token'iyle karismasin)
+                localStorage.setItem('adminToken', data.token);
+
+                // Başarı bildirimi
+                const notif = document.createElement('div');
+                notif.className = 'notification success';
+                notif.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success);font-size:20px;"></i><div><strong>Başarılı</strong><p style="font-size:13px;margin-top:2px;">Yönetici paneline yönlendiriliyorsunuz...</p></div>';
+                document.body.appendChild(notif);
+
+                setTimeout(() => {
+                    window.location.href = 'admin-dashboard2.html';
+                }, 800);
+
+            } catch (err) {
+                showError('Sunucuya bağlanılamadı. Lütfen backendin çalıştığından emin olun.');
+                btn.disabled = false;
+                btnText.textContent = 'Giriş Yap';
+            }
+        }
+
+        // Enter tuşu desteği
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleLogin();
+        });
+        document.getElementById('identifier').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleLogin();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bakiye Ekle - Premium Wallet Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- Gelişmiş Premium Siber Tema Değişkenleri --- */
+        :root {
+            --primary-purple: #8b5cf6;   /* Dijital Amiral Mor */
+            --primary-hover: #a78bfa;    /* Parlak Plazma Mor */
+            --light-purple: rgba(139, 92, 246, 0.15); 
+            --bg-gray: #030306;          /* Uzay Siyahı */
+            --card-bg: rgba(18, 18, 26, 0.65); /* Transparan Cam Paneli */
+            --input-bg: rgba(0, 0, 0, 0.4);       
+            --text-dark: #ffffff;        
+            --text-muted: #94a3b8;       
+            --border-gray: rgba(255, 255, 255, 0.06);   
+            --input-focus: #a855f7;
+            --success-glow: #10b981;
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            --shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            --accent-glow: rgba(168, 85, 247, 0.35);
+        }
+
+        /* Gündüz Modu (Light Mode) */
+        body.light-mode {
+            --bg-gray: #f1f5f9;
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --input-bg: rgba(255, 255, 255, 0.7);
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-gray: rgba(0, 0, 0, 0.08);
+            --light-purple: rgba(109, 40, 217, 0.08);
+            --shadow: 0 20px 45px rgba(0, 0, 0, 0.06);
+            --primary-purple: #6d28d9;
+            --primary-hover: #7c3aed;
+            --accent-glow: rgba(109, 40, 217, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+        }
+
+        h2, strong, .submit-btn, .back-btn, .current-balance strong {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 30px 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 3D Canlı Akışkan Arka Plan Efekti */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: 
+                radial-gradient(circle at 20% 25%, rgba(99, 102, 241, 0.09) 0%, transparent 45%),
+                radial-gradient(circle at 80% 75%, rgba(236, 72, 153, 0.07) 0%, transparent 45%);
+            z-index: -1;
+            animation: backgroundMove 40s linear infinite;
+        }
+
+        @keyframes backgroundMove {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- ÜST BAR / NAVBAR --- */
+        .top-navbar {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 80px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5%;
+            background: rgba(10, 10, 14, 0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-gray);
+            z-index: 100;
+        }
+
+        body.light-mode .top-navbar {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-gray);
+            color: var(--text-dark);
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; font-size: 14px; font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Geri Dönüş Butonu */
+        .back-btn {
+            padding: 12px 22px;
+            border-radius: 14px;
+            gap: 10px;
+            color: var(--text-dark);
+        }
+
+        .back-btn svg {
+            stroke: var(--primary-purple);
+            transition: transform 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+
+        .back-btn:hover svg {
+            stroke: #ffffff;
+            transform: translateX(-4px);
+        }
+
+        /* Gece/Gündüz Modu Butonu */
+        .theme-toggle-btn {
+            width: 46px; height: 46px;
+            border-radius: 14px;
+            color: var(--text-muted);
+        }
+
+        .theme-toggle-btn:hover {
+            border-color: var(--primary-purple);
+            color: var(--primary-purple);
+            box-shadow: 0 0 15px var(--accent-glow);
+            transform: scale(1.05);
+        }
+
+        /* --- PREMIUM HUDBOX KART TASARIMI --- */
+        .card {
+            background: var(--card-bg);
+            width: 100%; max-width: 480px;
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            padding: 45px 35px;
+            border: 1px solid var(--border-gray);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            position: relative;
+            margin-top: 60px;
+            /* Hafif 3 Boyutlu HUD Perspektifi */
+            transform: perspective(1000px) rotateX(1deg);
+            animation: cardFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: perspective(1000px) rotateX(10deg) translateY(30px); }
+            to { opacity: 1; transform: perspective(1000px) rotateX(1deg) translateY(0); }
+        }
+
+        .card:hover {
+            border-color: rgba(139, 92, 246, 0.25);
+            box-shadow: 0 30px 70px rgba(139, 92, 246, 0.12), var(--shadow);
+            transform: perspective(1000px) rotateX(0deg) translateY(-2px);
+        }
+
+        /* Üst Çizgi Neon Işık Degradesi */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 28px 28px 0 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+
+        /* --- MEVCUT BAKİYE HUD PANELİ --- */
+        .current-balance {
+            background: linear-gradient(135deg, var(--input-bg), rgba(255,255,255,0.01));
+            border: 1px solid var(--border-gray);
+            border-radius: 18px;
+            padding: 18px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .current-balance::after {
+            content: ''; position: absolute; top: 0; right: 0; width: 60px; height: 100%;
+            background: radial-gradient(circle at center, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+        }
+
+        .current-balance span {
+            color: var(--text-muted);
+            font-weight: 600; font-size: 0.9rem;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .current-balance span::before {
+            content: '\f555'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--primary-purple);
+        }
+
+        .current-balance strong {
+            color: var(--success-glow);
+            font-size: 1.6rem; font-weight: 800;
+            text-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        }
+        body.light-mode .current-balance strong { text-shadow: none; }
+
+        /* --- FORM ELEMENTLERİ & INPUTS --- */
+        .form-group {
+            margin-bottom: 26px;
+        }
+
+        .form-group label {
+            display: block; font-size: 0.85rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            margin-bottom: 10px; color: var(--text-muted);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper span {
+            position: absolute; left: 18px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-purple);
+            font-weight: 800; font-size: 1.2rem;
+            pointer-events: none;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 16px 16px 16px 46px;
+            border: 1px solid var(--border-gray);
+            border-radius: 16px;
+            font-size: 1.05rem; font-weight: 600;
+            color: var(--text-dark);
+            background-color: var(--input-bg);
+            outline: none;
+        }
+
+        select {
+            padding-left: 20px;
+            appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394a3b8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px top 50%;
+            background-size: 12px auto;
+        }
+
+        input[type="number"]:focus, select:focus {
+            border-color: var(--input-focus);
+            background-color: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 25px var(--accent-glow);
+        }
+        body.light-mode input[type="number"]:focus, body.light-mode select:focus {
+            background-color: #fff;
+        }
+
+        /* --- TOKEN/KAPSÜL HIZLI MİKTAR BUTONLARI --- */
+        .quick-amounts {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .quick-btn {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-gray);
+            color: var(--text-dark);
+            padding: 14px 0;
+            border-radius: 14px;
+            font-size: 0.9rem; font-weight: 700;
+            cursor: pointer;
+        }
+
+        .quick-btn:hover {
+            border-color: var(--primary-purple);
+            color: var(--primary-purple);
+            background-color: var(--light-purple);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.15);
+        }
+
+        .quick-btn.active {
+            background: var(--primary-gradient);
+            border-color: transparent;
+            color: #ffffff;
+            box-shadow: 0 10px 25px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        /* --- ŞANLI GÖNDER BUTONU --- */
+        .submit-btn {
+            width: 100%;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 1.1rem; font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 12px 30px var(--accent-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Parlama Efekti Streak Overlay */
+        .submit-btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
+            transform: skewX(-25deg); transition: left 0.6s ease;
+        }
+
+        .submit-btn:hover::before { left: 200%; }
+
+        .submit-btn:hover {
+            box-shadow: 0 15px 40px rgba(168, 85, 247, 0.55);
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* --- SİBER GÜVENLİK ROZETİ --- */
+        .security-badge {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.8rem; font-weight: 600;
+            color: var(--text-muted);
+            display: flex; align-items: center; justify-content: center;
+            gap: 8px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .security-badge svg {
+            stroke: var(--primary-purple);
+            animation: pulseShield 2s infinite;
+        }
+
+        .bank-transfer-info {
+            display: none;
+            margin: 0 0 24px;
+            padding: 18px;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 16px;
+            background: rgba(139, 92, 246, 0.08);
+        }
+
+        .bank-transfer-info.active {
+            display: block;
+        }
+
+        .bank-transfer-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .bank-transfer-row span {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .bank-transfer-row strong {
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            word-break: break-word;
+        }
+
+        .bank-transfer-note {
+            color: var(--text-muted);
+            font-size: 0.86rem;
+            line-height: 1.55;
+            margin: 4px 0 0;
+        }
+
+        .payment-popup-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(3, 7, 18, 0.76);
+            backdrop-filter: blur(12px);
+            z-index: 9999;
+        }
+
+        .payment-popup-overlay.active {
+            display: flex;
+        }
+
+        .payment-popup {
+            width: min(430px, 100%);
+            padding: 34px 28px;
+            border-radius: 24px;
+            text-align: center;
+            background: var(--card-bg);
+            border: 1px solid var(--border-gray);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+        }
+
+        .payment-popup-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.13);
+            color: #10b981;
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .payment-popup h3 {
+            margin: 0 0 12px;
+            color: var(--text-dark);
+            font-size: 1.55rem;
+        }
+
+        .payment-popup p {
+            margin: 0 0 22px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.96rem;
+        }
+
+        .payment-popup button {
+            width: 100%;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 18px;
+            color: #fff;
+            font-weight: 800;
+            cursor: pointer;
+            background: var(--primary-gradient);
+        }
+        
+        @keyframes pulseShield {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+        }
+
+        /* Input Ok Temizleyicileri */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none; margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-navbar">
+        <a href="/" class="nav-btn back-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Anasayfaya Dön
+        </a>
+        
+        <button class="nav-btn theme-toggle-btn" id="themeToggleBtn" title="Temayı Değiştir">
+            <svg id="themeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="header">
+            <h2>Bakiye Ekle</h2>
+            <p>Hesabınıza güvenle bakiye yükleyebilirsiniz.</p>
+        </div>
+
+        <div class="current-balance">
+            <span>Mevcut Bakiyeniz</span>
+            <strong id="balanceDisplay">0.00 ₺</strong>
+        </div>
+
+        <form action="#" method="POST" id="balanceForm">
+            
+            <div class="form-group">
+                <label for="amount">Yüklenecek Tutar</label>
+                <div class="input-wrapper">
+                    <span>₺</span>
+                    <input type="number" id="amount" name="amount" placeholder="Örn: 100" min="1" required>
+                </div>
+            </div>
+
+            <div class="quick-amounts">
+                <button type="button" class="quick-btn" data-val="50">50 ₺</button>
+                <button type="button" class="quick-btn" data-val="100">100 ₺</button>
+                <button type="button" class="quick-btn" data-val="250">250 ₺</button>
+                <button type="button" class="quick-btn" data-val="500">500 ₺</button>
+            </div>
+
+            <div class="form-group">
+                <label for="method">Ödeme Yöntemi</label>
+                <select id="method" name="method" required>
+                    <option value="" disabled selected>Bir yöntem seçin...</option>
+                    <option value="cc">Kredi / Banka Kartı</option>
+                    <option value="eft">Havale / EFT</option>
+                    <option value="papara">Papara</option>
+                </select>
+            </div>
+
+            <div class="bank-transfer-info" id="bankTransferInfo">
+                <div class="bank-transfer-row">
+                    <span>Alıcı Ad Soyad</span>
+                    <strong>Premium Itemci Ödeme Hizmetleri</strong>
+                </div>
+                <div class="bank-transfer-row">
+                    <span>IBAN</span>
+                    <strong>TR00 0000 0000 0000 0000 0000 00</strong>
+                </div>
+                <p class="bank-transfer-note">
+                    Not: Banka hesabınızdan yatırım yaptıktan sonra “Ödemeyi Yaptım” butonuna tıklayınız. Bakiyeniz otomatik olarak yüklenecektir.
+                </p>
+            </div>
+
+            <button type="submit" class="submit-btn">Ödemeye Geç</button>
+
+            <div class="security-badge">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                256-bit SSL ile güvenli siber ödeme
+            </div>
+        </form>
+    </div>
+
+    <div class="payment-popup-overlay" id="paymentSuccessPopup">
+        <div class="payment-popup">
+            <div class="payment-popup-icon">✓</div>
+            <h3 id="paymentPopupTitle">Ödeme Başarılı</h3>
+            <p id="paymentPopupText">Not: İşleminiz incelemededir. 1-5 dakika aralığında onaylanıp hesabınıza geçecektir.</p>
+            <button type="button" onclick="closePaymentPopup()">Tamam</button>
+        </div>
+    </div>
+
+    <script>
+        const amountInput = document.getElementById('amount');
+        const quickBtns = document.querySelectorAll('.quick-btn');
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = document.getElementById('themeIcon');
+        const balanceDisplay = document.getElementById('balanceDisplay');
+        const balanceForm = document.getElementById('balanceForm');
+        const methodSelect = document.getElementById('method');
+        const bankTransferInfo = document.getElementById('bankTransferInfo');
+        const paymentSuccessPopup = document.getElementById('paymentSuccessPopup');
+        const paymentPopupTitle = document.getElementById('paymentPopupTitle');
+        const paymentPopupText = document.getElementById('paymentPopupText');
+        const submitBtn = balanceForm.querySelector('.submit-btn');
+        let bankTransferConfirmed = false;
+
+        function closePaymentPopup() {
+            paymentSuccessPopup.classList.remove('active');
+        }
+
+        function showPaymentPopup(title, text) {
+            paymentPopupTitle.textContent = title;
+            paymentPopupText.textContent = text;
+            paymentSuccessPopup.classList.add('active');
+        }
+
+        // Kullanıcı doğrulama ve bakiye yükleme
+        async function initUserData() {
+            const userRaw = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            if (!userRaw || !token) {
+                alert('Bakiye eklemek için lütfen giriş yapın.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            let user;
+            try {
+                user = JSON.parse(userRaw);
+            } catch (e) {
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/auth/me', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) throw new Error('Bakiye alınamadı');
+                const userData = await res.json();
+                const balance = parseFloat(userData.balance || 0);
+                balanceDisplay.textContent = balance.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
+                localStorage.setItem('user', JSON.stringify(userData));
+            } catch (err) {
+                const balance = parseFloat(user.balance || 0);
+                balanceDisplay.textContent = balance.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
+            }
+        }
+        initUserData();
+
+        // Bakiye Seçimi Mekanizması
+        quickBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                quickBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const value = btn.getAttribute('data-val');
+                amountInput.value = value;
+                amountInput.focus();
+            });
+        });
+
+        // Manuel Değer Girişinde Aktif Buton Stilini Kaldırılması
+        amountInput.addEventListener('input', () => {
+            quickBtns.forEach(b => b.classList.remove('active'));
+        });
+
+        methodSelect.addEventListener('change', () => {
+            bankTransferConfirmed = false;
+            bankTransferInfo.classList.remove('active');
+            submitBtn.textContent = 'Ödemeye Geç';
+        });
+
+        // Form gönderimi
+        balanceForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Bakiye eklemek için lütfen giriş yapın.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const amount = parseFloat(amountInput.value);
+            const method = document.getElementById('method').value;
+            if (isNaN(amount) || amount <= 0) {
+                alert('Lütfen geçerli bir tutar giriniz.');
+                return;
+            }
+            if (!method) {
+                alert('Lütfen bir ödeme yöntemi seçiniz.');
+                return;
+            }
+
+            if (method !== 'eft') {
+                balanceForm.reset();
+                quickBtns.forEach(b => b.classList.remove('active'));
+                bankTransferInfo.classList.remove('active');
+                bankTransferConfirmed = false;
+                submitBtn.textContent = 'Ödemeye Geç';
+                showPaymentPopup('BAKIM AŞAMASI', 'Not: Havale / EFT yöntemini kullanınız.');
+                return;
+            }
+
+            if (method === 'eft' && !bankTransferConfirmed) {
+                bankTransferInfo.classList.add('active');
+                submitBtn.textContent = 'Ödemeyi Yaptım';
+                bankTransferConfirmed = true;
+                return;
+            }
+
+            if (method === 'eft' && bankTransferConfirmed) {
+                balanceForm.reset();
+                quickBtns.forEach(b => b.classList.remove('active'));
+                bankTransferInfo.classList.remove('active');
+                bankTransferConfirmed = false;
+                submitBtn.textContent = 'Ödemeye Geç';
+                showPaymentPopup('Ödeme Başarılı', 'Not: İşleminiz incelemededir. 1-5 dakika aralığında onaylanıp hesabınıza geçecektir.');
+                return;
+            }
+
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Ödeme İşleniyor...';
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/balance/top-up', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ amount, method })
+                });
+                const result = await response.json();
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || 'Ödeme işlemi başarısız oldu.');
+                }
+
+                const newBalance = parseFloat(result.newBalance || result.user?.balance || 0);
+                balanceDisplay.textContent = newBalance.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
+                if (result.user) {
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                }
+
+                balanceForm.reset();
+                quickBtns.forEach(b => b.classList.remove('active'));
+                bankTransferInfo.classList.remove('active');
+                bankTransferConfirmed = false;
+                paymentSuccessPopup.classList.add('active');
+            } catch (err) {
+                alert('Hata: ' + err.message);
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Kusursuz Gece / Gündüz Modu Değiştirici SVG Matrixi
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            
+            if(document.body.classList.contains('light-mode')) {
+                themeIcon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`; // Ay İkonu
+            } else {
+                themeIcon.innerHTML = `
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                `; // Güneş İkonu
+            }
+        });
+    </script>
+
+</body>
+</html>

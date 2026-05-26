@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hakkımızda - Epin Hesabım</title>
+    <link rel="icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+
+    <style>
+        * { font-family: 'Poppins', sans-serif; box-sizing: border-box; }
+        body {
+            overflow-x: hidden !important;
+            min-height: 100vh;
+            background-image: linear-gradient(180deg, rgba(8, 12, 26, 0.4), rgba(8, 12, 26, 0.5)), url('assets/arkaplan.png');
+            background-repeat: no-repeat, repeat;
+            background-size: cover, 900px auto;
+            background-attachment: fixed;
+            background-position: center;
+            color: #e8e8f0;
+            margin: 0;
+        }
+
+        /* Header */
+        .frontend-header {
+            background: rgba(13, 16, 36, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-section { display: flex; flex-direction: column; text-decoration: none; }
+        .logo {
+            font-size: 22px; font-weight: 800; letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #fff, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .logo-subtitle { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; }
+
+        .header-right-actions { display: flex; align-items: center; gap: 16px; }
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #f1be04;
+            width: 42px; height: 42px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: scale(1.05);
+            box-shadow: 0 0 12px rgba(241, 190, 4, 0.2);
+        }
+        .auth-buttons { display: flex; align-items: center; gap: 10px; }
+        .btn-login {
+            background: transparent; border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff; padding: 10px 20px; border-radius: 10px;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.3s ease; text-decoration: none;
+        }
+        .btn-login:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.25); }
+        .btn-register {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border: none; color: #fff;
+            padding: 11px 22px; border-radius: 10px;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+            text-decoration: none;
+        }
+        .btn-register:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35); }
+
+        /* User Dropdown */
+        .user-dropdown { position: relative; display: none; align-items: center; }
+        .user-dropdown-trigger {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; padding: 6px 14px; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .user-dropdown-trigger:hover { background: rgba(255,255,255,0.07); border-color: rgba(139,92,246,0.3); }
+        .user-avatar { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(139,92,246,0.3); }
+        .user-info { display: flex; flex-direction: column; line-height: 1.2; }
+        .user-name { font-size: 13px; font-weight: 600; color: #fff; }
+        .user-balance { font-size: 11px; color: #a78bfa; font-weight: 500; }
+        .dropdown-menu {
+            position: absolute; top: calc(100% + 8px); right: 0;
+            background: rgba(18, 20, 36, 0.95); backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 14px;
+            padding: 8px; min-width: 200px; opacity: 0; visibility: hidden;
+            transform: translateY(-8px); transition: all 0.25s ease; z-index: 1001;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .user-dropdown.open .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border-radius: 10px; color: #e8e8f0;
+            font-size: 13px; font-weight: 500; text-decoration: none;
+            transition: all 0.2s ease; cursor: pointer; border: none; background: transparent; width: 100%;
+        }
+        .dropdown-item:hover { background: rgba(139,92,246,0.1); color: #fff; }
+        .dropdown-item i { width: 18px; text-align: center; color: #a78bfa; }
+        .dropdown-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 6px 0; }
+        .dropdown-item.logout { color: #f87171; }
+        .dropdown-item.logout:hover { background: rgba(239,68,68,0.1); }
+        .dropdown-item.logout i { color: #f87171; }
+
+        /* Main Container */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        /* Hero */
+        .about-hero {
+            position: relative;
+            background: linear-gradient(135deg, rgba(24, 12, 50, 0.85), rgba(139, 92, 246, 0.25));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 24px;
+            padding: 80px 40px;
+            text-align: center;
+            overflow: hidden;
+            margin: 40px 0 60px;
+            box-shadow: inset 0 0 30px rgba(139, 92, 246, 0.2), 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .about-hero::before {
+            content: ''; position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 60%);
+            animation: pulseBg 8s infinite linear;
+            pointer-events: none;
+        }
+        @keyframes pulseBg {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-10%, -10%) rotate(180deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+        .about-hero h1 {
+            font-size: 48px; font-weight: 800; margin: 0 0 16px 0;
+            background: linear-gradient(135deg, #fff, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            position: relative; z-index: 1;
+        }
+        .about-hero p {
+            font-size: 18px; color: rgba(232, 232, 240, 0.7);
+            max-width: 700px; margin: 0 auto;
+            position: relative; z-index: 1; line-height: 1.7;
+        }
+
+        /* Section Title */
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .section-header h2 {
+            font-size: 32px; font-weight: 700; margin: 0 0 12px 0;
+            background: linear-gradient(135deg, #fff, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .section-header p {
+            color: #9ca3af; font-size: 15px; max-width: 500px; margin: 0 auto; line-height: 1.6;
+        }
+
+        /* Story Section */
+        .story-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+        .story-visual {
+            position: relative;
+            background: rgba(24, 27, 51, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            overflow: hidden;
+        }
+        .story-visual::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+            z-index: 0;
+        }
+        .story-visual .icon-wrap {
+            position: relative; z-index: 1;
+            width: 160px; height: 160px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 64px;
+            animation: float 4s ease-in-out infinite;
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.2);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .story-content h3 {
+            font-size: 28px; font-weight: 700; margin: 0 0 20px 0;
+            color: #fff;
+        }
+        .story-content p {
+            font-size: 15px; color: rgba(232, 232, 240, 0.7);
+            line-height: 1.8; margin: 0 0 16px 0;
+        }
+        .story-content .highlight {
+            color: #a78bfa; font-weight: 600;
+        }
+
+        /* Values Grid */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+        .value-card {
+            background: rgba(24, 27, 51, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        .value-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15);
+        }
+        .value-card .value-icon {
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: #a78bfa;
+            margin-bottom: 20px;
+        }
+        .value-card h4 { font-size: 18px; font-weight: 700; margin: 0 0 10px 0; color: #fff; }
+        .value-card p { font-size: 14px; color: rgba(232, 232, 240, 0.6); line-height: 1.7; margin: 0; }
+
+        /* Stats Section */
+        .stats-section {
+            background: rgba(13, 16, 36, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 60px 40px;
+            margin-bottom: 80px;
+            backdrop-filter: blur(10px);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            text-align: center;
+        }
+        .stat-item .stat-number {
+            font-size: 42px; font-weight: 800;
+            background: linear-gradient(135deg, #fff, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            display: block; margin-bottom: 8px;
+        }
+        .stat-item .stat-label {
+            font-size: 14px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        /* Why Us */
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+        .why-item {
+            display: flex; align-items: flex-start; gap: 16px;
+            background: rgba(24, 27, 51, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+        .why-item:hover {
+            background: rgba(24, 27, 51, 0.7);
+            border-color: rgba(139, 92, 246, 0.2);
+        }
+        .why-item .why-icon {
+            width: 48px; height: 48px; min-width: 48px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: #fff;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.25);
+        }
+        .why-item h4 { font-size: 16px; font-weight: 600; margin: 0 0 6px 0; color: #fff; }
+        .why-item p { font-size: 14px; color: rgba(232, 232, 240, 0.6); margin: 0; line-height: 1.6; }
+
+        /* CTA Section */
+        .cta-section {
+            position: relative;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.15));
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            border-radius: 24px;
+            padding: 70px 40px;
+            text-align: center;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+        .cta-section h2 {
+            font-size: 36px; font-weight: 800; margin: 0 0 16px 0;
+            background: linear-gradient(135deg, #fff, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .cta-section p { font-size: 16px; color: rgba(232, 232, 240, 0.7); margin: 0 0 30px 0; }
+        .cta-btn {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border: none; color: #fff;
+            padding: 16px 40px; border-radius: 14px;
+            font-size: 16px; font-weight: 700; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+            text-decoration: none;
+        }
+        .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(139, 92, 246, 0.4); }
+
+        /* Footer */
+        .site-footer {
+            background: rgba(13, 16, 36, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 40px 0;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        .site-footer a { color: #a78bfa; text-decoration: none; }
+
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .story-grid { grid-template-columns: 1fr; }
+            .values-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .why-grid { grid-template-columns: 1fr; }
+            .about-hero h1 { font-size: 36px; }
+        }
+        @media (max-width: 576px) {
+            .values-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .about-hero { padding: 50px 24px; }
+            .about-hero h1 { font-size: 28px; }
+            .story-visual { min-height: 280px; }
+            .btn-login span, .btn-register span { display: none; }
+            .btn-login, .btn-register { padding: 10px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="frontend-header">
+        <div class="header-content">
+            <a href="index.html" class="logo-section">
+                <span class="logo">Epin Hesabım</span>
+                <span class="logo-subtitle">Güvenli Alışverişin Adresi</span>
+            </a>
+            <div class="header-right-actions">
+                <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()" title="Temayı Değiştir">
+                    <i id="themeIcon" class="ri-moon-line"></i>
+                </button>
+                <div class="auth-buttons" id="authButtons">
+                    <a href="login.html" class="btn-login">
+                        <i class="fas fa-sign-in-alt"></i> <span>Giriş Yap</span>
+                    </a>
+                    <a href="register.html" class="btn-register">
+                        <i class="fas fa-user-plus"></i> <span>Kayıt Ol</span>
+                    </a>
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="user-dropdown-trigger" id="userDropdownTrigger">
+                        <img src="assets/img/avatar-1.png" alt="Profil" class="user-avatar" id="userAvatar">
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Kullanıcı</span>
+                            <span class="user-balance" id="userBalance">₺0.00</span>
+                        </div>
+                        <i class="fas fa-chevron-down" style="font-size:10px; color:#9ca3af; margin-left:4px;"></i>
+                    </div>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="profilim.html" class="dropdown-item"><i class="fas fa-user"></i> Profilim</a>
+                        <a href="ilanlarım.html" class="dropdown-item"><i class="fas fa-list"></i> İlanlarım</a>
+                        <a href="bakiye-ekle.html" class="dropdown-item"><i class="fas fa-plus-circle"></i> Bakiye Yükle</a>
+                        <a href="ayarlar.html" class="dropdown-item"><i class="fas fa-cog"></i> Ayarlar</a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item logout" onclick="confirmLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="about-hero reveal">
+            <h1>Hakkımızda</h1>
+            <p>Epin Hesabım olarak, oyuncuların ve dijital içerik üreticilerinin güvenle alışveriş yapabileceği, modern ve şeffaf bir platform inşa ediyoruz. Misyonumuz, dijital ekonomiyi herkes için erişilebilir ve güvenilir kılmak.</p>
+        </section>
+
+        <!-- Story -->
+        <section class="story-grid reveal">
+            <div class="story-visual">
+                <div class="icon-wrap">
+                    <i class="fas fa-rocket"></i>
+                </div>
+            </div>
+            <div class="story-content">
+                <h3>Biz Kimiz?</h3>
+                <p>
+                    <span class="highlight">Epin Hesabım</span>, dijital ürünlerin güvenli bir şekilde alınıp satıldığı next-generation bir platformdur. 2024 yılında kurulan ekibimiz, oyun içi para birimleri, hesaplar, skinler ve dijital hizmetler alanında yılların tecrübesini bir araya getirdi.
+                </p>
+                <p>
+                    Amacımız, alıcı ve satıcı arasında <span class="highlight">güvenilir bir köprü</span> kurmak. Her işlemi şeffaf, hızlı ve adil bir şekilde yöneterek kullanıcılarımıza en iyi deneyimi sunmayı hedefliyoruz.
+                </p>
+                <p>
+                    Teknolojiyi ve inovasyonu takip ederek, sürekli gelişen dijital dünyada kullanıcılarımızın her zaman bir adım önde olmasını sağlıyoruz.
+                </p>
+            </div>
+        </section>
+
+        <!-- Values -->
+        <div class="section-header reveal">
+            <h2>Değerlerimiz</h2>
+            <p>Her kararımızda ve her adımımızda önceliğimiz olan temel ilkelerimiz.</p>
+        </div>
+        <section class="values-grid reveal">
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-shield-alt"></i></div>
+                <h4>Güvenlik</h4>
+                <p>Kullanıcı verilerini ve işlemlerini en üst düzey güvenlik protokolleriyle koruyoruz. Her adımda şifreleme ve doğrulama sistemleri aktif.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-bolt"></i></div>
+                <h4>Hız</h4>
+                <p>Süreçleri otomatikleştirerek siparişlerin saniyeler içinde tamamlanmasını sağlıyoruz. Bekleme süresini minimuma indiriyoruz.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-eye"></i></div>
+                <h4>Şeffaflık</h4>
+                <p>Fiyatlandırma, komisyon oranları ve işlem durumları konusunda tam şeffaflık sunuyoruz. Gizli maliyet yok, sürpriz yok.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-headset"></i></div>
+                <h4>7/24 Destek</h4>
+                <p>Uzman destek ekibimiz, kullanıcılarımızın sorularını ve taleplerini anında çözmek için her zaman hazır.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-lightbulb"></i></div>
+                <h4>Yenilikçilik</h4>
+                <p>Platformumuzu sürekli güncel tutuyor, kullanıcı geri bildirimlerine dayalı yeni özellikler geliştiriyoruz.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-users"></i></div>
+                <h4>Topluluk</h4>
+                <p>Kullanıcılarımızı bir aile olarak görüyoruz. Çekilişler, özel etkinlikler ve sadakat programlarıyla topluluğumuzu güçlendiriyoruz.</p>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="stats-section reveal">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="12500">0</span>
+                    <span class="stat-label">Aktif Kullanıcı</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="48500">0</span>
+                    <span class="stat-label">Tamamlanan İşlem</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="99">0</span>
+                    <span class="stat-label">Memnuniyet Oranı %</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="850">0</span>
+                    <span class="stat-label">Aktif İlan</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Us -->
+        <div class="section-header reveal">
+            <h2>Neden Bizi Seçmelisiniz?</h2>
+            <p>Rakiplerimiz arasından bizi öne çıkaran özellikler.</p>
+        </div>
+        <section class="why-grid reveal">
+            <div class="why-item">
+                <div class="why-icon"><i class="fas fa-lock"></i></div>
+                <div>
+                    <h4>Otomatik Teslimat Sistemi</h4>
+                    <p>Satın aldığınız ürünler anında hesabınıza tanımlanır. Manuel işlem beklemenize gerek kalmaz.</p>
+                </div>
+            </div>
+            <div class="why-item">
+                <div class="why-icon"><i class="fas fa-percentage"></i></div>
+                <div>
+                    <h4>Rekabetçi Komisyon Oranları</h4>
+                    <p>Satıcılarımız için en düşük komisyon oranlarını sunarak kazancınızı maksimize ediyoruz.</p>
+                </div>
+            </div>
+            <div class="why-item">
+                <div class="why-icon"><i class="fas fa-gift"></i></div>
+                <div>
+                    <h4>Sürekli Çekilişler ve Ödüller</h4>
+                    <p>Platformumuzda düzenlenen çekilişler ve etkinliklerle kullanıcılarımızı ödüllendiriyoruz.</p>
+                </div>
+            </div>
+            <div class="why-item">
+                <div class="why-icon"><i class="fas fa-mobile-alt"></i></div>
+                <div>
+                    <h4>Mobil Uyumlu Tasarım</h4>
+                    <p>Telefonunuzdan, tabletinizden veya bilgisayarınızdan sorunsuz bir deneyim yaşayın.</p>
+                </div>
+            </div>
+            <div class="why-item">
+                <div class="why-icon"><i class="fas fa-chart-line"></i></div>
+                <div>
+                    <h4>Gelişmiş Satıcı Paneli</h4>
+                    <p>Satıcılarımız için detaylı istatistikler, sipariş yönetimi ve otomatik araçlar sunuyoruz.</p>
+                </div>
+            </div>
+            <div class="why-item">
+                <div class="why-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                <div>
+                    <h4>Kolay Para Çekme</h4>
+                    <p>Kazancınızı hızlı ve güvenli bir şekilde banka hesabınıza veya dijital cüzdanınıza aktarın.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section reveal">
+            <h2>Bize Katılmaya Hazır mısın?</h2>
+            <p>Binlerce kullanıcının güvenle alışveriş yaptığı platformumuza sen de katıl. Hemen ücretsiz hesap oluştur ve fırsatları kaçırma.</p>
+            <a href="register.html" class="cta-btn">
+                <i class="fas fa-user-plus"></i> Hemen Kayıt Ol
+            </a>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div>
+            <span class="logo" style="font-size: 18px; display: inline-block; margin-bottom: 10px;">Dijital Pazaryeri</span>
+        </div>
+        <p> &copy; 2024 Dijital Pazaryeri. Tüm hakları saklıdır.</p>
+        <p style="margin-top: 8px; font-size: 13px;">
+            <a href="hakkimizda.html">Hakkımızda</a> &bull; 
+            <a href="iletisim.html">İletişim</a> &bull; 
+            <a href="gizlilik.html">Gizlilik Politikası</a> &bull; 
+            <a href="kullanim-kosullari.html">Kullanım Koşulları</a>
+        </p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            updateThemeIcon(currentTheme);
+            initScrollReveal();
+            initCounters();
+        });
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            let targetTheme = 'dark';
+            if (html.getAttribute('data-theme') === 'dark') targetTheme = 'light';
+            html.setAttribute('data-theme', targetTheme);
+            localStorage.setItem('theme', targetTheme);
+            updateThemeIcon(targetTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            if (theme === 'light') {
+                icon.className = 'ri-sun-line';
+                document.getElementById('themeToggle').style.color = '#ff9800';
+            } else {
+                icon.className = 'ri-moon-line';
+                document.getElementById('themeToggle').style.color = '#f1be04';
+            }
+        }
+
+        // Scroll Reveal
+        function initScrollReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        // Counter Animation
+        function initCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const target = parseInt(el.getAttribute('data-target'));
+                        animateCounter(el, target);
+                        observer.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            counters.forEach(c => observer.observe(c));
+        }
+
+        function animateCounter(el, target) {
+            const duration = 2000;
+            const start = performance.now();
+            const isPercent = el.nextElementSibling.textContent.includes('%');
+
+            function update(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const ease = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(ease * target);
+                el.textContent = current.toLocaleString('tr-TR') + (isPercent ? '%' : '+');
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+
+        // ========== AUTH SYSTEM ==========
+        function updateAuthDisplay() {
+            const user = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            const authButtons = document.getElementById('authButtons');
+            const userDropdown = document.getElementById('userDropdown');
+
+            if (user && token) {
+                try {
+                    const userData = JSON.parse(user);
+                    if (authButtons) authButtons.style.display = 'none';
+                    if (userDropdown) {
+                        userDropdown.style.display = 'flex';
+                        const username = userData.username || 'Kullanıcı';
+                        const balance = userData.balance || '0.00';
+                        const avatar = userData.avatar || 'assets/img/avatar-1.png';
+                        document.getElementById('userName').textContent = username;
+                        document.getElementById('userBalance').textContent = '₺' + parseFloat(balance).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        document.getElementById('userAvatar').src = avatar;
+                    }
+                } catch (e) { console.error('Auth display error:', e); }
+            } else {
+                if (authButtons) authButtons.style.display = 'flex';
+                if (userDropdown) userDropdown.style.display = 'none';
+            }
+        }
+
+        async function fetchUserData() {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            try {
+                const response = await fetch('/api/auth/me', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!response.ok) return;
+                const userData = await response.json();
+                if (userData && userData._id) {
+                    const existing = localStorage.getItem('user');
+                    const merged = existing ? { ...JSON.parse(existing), ...userData } : userData;
+                    localStorage.setItem('user', JSON.stringify(merged));
+                    updateAuthDisplay();
+                }
+            } catch (e) { console.error('fetchUserData error:', e); }
+        }
+
+        function confirmLogout() {
+            const popup = document.createElement('div');
+            popup.innerHTML = `
+                <div id="logoutOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);z-index:10000;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s ease;">
+                    <div id="logoutBox" style="background:linear-gradient(135deg,rgba(18,20,36,0.95),rgba(24,12,50,0.95));border:1px solid rgba(139,92,246,0.3);border-radius:24px;padding:40px 36px;max-width:380px;width:90%;text-align:center;box-shadow:0 25px 60px rgba(0,0,0,0.5);transform:scale(0.9);transition:transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275);">
+                        <div style="width:64px;height:64px;background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(236,72,153,0.2));border:1px solid rgba(139,92,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:26px;color:#a78bfa;">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </div>
+                        <h3 style="margin:0 0 10px;font-size:22px;font-weight:700;color:#fff;">Çıkış Yap</h3>
+                        <p style="margin:0 0 28px;font-size:15px;color:rgba(232,232,240,0.65);line-height:1.6;">Hesabınızdan çıkış yapmak istediğinizden emin misiniz?</p>
+                        <div style="display:flex;gap:12px;justify-content:center;">
+                            <button id="logoutCancel" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e8e8f0;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s ease;font-family:'Poppins',sans-serif;">İptal</button>
+                            <button id="logoutConfirm" style="background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s ease;box-shadow:0 4px 15px rgba(139,92,246,0.25);font-family:'Poppins',sans-serif;">Evet, Çıkış Yap</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(popup);
+            const overlay = document.getElementById('logoutOverlay');
+            const box = document.getElementById('logoutBox');
+
+            requestAnimationFrame(() => { overlay.style.opacity = '1'; box.style.transform = 'scale(1)'; });
+
+            function closePopup() {
+                overlay.style.opacity = '0'; box.style.transform = 'scale(0.9)';
+                setTimeout(() => popup.remove(), 300);
+            }
+
+            document.getElementById('logoutCancel').addEventListener('click', closePopup);
+            document.getElementById('logoutConfirm').addEventListener('click', () => {
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                closePopup();
+                setTimeout(() => window.location.reload(), 250);
+            });
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) closePopup(); });
+        }
+
+        // Dropdown toggle
+        document.getElementById('userDropdownTrigger').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('userDropdown').classList.toggle('open');
+        });
+        document.addEventListener('click', function() {
+            document.getElementById('userDropdown').classList.remove('open');
+        });
+
+        // Init
+        updateAuthDisplay();
+        fetchUserData();
+        setInterval(fetchUserData, 10000);
+    </script>
+</body>
+</html>

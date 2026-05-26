@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Çek - Premium Finansal HUD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- Siber Premium HUD Tema Değişkenleri --- */
+        :root {
+            --bg-main: #030306;             /* Uzay Siyahı */
+            --card-bg: rgba(18, 18, 26, 0.65); /* Yarı Saydam Cam Paneli */
+            --card-inner: rgba(0, 0, 0, 0.4);  /* Girdi Alanı Karartması */
+            --primary: #8b5cf6;             /* Elektrik Moru */
+            --primary-glow: rgba(139, 92, 246, 0.35);
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            --text-main: #ffffff;           /* Parlak Beyaz */
+            --text-secondary: #cbd5e1;      /* Okunabilir Gümüş */
+            --text-muted: #64748b;          /* Fütüristik Koyu Gri */
+            --border: rgba(255, 255, 255, 0.08); /* İnce Işık Kenarlığı */
+            --border-focus: #a855f7;
+            --accent-green: #10b981;        /* Finansal Onay Yeşili */
+            --shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        /* --- Aydınlık (Gündüz) Tema Değişkenleri --- */
+        body.light-theme {
+            --bg-main: #f1f5f9;
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --card-inner: rgba(255, 255, 255, 0.8);
+            --primary: #6d28d9;
+            --primary-glow: rgba(109, 40, 217, 0.2);
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --text-main: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border: rgba(0, 0, 0, 0.08);
+            --border-focus: #7c3aed;
+            --accent-green: #059669;
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        h2, h3, strong, .submit-action-btn, .control-btn, .val, .net-val {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 24px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- 3D Canlı Arka Plan Efekti --- */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: 
+                radial-gradient(circle at 15% 25%, rgba(99, 102, 241, 0.07) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(236, 72, 153, 0.05) 0%, transparent 45%);
+            z-index: -1;
+            animation: fluidBackground 45s linear infinite;
+        }
+
+        @keyframes fluidBackground {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- ÜST KONTROL BARI (Navbar) --- */
+        .top-controls {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 80px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5%;
+            background: rgba(10, 10, 14, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        body.light-theme .top-controls {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 12px 22px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none;
+        }
+
+        .control-btn svg {
+            width: 18px; height: 18px;
+            stroke: var(--primary); fill: none;
+            transition: transform 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+
+        .control-btn:hover svg {
+            stroke: #ffffff; transform: translateX(-4px);
+        }
+
+        .control-btn.icon-only {
+            padding: 12px;
+            width: 46px; height: 46px;
+            justify-content: center;
+        }
+
+        .control-btn.icon-only:hover {
+            transform: scale(1.05);
+        }
+        .control-btn.icon-only:hover svg {
+            transform: none;
+        }
+
+        /* --- ANA PANEL KARTI (Glassmorphism HUD) --- */
+        .premium-card {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 540px;
+            border-radius: 28px;
+            padding: 45px 35px;
+            border: 1px solid var(--border);
+            position: relative;
+            box-shadow: var(--shadow);
+            margin-top: 60px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            transform: perspective(1000px) rotateX(1deg);
+            animation: cardDeploy 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes cardDeploy {
+            from { opacity: 0; transform: perspective(1000px) rotateX(10deg) translateY(40px); }
+            to { opacity: 1; transform: perspective(1000px) rotateX(1deg) translateY(0); }
+        }
+
+        .premium-card:hover {
+            border-color: rgba(139, 92, 246, 0.25);
+            box-shadow: 0 30px 70px rgba(139, 92, 246, 0.12), var(--shadow);
+            transform: perspective(1000px) rotateX(0deg) translateY(-2px);
+        }
+
+        .premium-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 28px 28px 0 0;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header-section h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-section p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* --- İNTERAKTİF BAKİYE WIDGET'I --- */
+        .balance-widget {
+            background: linear-gradient(135deg, var(--card-inner), rgba(255,255,255,0.01));
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-widget::after {
+            content: ''; position: absolute; top: 0; right: 0; width: 80px; height: 100%;
+            background: radial-gradient(circle at center, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+        }
+
+        .balance-info .lbl {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .balance-info .val {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            text-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        }
+        body.light-theme .balance-info .val { text-shadow: none; }
+
+        .balance-info .val span {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+        }
+
+        .withdraw-all-btn {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: var(--primary);
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .withdraw-all-btn:hover {
+            background: var(--primary-gradient);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 8px 20px var(--primary-glow);
+            transform: translateY(-2px);
+        }
+
+        /* --- YÖNTEM SEÇİM KARTLARI --- */
+        .method-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: block;
+            color: var(--text-muted);
+        }
+
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .method-card {
+            background: var(--card-inner);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px 10px;
+            text-align: center;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-card svg {
+            width: 28px; height: 28px;
+            stroke: var(--text-muted); fill: none;
+            transition: stroke 0.3s ease, transform 0.3s ease;
+        }
+
+        .method-card span {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .method-card:hover {
+            border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .method-card:hover svg { transform: scale(1.1); stroke: var(--primary); }
+
+        .method-card.active {
+            border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.08);
+            box-shadow: inset 0 0 20px var(--primary-glow);
+        }
+
+        .method-card.active svg { stroke: var(--primary); }
+        .method-card.active span { color: var(--text-main); }
+        body.light-theme .method-card.active span { color: var(--primary); }
+
+        /* --- DİNAMİK FORM ALANLARI --- */
+        .dynamic-fields {
+            margin-bottom: 24px;
+        }
+
+        .field-group {
+            display: none; 
+            animation: HUDfadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .field-group.active { display: block; }
+
+        @keyframes HUDfadeIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .form-control { margin-bottom: 20px; }
+
+        .form-control label {
+            display: block; font-size: 0.85rem; font-weight: 600;
+            color: var(--text-secondary); margin-bottom: 8px;
+        }
+
+        .input-box { position: relative; }
+
+        .input-box input {
+            width: 100%;
+            background: var(--card-inner);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px 18px;
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
+            font-weight: 500;
+        }
+
+        .input-box input:focus {
+            border-color: var(--border-focus);
+            background: rgba(0,0,0,0.6);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+        body.light-theme .input-box input:focus { background: #fff; }
+
+        .amount-container {
+            border-top: 1px solid var(--border);
+            padding-top: 24px; margin-top: 24px;
+        }
+
+        .amount-input-wrapper .currency-symbol {
+            position: absolute; left: 18px;
+            font-size: 1.2rem; font-weight: 800;
+            color: var(--primary);
+            pointer-events: none;
+        }
+
+        .amount-input-wrapper input {
+            padding-left: 45px !important;
+            font-size: 1.2rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
+
+        /* --- CANLI HESAPLAMA PANELİ (HUD) --- */
+        .live-calc-box {
+            background: rgba(0,0,0,0.2);
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-top: 16px;
+            display: flex; flex-direction: column; gap: 10px;
+            border: 1px dashed rgba(255,255,255,0.15);
+        }
+        body.light-theme .live-calc-box { background: rgba(0,0,0,0.02); border-color: var(--border); }
+
+        .calc-row {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.9rem; color: var(--text-secondary); font-weight: 500;
+        }
+
+        .calc-row.total {
+            border-top: 1px solid var(--border);
+            padding-top: 12px; margin-top: 4px;
+            color: var(--text-main);
+        }
+
+        .calc-row.total span:first-child { font-weight: 700; }
+
+        .calc-row.total .net-val {
+            color: var(--accent-green);
+            font-size: 1.4rem; font-weight: 800;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+        }
+
+        /* Bilgi Uyarı Kutusu */
+        .info-notice {
+            display: flex; gap: 12px; align-items: center;
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-bottom: 28px;
+            font-size: 0.85rem; font-weight: 500;
+            color: #fbbf24; line-height: 1.5;
+        }
+
+        .info-notice svg {
+            flex-shrink: 0; width: 20px; height: 20px;
+            stroke: #fbbf24; fill: none;
+        }
+
+        /* --- ŞANLI GÖNDER BUTONU --- */
+        .submit-action-btn {
+            width: 100%;
+            background: var(--primary-gradient);
+            color: #fff;
+            border: none;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 1.15rem; font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 30px var(--primary-glow);
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            position: relative; overflow: hidden;
+        }
+
+        .submit-action-btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
+            transform: skewX(-25deg); transition: left 0.6s ease;
+        }
+
+        .submit-action-btn:hover::before { left: 200%; }
+
+        .submit-action-btn:hover {
+            box-shadow: 0 15px 40px rgba(168, 85, 247, 0.5);
+            transform: translateY(-2px);
+        }
+        .submit-action-btn:active { transform: translateY(1px); }
+
+        .footer-security {
+            text-align: center; margin-top: 24px;
+            font-size: 0.8rem; font-weight: 600;
+            color: var(--text-muted);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        /* --- SİBER POPUP (Glassmorphism Overlay) --- */
+        .popup-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 3, 6, 0.8);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.4s ease;
+        }
+        
+        body.light-theme .popup-overlay { background: rgba(241, 245, 249, 0.8); }
+        .popup-overlay.show { opacity: 1; visibility: visible; }
+
+        .popup-box {
+            background: var(--card-bg);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 28px;
+            padding: 40px; width: 90%; max-width: 450px;
+            text-align: center;
+            transform: translateY(30px) scale(0.9);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 30px 60px rgba(16, 185, 129, 0.15);
+        }
+
+        .popup-overlay.show .popup-box { transform: translateY(0) scale(1); }
+
+        .popup-icon {
+            width: 80px; height: 80px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            margin: 0 auto 24px;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+            animation: pulseSuccess 2s infinite;
+        }
+
+        @keyframes pulseSuccess {
+            0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.4); }
+        }
+
+        .popup-icon svg { width: 40px; height: 40px; stroke: var(--accent-green); }
+
+        .popup-box h3 {
+            font-size: 1.8rem; font-weight: 800;
+            color: var(--text-main); margin-bottom: 14px;
+        }
+
+        .popup-box p {
+            font-size: 0.95rem; color: var(--text-secondary);
+            line-height: 1.6; margin-bottom: 30px;
+        }
+
+        .popup-close-btn {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 16px 24px; border-radius: 14px;
+            font-size: 1rem; font-weight: 700;
+            cursor: pointer; width: 100%; transition: all 0.3s;
+        }
+
+        .popup-close-btn:hover {
+            background: var(--accent-green);
+            color: #fff;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-controls">
+        <a href="index.html" class="control-btn">
+            <svg viewBox="0 0 24 24" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Ana Sayfa
+        </a>
+        <button class="control-btn icon-only" id="themeToggleBtn" aria-label="Temayı Değiştir">
+            <svg id="themeIcon" viewBox="0 0 24 24" stroke-width="2.2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line></svg>
+        </button>
+    </div>
+
+    <div class="premium-card">
+        <div class="header-section">
+            <h2>Para Çekme Talebi</h2>
+            <p>Kazancınızı güvenli, şifreli ve hızlıca hesabınıza aktarın.</p>
+        </div>
+
+        <div class="balance-widget">
+            <div class="balance-info">
+                <span class="lbl">Çekilebilir Bakiye</span>
+                <span class="val" id="maxBalance">0.00 <span>₺</span></span>
+            </div>
+            <button type="button" class="withdraw-all-btn" id="btnAllIn">Tümünü Çek</button>
+        </div>
+
+        <form action="#" method="POST" id="withdrawalForm">
+            
+            <span class="method-label">Ödeme Ekosistemi</span>
+            <div class="method-grid">
+                <div class="method-card active" data-target="banka-fields">
+                    <svg viewBox="0 0 24 24" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                    <span>Banka / IBAN</span>
+                </div>
+                <div class="method-card" data-target="papara-fields">
+                    <svg viewBox="0 0 24 24" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <span>Papara</span>
+                </div>
+                <div class="method-card" data-target="crypto-fields">
+                    <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v12M9 9h6M9 15h6"></path></svg>
+                    <span>Kripto (USDT)</span>
+                </div>
+            </div>
+
+            <div class="dynamic-fields">
+                <div class="field-group banka-fields active">
+                    <div class="form-control">
+                        <label>Alıcı Adı Soyadı</label>
+                        <div class="input-box">
+                            <input type="text" placeholder="Örn: Ahmet Yılmaz" required>
+                        </div>
+                    </div>
+                    <div class="form-control">
+                        <label>IBAN Numarası</label>
+                        <div class="input-box">
+                            <input type="text" id="ibanInput" placeholder="TR00 0000 0000 0000 0000 0000 00" maxlength="32">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group papara-fields">
+                    <div class="form-control">
+                        <label>Papara Hesap Numarası</label>
+                        <div class="input-box">
+                            <input type="number" placeholder="Örn: 1023456789">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group crypto-fields">
+                    <div class="form-control">
+                        <label>USDT Cüzdan Adresi (TRC-20)</label>
+                        <div class="input-box">
+                            <input type="text" placeholder="T ile başlayan cüzdan adresi">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="amount-container">
+                <div class="form-control">
+                    <label>Çekilecek Tutar</label>
+                    <div class="amount-input-wrapper input-box">
+                        <span class="currency-symbol">₺</span>
+                        <input type="number" id="withdrawAmount" placeholder="0.00" min="20" step="any" required>
+                    </div>
+                </div>
+
+                <div class="live-calc-box">
+                    <div class="calc-row">
+                        <span>Talep Edilen Tutar:</span>
+                        <span id="rowRaw">0.00 ₺</span>
+                    </div>
+                    <div class="calc-row">
+                        <span>Ağ İşlem Ücreti (%1.5):</span>
+                        <span id="rowFee" style="color: #f43f5e; font-weight: 600;">0.00 ₺</span>
+                    </div>
+                    <div class="calc-row total">
+                        <span>Hesabınıza Geçecek Net Tutar:</span>
+                        <span class="net-val" id="rowNet">0.00 ₺</span>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+            
+            <div class="info-notice">
+                <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <span>Çekim talebiniz finans ekibimiz tarafından incelenerek tercih ettiğiniz yönteme göre ortalama 5-15 dakika içerisinde aktarılır.</span>
+            </div>
+
+            <button type="submit" class="submit-action-btn">
+                <span>Çekim Talebi Oluştur</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+
+            <div class="footer-security">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="stroke: var(--accent-green);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                256-Bit SSL Şifreleme ve Uluslararası Güvenlik Aktif
+            </div>
+
+        </form>
+    </div>
+
+    <div class="popup-overlay" id="successPopup">
+        <div class="popup-box">
+            <div class="popup-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+            <h3 id="popupTitle">İşlem Başarılı!</h3>
+            <p id="popupMessage">Çekim talebiniz finans ağımıza iletildi. İnceleme sonrası ortalama 5-15 dakika içerisinde seçtiğiniz hedefe aktarılacaktır.</p>
+            <button type="button" class="popup-close-btn" id="closePopupBtn">Anladım, Kapat</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Gece / Gündüz Modülü JS ---
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = document.getElementById('themeIcon');
+        let isDarkMode = true;
+
+        const sunIcon = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>';
+        const moonIcon = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+
+        themeToggleBtn.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                document.body.classList.remove('light-theme');
+                themeIcon.innerHTML = sunIcon;
+            } else {
+                document.body.classList.add('light-theme');
+                themeIcon.innerHTML = moonIcon;
+            }
+        });
+        // -------------------------------------
+
+        let rawBalance = 0.00; 
+        const feeRate = 0.015;
+        let currentUser = null;
+        let authToken = null; 
+
+        const methodCards = document.querySelectorAll('.method-card');
+        const fieldGroups = document.querySelectorAll('.field-group');
+        const amountInput = document.getElementById('withdrawAmount');
+        const btnAllIn = document.getElementById('btnAllIn');
+        const maxBalanceEl = document.getElementById('maxBalance');
+        
+        const withdrawalForm = document.getElementById('withdrawalForm');
+        const successPopup = document.getElementById('successPopup');
+        const closePopupBtn = document.getElementById('closePopupBtn');
+        const popupTitle = document.getElementById('popupTitle');
+        const popupMessage = document.getElementById('popupMessage');
+
+        const rowRaw = document.getElementById('rowRaw');
+        const rowFee = document.getElementById('rowFee');
+        const rowNet = document.getElementById('rowNet');
+        const ibanInput = document.getElementById('ibanInput');
+
+        function showScreenPopup(title, message) {
+            popupTitle.textContent = title;
+            popupMessage.textContent = message;
+            successPopup.classList.add('show');
+        }
+
+        function updateBalanceDisplay() {
+            maxBalanceEl.innerHTML = rawBalance.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' <span>₺</span>';
+        }
+
+        async function initUserData() {
+            const userRaw = localStorage.getItem('user');
+            authToken = localStorage.getItem('token');
+            if (!userRaw || !authToken) {
+                alert('Para çekmek için lütfen giriş yapın.');
+                window.location.href = 'login.html';
+                return;
+            }
+            try {
+                currentUser = JSON.parse(userRaw);
+            } catch (e) {
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/auth/me', {
+                    headers: { 'Authorization': 'Bearer ' + authToken }
+                });
+                if (!res.ok) throw new Error('Bakiye alınamadı');
+                const userData = await res.json();
+                rawBalance = parseFloat(userData.balance || 0);
+                currentUser = userData;
+                localStorage.setItem('user', JSON.stringify(userData));
+            } catch (err) {
+                rawBalance = parseFloat(currentUser.balance || 0);
+            }
+            updateBalanceDisplay();
+        }
+        initUserData();
+
+        methodCards.forEach(card => {
+            card.addEventListener('click', () => {
+                methodCards.forEach(c => c.classList.remove('active'));
+                fieldGroups.forEach(g => g.classList.remove('active'));
+
+                card.classList.add('active');
+                const targetClass = card.getAttribute('data-target');
+                const targetGroup = document.querySelector('.' + targetClass);
+                targetGroup.classList.add('active');
+
+                const inputs = targetGroup.querySelectorAll('input');
+                fieldGroups.forEach(g => g.querySelectorAll('input').forEach(i => i.removeAttribute('required')));
+                inputs.forEach(i => i.setAttribute('required', 'true'));
+            });
+        });
+
+        function calculateFinance(val) {
+            let amount = parseFloat(val);
+            if (isNaN(amount) || amount <= 0) {
+                rowRaw.innerText = "0,00 ₺";
+                rowFee.innerText = "0,00 ₺";
+                rowNet.innerText = "0,00 ₺";
+                return;
+            }
+
+            let fee = amount * feeRate;
+            let net = amount - fee;
+
+            const isCrypto = document.querySelector('.method-card[data-target="crypto-fields"]').classList.contains('active');
+            const symbol = isCrypto ? " USDT" : " ₺";
+
+            rowRaw.innerText = amount.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + symbol;
+            rowFee.innerText = fee.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + symbol;
+            rowNet.innerText = net.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + symbol;
+        }
+
+        amountInput.addEventListener('input', (e) => {
+            calculateFinance(e.target.value);
+        });
+
+        methodCards.forEach(card => {
+            card.addEventListener('click', () => calculateFinance(amountInput.value));
+        });
+
+        btnAllIn.addEventListener('click', () => {
+            amountInput.value = rawBalance;
+            calculateFinance(rawBalance);
+            amountInput.focus();
+        });
+
+        ibanInput.addEventListener('input', (e) => {
+            let target = e.target;
+            let position = target.selectionStart;
+            let length = target.value.length;
+            
+            let value = target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            
+            if(value.length > 0 && !value.startsWith('TR')) {
+                if(/^[0-9]/.test(value)) {
+                    value = 'TR' + value;
+                }
+            }
+
+            let formatted = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    formatted += ' ';
+                }
+                formatted += value[i];
+            }
+            
+            target.value = formatted;
+            
+            if (length !== target.value.length) {
+                target.setSelectionRange(position + (target.value.length - length), position + (target.value.length - length));
+            }
+        });
+
+        withdrawalForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            
+            let withdrawValue = parseFloat(amountInput.value);
+
+            if (isNaN(withdrawValue) || withdrawValue <= 0) {
+                showScreenPopup('Hata', 'Lütfen geçerli bir tutar giriniz.');
+                return;
+            }
+
+            if (withdrawValue > rawBalance) {
+                showScreenPopup('Hata', 'Çekmek istediğiniz tutar bakiyenizden fazla olamaz.');
+                return;
+            }
+
+            if (rawBalance <= 0) {
+                showScreenPopup('Hata', 'Bakiyeniz 0 ₺. Çekim yapamazsınız.');
+                return;
+            }
+
+            const methodCard = document.querySelector('.method-card.active');
+            const method = methodCard ? methodCard.querySelector('span').textContent.trim() : 'Banka / IBAN';
+
+            let accountInfo = '';
+            const activeGroup = document.querySelector('.field-group.active');
+            if (activeGroup) {
+                const inputs = activeGroup.querySelectorAll('input');
+                accountInfo = Array.from(inputs).map(i => i.value.trim()).filter(v => v).join(' | ');
+            }
+
+            try {
+                const res = await fetch('/api/withdrawals', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + authToken
+                    },
+                    body: JSON.stringify({
+                        amount: withdrawValue,
+                        method: method,
+                        accountInfo: accountInfo
+                    })
+                });
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.error || 'Çekim talebi oluşturulamadı.');
+
+                rawBalance = parseFloat(result.newBalance || 0);
+                currentUser.balance = rawBalance;
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                updateBalanceDisplay();
+
+                amountInput.value = '';
+                calculateFinance(0);
+                showScreenPopup('İşlem Başarılı!', 'Çekim talebiniz finans ağımıza iletildi. İnceleme sonrası ortalama 5-15 dakika içerisinde seçtiğiniz hedefe aktarılacaktır.');
+            } catch (err) {
+                showScreenPopup('Hata', err.message);
+            }
+        });
+
+        closePopupBtn.addEventListener('click', () => {
+            successPopup.classList.remove('show');
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epin Hesabım Admin Panel</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --font-main: 'Poppins', sans-serif;
+            --bg-body: #070816;
+            --surface-glass: rgba(18, 20, 32, 0.75);
+            --surface-solid: rgba(15, 19, 34, 0.96);
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --secondary: #ec4899;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--bg-body); color: var(--text-main); overflow-x: hidden; display: flex; min-height: 100vh; }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.5); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, rgba(18, 9, 42, 0.98) 0%, rgba(10, 15, 34, 0.98) 100%);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-menu { padding: 20px 12px; flex: 1; overflow-y: auto; }
+
+        .menu-title {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 15px 0 10px 12px;
+            font-weight: 600;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+        }
+
+        .menu-item i { font-size: 18px; width: 24px; text-align: center; transition: transform 0.3s; }
+        .menu-item:hover, .menu-item.active {
+            background: rgba(139, 92, 246, 0.15);
+            color: #fff;
+            box-shadow: inset 4px 0 0 var(--primary);
+        }
+        .menu-item:hover i, .menu-item.active i { color: var(--primary); transform: scale(1.1); }
+
+        .pending-badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        /* MAIN */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: margin 0.3s ease;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            height: 70px;
+            background: var(--surface-glass);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 20px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            width: 300px;
+        }
+        .search-bar input {
+            background: none; border: none; color: #fff; outline: none;
+            width: 100%; margin-left: 10px; font-size: 14px;
+        }
+
+        .topbar-actions { display: flex; align-items: center; gap: 20px; }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-main);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .icon-btn:hover { background: var(--primary); border-color: var(--primary); }
+
+        .admin-profile {
+            display: flex; align-items: center; gap: 12px;
+            cursor: pointer;
+            padding: 6px 12px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        .admin-profile:hover { background: rgba(139, 92, 246, 0.2); }
+        .admin-profile img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; }
+        .admin-info span { display: block; font-size: 13px; font-weight: 600; }
+        .admin-info small { color: var(--text-muted); font-size: 11px; }
+
+        /* CONTENT */
+        .content-area { padding: 30px; flex: 1; }
+        .page-title { font-size: 24px; font-weight: 700; margin-bottom: 24px; color: #fff; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--surface-solid);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -20px; right: -20px;
+            width: 100px; height: 100px;
+            background: var(--primary);
+            filter: blur(50px);
+            opacity: 0.15;
+            border-radius: 50%;
+        }
+        .stat-info h3 { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
+        .stat-info h2 { font-size: 28px; font-weight: 800; color: #fff; }
+        .stat-info .trend { font-size: 12px; margin-top: 8px; display: inline-block; padding: 4px 8px; border-radius: 6px; background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .stat-info .trend.down { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+        .stat-icon {
+            width: 60px; height: 60px;
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: #fff;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.3);
+        }
+        .c-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3); }
+        .c-green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3); }
+        .c-orange { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3); }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .panel-card {
+            background: var(--surface-solid);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .panel-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px;
+        }
+        .panel-title { font-size: 16px; font-weight: 600; color: #fff; }
+
+        .btn-view-all {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 12px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .btn-view-all:hover { background: var(--primary); border-color: var(--primary); }
+
+        /* TABLES */
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 12px; color: var(--text-muted); font-size: 12px; font-weight: 500; border-bottom: 1px solid var(--border-color); }
+        td { padding: 16px 12px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: middle; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+
+        .user-cell { display: flex; align-items: center; gap: 10px; }
+        .user-cell img { width: 32px; height: 32px; border-radius: 50%; }
+
+        .status-pill {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .status-success { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status-pending { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .status-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .action-td { display: flex; gap: 8px; }
+        .action-sm {
+            background: rgba(255,255,255,0.05); border: none; color: #fff;
+            width: 32px; height: 32px; border-radius: 8px;
+            cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .action-sm:hover { background: var(--primary); }
+        .action-sm.delete:hover { background: var(--danger); }
+        .action-sm.edit:hover { background: var(--success); }
+        .action-sm.approve:hover { background: var(--success); }
+        .action-sm.reject:hover { background: var(--danger); }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(139,92,246,0.4); }
+        .btn-secondary { background: rgba(255,255,255,0.08); color: white; border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.15); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #059669; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-warning { background: var(--warning); color: #fff; }
+        .btn-sm { padding: 6px 14px; font-size: 12px; border-radius: 8px; }
+
+        /* Cards Grid for Products */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .pending-card {
+            background: var(--surface-solid);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .pending-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+        .pending-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+        .pending-info { padding: 16px; }
+        .pending-info h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+        .pending-info p { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+        .pending-actions {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-box {
+            background: var(--surface-solid);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            width: 500px;
+            max-width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px;
+            position: relative;
+            animation: modalIn 0.3s ease;
+        }
+        .modal-box.wide { width: 720px; }
+        .modal-close {
+            position: absolute;
+            top: 16px; right: 20px;
+            background: none; border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .modal-close:hover { color: #fff; }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus { border-color: var(--primary); }
+        .form-control[readonly] { background: rgba(255,255,255,0.05); color: var(--success); font-weight: 700; }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Notifications */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .notification {
+            background: var(--surface-solid);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary);
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            max-width: 400px;
+            animation: slideIn 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .notification.success { border-left-color: var(--success); }
+        .notification.error { border-left-color: var(--danger); }
+        .notification.warning { border-left-color: var(--warning); }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Empty & Loading */
+        .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
+        .empty-state i { font-size: 48px; margin-bottom: 12px; display: block; }
+        .loading-state { text-align: center; padding: 40px; }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid rgba(139, 92, 246, 0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Section Display */
+        .section { display: none; }
+        .section.active { display: block; }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 26px;
+            transition: .3s;
+        }
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: .3s;
+        }
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--primary);
+        }
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(22px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .toggle-btn { display: block; }
+            .search-bar { display: none; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Notifications -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">Epin Hesabım Admin</div>
+            <button class="toggle-btn" id="closeSidebar" style="display: none;"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="sidebar-menu">
+            <div class="menu-title">Ana Menü</div>
+            <button class="menu-item active" data-section="dashboard"><i class="fas fa-home"></i> <span>Dashboard</span></button>
+            <button class="menu-item" data-section="users"><i class="fas fa-users"></i> <span>Kullanıcılar</span></button>
+            <button class="menu-item" data-section="products"><i class="fas fa-store"></i> <span>İlan Yönetimi</span> <span class="pending-badge" id="pendingBadge" style="display:none">0</span></button>
+            <button class="menu-item" data-section="verifications"><i class="fas fa-id-card"></i> <span>Hesap Onay</span> <span class="pending-badge" id="verificationBadge" style="display:none">0</span></button>
+            <button class="menu-item" data-section="sales"><i class="fas fa-shopping-cart"></i> <span>Siparişler</span></button>
+
+            <div class="menu-title">Sistem</div>
+            <button class="menu-item" data-section="system"><i class="fas fa-server"></i> <span>Sistem Durumu</span></button>
+            <button class="menu-item" data-section="security"><i class="fas fa-shield-alt"></i> <span>Güvenlik</span></button>
+            <button class="menu-item" data-section="settings"><i class="fas fa-cog"></i> <span>Ayarlar</span></button>
+
+            <div style="margin-top: 40px;"></div>
+            <button class="menu-item" onclick="logoutAdmin()" style="color: var(--danger);"><i class="fas fa-sign-out-alt"></i> <span>Çıkış Yap</span></button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content" id="mainContent">
+
+        <header class="topbar">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <button class="toggle-btn" id="openSidebar"><i class="fas fa-bars"></i></button>
+                <div class="search-bar">
+                    <i class="fas fa-search" style="color: var(--text-muted);"></i>
+                    <input type="text" placeholder="Kullanıcı, İlan veya Sipariş Ara...">
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <button class="icon-btn"><i class="fas fa-bell"></i></button>
+                <div class="admin-profile">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=8b5cf6&color=fff" alt="Admin">
+                    <div class="admin-info">
+                        <span>Admin</span>
+                        <small>Yönetici</small>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-area">
+
+            <!-- DASHBOARD SECTION -->
+            <div class="section active" id="dashboardSection">
+                <h1 class="page-title">Genel Bakış</h1>
+                <div class="stats-grid" id="dashboardStats">
+                    <div class="stat-card"><div class="stat-info"><h3>Toplam Kullanıcı</h3><h2>-</h2></div><div class="stat-icon c-blue"><i class="fas fa-users"></i></div></div>
+                    <div class="stat-card"><div class="stat-info"><h3>Bekleyen İlan</h3><h2>-</h2></div><div class="stat-icon c-orange"><i class="fas fa-clock"></i></div></div>
+                    <div class="stat-card"><div class="stat-info"><h3>Toplam Sipariş</h3><h2>-</h2></div><div class="stat-icon c-green"><i class="fas fa-check-circle"></i></div></div>
+                    <div class="stat-card"><div class="stat-info"><h3>Toplam Gelir</h3><h2>-</h2></div><div class="stat-icon"><i class="fas fa-wallet"></i></div></div>
+                </div>
+                <div class="dashboard-grid">
+                <div class="panel-card">
+                    <div class="panel-header"><span class="panel-title">Son İşlemler</span></div>
+                    <div id="recentTransactions">Yükleniyor...</div>
+                </div>
+                <div class="panel-card">
+                    <div class="panel-header"><span class="panel-title">Bekleyen İlanlar</span></div>
+                    <div id="pendingListings">Yükleniyor...</div>
+                </div>
+            </div>
+            </div>
+
+            <!-- USERS SECTION -->
+            <div class="section" id="usersSection">
+                <h1 class="page-title">Kullanıcı Yönetimi</h1>
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <span class="panel-title">Tüm Kullanıcılar</span>
+                    </div>
+                    <div id="usersContent"><div class="loading-state"><div class="spinner"></div><p>Yükleniyor...</p></div></div>
+                </div>
+            </div>
+
+            <!-- PRODUCTS SECTION -->
+            <div class="section" id="productsSection">
+                <h1 class="page-title">İlan Yönetimi</h1>
+                <div id="productsContent"><div class="loading-state"><div class="spinner"></div><p>Yükleniyor...</p></div></div>
+            </div>
+
+            <!-- VERIFICATIONS SECTION -->
+            <div class="section" id="verificationsSection">
+                <h1 class="page-title">Hesap Onay Talepleri</h1>
+                <div id="verificationsContent"><div class="loading-state"><div class="spinner"></div><p>Yükleniyor...</p></div></div>
+            </div>
+
+            <!-- SALES SECTION -->
+            <div class="section" id="salesSection">
+                <h1 class="page-title">Siparişler</h1>
+                <div id="salesContent"><div class="loading-state"><div class="spinner"></div><p>Yükleniyor...</p></div></div>
+            </div>
+
+            <!-- SYSTEM SECTION -->
+            <div class="section" id="systemSection">
+                <h1 class="page-title">Sistem Durumu</h1>
+                <div id="systemContent"><div class="loading-state"><div class="spinner"></div><p>Yükleniyor...</p></div></div>
+            </div>
+
+            <!-- SECURITY SECTION -->
+            <div class="section" id="securitySection">
+                <h1 class="page-title">Güvenlik</h1>
+                <div id="securityContent"><div class="loading-state"><div class="spinner"></div><p>Yükleniyor...</p></div></div>
+            </div>
+
+            <!-- SETTINGS SECTION -->
+            <div class="section" id="settingsSection">
+                <h1 class="page-title">Ayarlar</h1>
+                <div id="settingsContent">
+                    <div class="loading-state"><div class="spinner"></div><p>Yükleniyor...</p></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- EDIT USER MODAL -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('editModal')"><i class="fas fa-times"></i></button>
+            <h3 style="margin-bottom:20px;font-size:18px;">Kullanıcı Düzenle</h3>
+            <input type="hidden" id="editUserId">
+            <input type="hidden" id="editCurrentBalance" value="0">
+            <div class="form-group">
+                <label>Mevcut Bakiye</label>
+                <div id="displayCurrentBalance" style="padding:12px;border-radius:12px;border:1px solid var(--border-color);background:rgba(0,0,0,0.3);color:var(--success);font-weight:700;font-size:16px;">₺0</div>
+            </div>
+            <div class="form-group">
+                <label for="editAddBalance">Yeni Bakiye (TL)</label>
+                <input type="number" id="editAddBalance" class="form-control" value="0" min="0">
+            </div>
+            <div class="form-group">
+                <label for="editStatus">Durum</label>
+                <select id="editStatus" class="form-control">
+                    <option value="active">Aktif</option>
+                    <option value="pending">İncelemede</option>
+                    <option value="banned">Banlı</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('editModal')">İptal</button>
+                <button class="btn btn-primary" onclick="saveUserChanges()">Ekle</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCT MODAL -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-box wide">
+            <button class="modal-close" onclick="closeModal('productModal')"><i class="fas fa-times"></i></button>
+            <div id="productModalBody">Yükleniyor...</div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+    // =====================
+    // GLOBAL CONFIG
+    // =====================
+    const API_BASE = 'http://localhost:3000/api/admin';
+    let USE_MOCK_USERS = false;
+    if (typeof window !== 'undefined' && typeof window.__USE_MOCK_USERS !== 'undefined') {
+        USE_MOCK_USERS = !!window.__USE_MOCK_USERS;
+    }
+
+    const MOCK_USERS = [
+        { _id: 'u1', username: 'alice', email: 'alice@example.com', balance: 1200, role: 'user', status: 'active' },
+        { _id: 'u2', username: 'bob', email: 'bob@example.com', balance: 0, role: 'user', status: 'pending' },
+        { _id: 'u3', username: 'charlie', email: 'charlie@example.com', balance: 500, role: 'moderator', status: 'active' }
+    ];
+    const MOCK_PRODUCTS = [
+        { _id: 'p1', title: 'Premium Valorant Hesabı', description: 'Hesap 10+ rank skin içerir.', image: 'assets/uploads/listings/listing_392_1778261611_69fe1e6b80649.webp', price: 4500, category: 'Valorant', sellerName: 'TrustSeller', status: 'pending', saleStatus: 'available' },
+        { _id: 'p2', title: 'PUBG Mobile Hesabı', description: '50K BP, premium skinler.', image: 'assets/img/placeholder.jpg', price: 12000, category: 'PUBG', sellerName: 'GameHub', status: 'pending', saleStatus: 'available' }
+    ];
+    let adminSettings = {
+        maintenanceMode: false,
+        emailNotifications: true,
+        announcementVisible: true,
+        promotionsEnabled: false,
+        commissionRate: 5,
+        siteTitle: 'ITEMCI',
+        contactEmail: 'destek@itemci.com'
+    };
+
+    // =====================
+    // UTILITY FUNCTIONS
+    // =====================
+    function escapeHtml(str) {
+        if (str == null) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function jsString(value) {
+        return "'" + String(value ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'";
+    }
+
+    function formatStatus(status) {
+        const map = {
+            active: { text: 'Aktif', className: 'status-success' },
+            pending: { text: 'Beklemede', className: 'status-pending' },
+            banned: { text: 'Banlı', className: 'status-danger' },
+            approved: { text: 'Onaylandı', className: 'status-success' },
+            rejected: { text: 'Reddedildi', className: 'status-danger' },
+            available: { text: 'Aktif', className: 'status-success' },
+            reserved: { text: 'Pasif', className: 'status-pending' },
+            sold: { text: 'Satıldı', className: 'status-danger' }
+        };
+        return map[status] || { text: status || 'Bilinmiyor', className: 'status-pending' };
+    }
+
+    function createLoadingState() {
+        return '<div class="loading-state"><div class="spinner"></div><p>Yükleniyor...</p></div>';
+    }
+    function createEmptyState(title, icon) {
+        return '<div class="empty-state"><i class="fas ' + (icon || 'fa-inbox') + '"></i><h3>' + escapeHtml(title) + '</h3><p>Şu anda görüntülenecek bir şey yok.</p></div>';
+    }
+    function createErrorState(msg) {
+        return '<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><h3>Hata Oluştu</h3><p>' + escapeHtml(msg || 'Veriler yüklenirken hata oluştu') + '</p></div>';
+    }
+
+    // =====================
+    // NOTIFICATIONS
+    // =====================
+    function addNotification(title, message, icon, type) {
+        const container = document.getElementById('notificationContainer');
+        const notif = document.createElement('div');
+        notif.className = 'notification ' + (type || 'info');
+        const iconClass = icon || (type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle');
+        notif.innerHTML = '<i class="fas ' + iconClass + '" style="font-size:20px;color:' + (type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : 'var(--primary)') + '"></i><div><strong>' + escapeHtml(title) + '</strong><p style="font-size:13px;margin-top:2px;">' + escapeHtml(message) + '</p></div>';
+        container.appendChild(notif);
+        setTimeout(() => { notif.style.opacity = '0'; notif.style.transform = 'translateX(100%)'; setTimeout(() => notif.remove(), 400); }, 4000);
+    }
+
+    // =====================
+    // MODAL HELPERS
+    // =====================
+    function openModal(id) {
+        const m = document.getElementById(id);
+        if (m) { m.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+    }
+    function closeModal(id) {
+        const m = document.getElementById(id);
+        if (m) { m.style.display = 'none'; document.body.style.overflow = ''; }
+    }
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) closeModal(this.id);
+        });
+    });
+
+    // =====================
+    // API CALL
+    // =====================
+    async function apiCall(endpoint, options = {}) {
+        const token = localStorage.getItem('adminToken');
+        const headers = {
+            'Content-Type': 'application/json',
+            ...(token && { 'Authorization': 'Bearer ' + token }),
+            ...options.headers
+        };
+
+        try {
+            if (USE_MOCK_USERS && endpoint && endpoint.startsWith('/')) {
+                await new Promise(r => setTimeout(r, 300));
+                if ((endpoint === '/users' || endpoint === '/users/') && (!options.method || options.method === 'GET')) return JSON.parse(JSON.stringify(MOCK_USERS));
+                const banMatch = endpoint.match(/^\/ban-user\/(.+)$/);
+                if (banMatch && options.method === 'PUT') {
+                    const id = banMatch[1];
+                    const u = MOCK_USERS.find(x => x._id === id);
+                    if (u) { u.status = 'banned'; return { success: true }; }
+                    throw new Error('User not found');
+                }
+                const delMatch = endpoint.match(/^\/user\/(.+)$/);
+                if (delMatch && options.method === 'DELETE') {
+                    const id = delMatch[1];
+                    const idx = MOCK_USERS.findIndex(x => x._id === id);
+                    if (idx > -1) { MOCK_USERS.splice(idx, 1); return { success: true }; }
+                    throw new Error('User not found');
+                }
+                if ((endpoint === '/products' || endpoint === '/products/') && (!options.method || options.method === 'GET')) return JSON.parse(JSON.stringify(MOCK_PRODUCTS));
+                if ((endpoint === '/pending-products' || endpoint === '/pending-products/') && (!options.method || options.method === 'GET')) return JSON.parse(JSON.stringify(MOCK_PRODUCTS.filter(p => p.status === 'pending')));
+                const approveMatch = endpoint.match(/^\/approve-product\/(.+)$/);
+                if (approveMatch && options.method === 'PUT') {
+                    const id = approveMatch[1];
+                    const p = MOCK_PRODUCTS.find(x => x._id === id);
+                    if (p) { p.status = 'approved'; p.saleStatus = 'available'; return { success: true }; }
+                    throw new Error('Product not found');
+                }
+                const rejectMatch = endpoint.match(/^\/reject-product\/(.+)$/);
+                if (rejectMatch && options.method === 'PUT') {
+                    const id = rejectMatch[1];
+                    const p = MOCK_PRODUCTS.find(x => x._id === id);
+                    if (p) { p.status = 'rejected'; return { success: true }; }
+                    throw new Error('Product not found');
+                }
+                const statusMatch = endpoint.match(/^\/product-status\/(.+)$/);
+                if (statusMatch && options.method === 'PUT') {
+                    const id = statusMatch[1];
+                    const body = options.body ? JSON.parse(options.body) : {};
+                    const p = MOCK_PRODUCTS.find(x => x._id === id);
+                    if (p) { if (body.status) p.status = body.status; if (body.saleStatus) p.saleStatus = body.saleStatus; return { success: true }; }
+                    throw new Error('Product not found');
+                }
+                const productMatch = endpoint.match(/^\/product\/(.+)$/);
+                if (productMatch && (!options.method || options.method === 'GET')) {
+                    const id = productMatch[1];
+                    const p = MOCK_PRODUCTS.find(x => x._id === id);
+                    if (p) return JSON.parse(JSON.stringify(p));
+                    throw new Error('Product not found');
+                }
+                if (delMatch && options.method === 'PUT') {
+                    const id = delMatch[1];
+                    const body = options.body ? (typeof options.body === 'string' ? JSON.parse(options.body) : options.body) : {};
+                    const u = MOCK_USERS.find(x => x._id === id);
+                    if (u) { Object.assign(u, body); return { success: true, user: u }; }
+                    throw new Error('User not found');
+                }
+                // Settings mocks
+                if ((endpoint === '/settings' || endpoint === '/settings/') && (!options.method || options.method === 'GET')) {
+                    return { ...adminSettings };
+                }
+                if ((endpoint === '/settings' || endpoint === '/settings/') && options.method === 'PUT') {
+                    const body = options.body ? (typeof options.body === 'string' ? JSON.parse(options.body) : options.body) : {};
+                    adminSettings = { ...adminSettings, ...body };
+                    return { success: true, settings: adminSettings };
+                }
+            }
+
+            const response = await fetch(API_BASE + endpoint + (endpoint.includes('?') ? '&' : '?') + '_t=' + Date.now(), { ...options, headers });
+            if (!response.ok) {
+                if (response.status === 401) logoutAdmin();
+                throw new Error('API Error: ' + response.status);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('API Error:', error);
+            throw error;
+        }
+    }
+
+    // =====================
+    // NAVIGATION
+    // =====================
+    const sectionLoaders = {
+        dashboardSection: loadDashboard,
+        usersSection: loadUsers,
+        productsSection: loadPendingProducts,
+        verificationsSection: loadVerifications,
+        salesSection: loadSalesSection,
+        systemSection: loadSystemSection,
+        securitySection: loadSecuritySection,
+        settingsSection: loadSettingsSection
+    };
+
+    function showSection(sectionId) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        const target = document.getElementById(sectionId);
+        if (target) target.classList.add('active');
+
+        document.querySelectorAll('.menu-item').forEach(btn => btn.classList.remove('active'));
+        const btn = document.querySelector('.menu-item[data-section="' + sectionId.replace('Section','') + '"]');
+        if (btn) btn.classList.add('active');
+
+        const loader = sectionLoaders[sectionId];
+        if (loader) loader();
+
+        if (window.innerWidth <= 768) {
+            document.getElementById('sidebar').classList.remove('active');
+        }
+    }
+
+    document.querySelectorAll('.menu-item[data-section]').forEach(item => {
+        item.addEventListener('click', () => showSection(item.dataset.section + 'Section'));
+    });
+
+    // =====================
+    // DATA LOADING
+    // =====================
+    async function loadDashboard() {
+        const statsEl = document.getElementById('dashboardStats');
+        const recentEl = document.getElementById('recentTransactions');
+        const pendingEl = document.getElementById('pendingListings');
+        try {
+            const summary = await apiCall('/dashboard-summary');
+            const cards = [
+                { title: 'Toplam Kullanıcı', value: Number(summary.usersCount || 0).toLocaleString('tr-TR'), icon: 'fa-users', color: 'c-blue' },
+                { title: 'Bekleyen İlan', value: Number(summary.pendingProductsCount || 0).toLocaleString('tr-TR'), icon: 'fa-clock', color: 'c-orange' },
+                { title: 'Toplam Sipariş', value: Number(summary.totalOrders || 0).toLocaleString('tr-TR'), icon: 'fa-check-circle', color: 'c-green' },
+                { title: 'Toplam Gelir', value: '₺' + Number(summary.totalRevenue || 0).toLocaleString('tr-TR'), icon: 'fa-wallet', color: '' }
+            ];
+            statsEl.innerHTML = cards.map(c => `
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>${c.title}</h3>
+                        <h2>${c.value}</h2>
+                    </div>
+                    <div class="stat-icon ${c.color}"><i class="fas ${c.icon}"></i></div>
+                </div>
+            `).join('');
+
+            // Recent transactions
+            let orders = [];
+            try {
+                const data = await apiCall('/orders');
+                orders = (data.orders || []).slice(0, 5);
+            } catch(e) {}
+            if (orders.length === 0) {
+                recentEl.innerHTML = createEmptyState('Henüz sipariş yok', 'fa-receipt');
+            } else {
+                recentEl.innerHTML = '<table><thead><tr><th>Sipariş</th><th>Tutar</th><th>Durum</th></tr></thead><tbody>' +
+                    orders.map(o => '<tr><td><strong>#' + (o._id || '').slice(-6).toUpperCase() + '</strong></td><td>₺' + Number(o.price || 0).toLocaleString('tr-TR') + '</td><td><span class="status-pill ' + (o.status === 'completed' ? 'status-success' : 'status-pending') + '">' + (o.status === 'completed' ? 'Tamamlandı' : 'Bekliyor') + '</span></td></tr>').join('') +
+                    '</tbody></table>';
+            }
+
+            // Pending listings
+            let pending = [];
+            try {
+                pending = await apiCall('/pending-products');
+                pending = (pending || []).slice(0, 5);
+            } catch(e) {}
+            if (pending.length === 0) {
+                pendingEl.innerHTML = createEmptyState('Bekleyen ilan yok', 'fa-store');
+            } else {
+                pendingEl.innerHTML = '<table><thead><tr><th>İlan</th><th>Satıcı</th><th>Fiyat</th><th>İşlem</th></tr></thead><tbody>' +
+                    pending.map(p => '<tr><td><strong>' + escapeHtml(p.title) + '</strong></td><td>' + escapeHtml(p.sellerName || '-') + '</td><td>₺' + Number(p.price || 0).toLocaleString('tr-TR') + '</td><td><button class="action-sm" onclick="openProductModal(' + jsString(p._id) + ')" title="İncele"><i class="fas fa-eye"></i></button></td></tr>').join('') +
+                    '</tbody></table>';
+            }
+        } catch (error) {
+            statsEl.innerHTML = createErrorState();
+            addNotification('Hata', 'Dashboard verileri alınamadı', 'fa-exclamation-circle', 'error');
+        }
+    }
+
+    async function loadUsers() {
+        const content = document.getElementById('usersContent');
+        content.innerHTML = createLoadingState();
+        try {
+            const users = await apiCall('/users');
+            if (!users || users.length === 0) { content.innerHTML = createEmptyState('Kullanıcı bulunamadı', 'fa-users'); return; }
+            content.innerHTML = '<div style="overflow-x:auto;"><table><thead><tr><th>Kullanıcı</th><th>Email</th><th>Bakiye</th><th>Rol</th><th>Durum</th><th>İşlemler</th></tr></thead><tbody>' +
+                users.map(user => {
+                    const balance = user.balance || 0;
+                    const st = formatStatus(user.status);
+                    return '<tr>' +
+                        '<td><div class="user-cell"><img src="https://ui-avatars.com/api/?name=' + encodeURIComponent(user.username || 'U') + '&background=8b5cf6&color=fff"><div><div style="font-weight:600;">' + escapeHtml(user.username) + '</div></div></div></td>' +
+                        '<td>' + escapeHtml(user.email) + '</td>' +
+                        '<td style="font-weight:600;">₺' + Number(balance).toLocaleString('tr-TR') + '</td>' +
+                        '<td>' + escapeHtml(user.role || 'user') + '</td>' +
+                        '<td><span class="status-pill ' + st.className + '">' + st.text + '</span></td>' +
+                        '<td class="action-td">' +
+                            '<button class="action-sm edit" title="Düzenle" onclick="openEditModal(' + jsString(user._id) + ', ' + Number(balance) + ', ' + jsString(user.status) + ')"><i class="fas fa-edit"></i></button>' +
+                            '<button class="action-sm approve" title="Banla" onclick="banUser(' + jsString(user._id) + ', ' + jsString(user.username) + ')"><i class="fas fa-ban"></i></button>' +
+                            '<button class="action-sm delete" title="Sil" onclick="deleteUser(' + jsString(user._id) + ', ' + jsString(user.username) + ')"><i class="fas fa-trash"></i></button>' +
+                        '</td>' +
+                    '</tr>';
+                }).join('') +
+                '</tbody></table></div>';
+        } catch (error) {
+            content.innerHTML = createErrorState();
+            addNotification('Hata', 'Kullanıcılar yüklenirken hata oluştu', 'fa-exclamation-circle', 'error');
+        }
+    }
+
+    async function loadPendingProducts() {
+        const content = document.getElementById('productsContent');
+        content.innerHTML = createLoadingState();
+        try {
+            const products = await apiCall('/products');
+            if (!products || products.length === 0) { content.innerHTML = createEmptyState('İlan bulunamadı', 'fa-store'); return; }
+
+            const pendingCount = products.filter(p => p.status === 'pending').length;
+            const badge = document.getElementById('pendingBadge');
+            if (badge) { if (pendingCount > 0) { badge.textContent = pendingCount; badge.style.display = 'inline-block'; } else badge.style.display = 'none'; }
+
+            content.innerHTML = '<div class="cards-grid">' + products.map(product => {
+                const st = formatStatus(product.status);
+                const saleSt = formatStatus(product.saleStatus);
+                return '<div class="pending-card">' +
+                    '<img src="' + escapeHtml(product.image || '') + '" onerror="this.style.display=\'none\'" alt="">' +
+                    '<div class="pending-info">' +
+                        '<h3>' + escapeHtml(product.title) + '</h3>' +
+                        '<p>' + escapeHtml(product.description || '') + '</p>' +
+                        '<p><strong>Kategori:</strong> ' + escapeHtml(product.category || 'Genel') + '</p>' +
+                        '<p><strong>Satıcı:</strong> ' + escapeHtml(product.sellerName || 'Satıcı') + '</p>' +
+                        '<p><strong>Fiyat:</strong> ₺' + (product.price || 0).toLocaleString('tr-TR') + '</p>' +
+                        '<p><strong>Onay:</strong> <span class="status-pill ' + st.className + '">' + st.text + '</span></p>' +
+                        '<p><strong>Satış:</strong> <span class="status-pill ' + saleSt.className + '">' + saleSt.text + '</span></p>' +
+                    '</div>' +
+                    '<div class="pending-actions">' +
+                        (product.status !== 'approved' ? '<button class="btn btn-success btn-sm" onclick="approveProduct(' + jsString(product._id) + ', ' + jsString(product.title) + ')"><i class="fas fa-check"></i> Onayla</button>' : '') +
+                        (product.status === 'approved' && product.saleStatus !== 'available' ? '<button class="btn btn-success btn-sm" onclick="setProductActive(' + jsString(product._id) + ', ' + jsString(product.title) + ')"><i class="fas fa-play"></i> Aktif Et</button>' : '') +
+                        (product.status === 'approved' && product.saleStatus === 'available' ? '<button class="btn btn-warning btn-sm" onclick="setProductPassive(' + jsString(product._id) + ', ' + jsString(product.title) + ')"><i class="fas fa-pause"></i> Pasif Et</button>' : '') +
+                        (product.status !== 'rejected' ? '<button class="btn btn-danger btn-sm" onclick="rejectProduct(' + jsString(product._id) + ', ' + jsString(product.title) + ')"><i class="fas fa-times"></i> Reddet</button>' : '') +
+                        '<button class="btn btn-secondary btn-sm" onclick="openProductModal(' + jsString(product._id) + ')"><i class="fas fa-eye"></i> Detay</button>' +
+                    '</div>' +
+                '</div>';
+            }).join('') + '</div>';
+        } catch (error) {
+            content.innerHTML = createErrorState();
+            addNotification('Hata', 'İlanlar yüklenirken hata oluştu', 'fa-exclamation-circle', 'error');
+        }
+    }
+
+    async function loadVerifications() {
+        const content = document.getElementById('verificationsContent');
+        content.innerHTML = createLoadingState();
+        try {
+            const verifications = await apiCall('/verifications');
+            const badge = document.getElementById('verificationBadge');
+            if (badge) {
+                if (verifications.length > 0) {
+                    badge.textContent = verifications.length;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+
+            if (!verifications || verifications.length === 0) {
+                content.innerHTML = createEmptyState('Hesap onay talebi yok', 'fa-id-card');
+                return;
+            }
+
+            content.innerHTML = '<div class="cards-grid">' + verifications.map(user => {
+                const image = user.verificationImage || '';
+                return '<div class="pending-card">' +
+                    '<img src="' + escapeHtml(image) + '" onerror="this.style.display=\'none\'" alt="Kimlik Görseli">' +
+                    '<div class="pending-info">' +
+                        '<h3>' + escapeHtml(user.username || user.fullName || 'Kullanıcı') + '</h3>' +
+                        '<p><strong>Ad Soyad:</strong> ' + escapeHtml(user.fullName || '-') + '</p>' +
+                        '<p><strong>Email:</strong> ' + escapeHtml(user.email || '-') + '</p>' +
+                        '<p><strong>Telefon:</strong> ' + escapeHtml(user.phone || '-') + '</p>' +
+                        '<p><strong>Durum:</strong> <span class="status-pill status-pending">İncelemede</span></p>' +
+                        '<p><strong>Gönderim:</strong> ' + (user.verificationSubmittedAt ? new Date(user.verificationSubmittedAt).toLocaleString('tr-TR') : '-') + '</p>' +
+                        (image ? '<p style="margin-top:8px;"><a href="' + escapeHtml(image) + '" target="_blank" style="color:var(--primary);">Kimlik görselini yeni sekmede aç</a></p>' : '') +
+                    '</div>' +
+                    '<div class="pending-actions">' +
+                        '<button class="btn btn-success btn-sm" onclick="reviewVerification(' + jsString(user._id) + ', ' + jsString('approved') + ', ' + jsString(user.username || user.fullName || 'Kullanıcı') + ')"><i class="fas fa-check"></i> Onayla</button>' +
+                        '<button class="btn btn-danger btn-sm" onclick="reviewVerification(' + jsString(user._id) + ', ' + jsString('rejected') + ', ' + jsString(user.username || user.fullName || 'Kullanıcı') + ')"><i class="fas fa-times"></i> Reddet</button>' +
+                    '</div>' +
+                '</div>';
+            }).join('') + '</div>';
+        } catch (error) {
+            content.innerHTML = createErrorState('Hesap onay talepleri yüklenirken hata oluştu');
+            addNotification('Hata', 'Hesap onay talepleri yüklenirken hata oluştu', 'fa-exclamation-circle', 'error');
+        }
+    }
+
+    async function reviewVerification(id, status, username) {
+        try {
+            await apiCall('/verifications/' + encodeURIComponent(id), {
+                method: 'PUT',
+                body: JSON.stringify({ status })
+            });
+            addNotification('Başarılı', username + ' hesap onay talebi ' + (status === 'approved' ? 'onaylandı' : 'reddedildi'), 'fa-check-circle', 'success');
+            loadVerifications();
+        } catch (error) {
+            addNotification('Hata', 'Hesap onay durumu güncellenemedi', 'fa-exclamation-circle', 'error');
+        }
+    }
+
+    async function loadSalesSection() {
+        const content = document.getElementById('salesContent');
+        content.innerHTML = createLoadingState();
+        try {
+            const data = await apiCall('/orders');
+            const orders = data.orders || [];
+            const summary = data.summary || {};
+            content.innerHTML = '<div class="stats-grid" style="margin-bottom:20px;">' +
+                '<div class="stat-card"><div class="stat-info"><h3>Toplam Sipariş</h3><h2>' + Number(summary.totalOrders || 0).toLocaleString('tr-TR') + '</h2></div><div class="stat-icon c-blue"><i class="fas fa-shopping-cart"></i></div></div>' +
+                '<div class="stat-card"><div class="stat-info"><h3>Tamamlanan</h3><h2>' + Number(summary.completedCount || 0).toLocaleString('tr-TR') + '</h2></div><div class="stat-icon c-green"><i class="fas fa-check"></i></div></div>' +
+                '<div class="stat-card"><div class="stat-info"><h3>Bekleyen</h3><h2>' + Number(summary.pendingCount || 0).toLocaleString('tr-TR') + '</h2></div><div class="stat-icon c-orange"><i class="fas fa-clock"></i></div></div>' +
+                '<div class="stat-card"><div class="stat-info"><h3>Toplam Gelir</h3><h2>₺' + Number(summary.totalRevenue || 0).toLocaleString('tr-TR') + '</h2></div><div class="stat-icon"><i class="fas fa-wallet"></i></div></div>' +
+            '</div>' +
+            '<div class="panel-card"><div class="panel-header"><span class="panel-title">Son Siparişler</span></div>' +
+            (orders.length === 0 ? createEmptyState('Sipariş bulunamadı', 'fa-basket-shopping') :
+                '<div style="overflow-x:auto;"><table><thead><tr><th>Sipariş No</th><th>Alıcı</th><th>Ürün</th><th>Tutar</th><th>Durum</th></tr></thead><tbody>' +
+                orders.slice(0, 20).map(order => {
+                    const badgeClass = order.status === 'completed' ? 'status-success' : order.status === 'pending' ? 'status-pending' : 'status-danger';
+                    const badgeText = order.status === 'completed' ? 'Tamamlandı' : order.status === 'pending' ? 'Beklemede' : 'İptal';
+                    return '<tr><td><strong>#' + (order._id || '').slice(-6).toUpperCase() + '</strong></td><td>' + escapeHtml(order.buyerId || '-') + '</td><td>' + escapeHtml(order.productName || '-') + '</td><td style="font-weight:600;">₺' + Number(order.price || 0).toLocaleString('tr-TR') + '</td><td><span class="status-pill ' + badgeClass + '">' + badgeText + '</span></td></tr>';
+                }).join('') + '</tbody></table></div>') +
+            '</div>';
+        } catch (error) {
+            content.innerHTML = createErrorState();
+            addNotification('Hata', 'Sipariş verileri yüklenirken hata oluştu', 'fa-exclamation-circle', 'error');
+        }
+    }
+
+    async function loadSystemSection() {
+        const content = document.getElementById('systemContent');
+        content.innerHTML = createLoadingState();
+        try {
+            const summary = await apiCall('/system-summary');
+            content.innerHTML = '<div class="stats-grid">' +
+                '<div class="stat-card"><div class="stat-info"><h3>Açık Ticket</h3><h2>' + Number(summary.ticketCount || 0) + '</h2></div><div class="stat-icon c-blue"><i class="fas fa-ticket-alt"></i></div></div>' +
+                '<div class="stat-card"><div class="stat-info"><h3>Raporlar</h3><h2>' + Number(summary.reportCount || 0) + '</h2></div><div class="stat-icon c-orange"><i class="fas fa-flag"></i></div></div>' +
+                '<div class="stat-card"><div class="stat-info"><h3>Kategoriler</h3><h2>' + Number(summary.categoryCount || 0) + '</h2></div><div class="stat-icon c-green"><i class="fas fa-tags"></i></div></div>' +
+                '<div class="stat-card"><div class="stat-info"><h3>Komisyon</h3><h2>' + (summary.commissionRate || 0) + '%</h2></div><div class="stat-icon"><i class="fas fa-percentage"></i></div></div>' +
+            '</div>' +
+            '<div class="panel-card" style="margin-top:20px;"><div class="panel-header"><span class="panel-title">Sistem Logları</span></div>' +
+            '<p style="color:var(--text-muted);padding:20px 0;">Bekleyen ilanlar: ' + (summary.pendingProductsCount || 0) + ' | Güncel komisyon oranı: ' + (summary.commissionRate || 0) + '%</p></div>';
+        } catch (error) {
+            content.innerHTML = createErrorState();
+            addNotification('Hata', 'Sistem verileri yüklenirken hata oluştu', 'fa-exclamation-circle', 'error');
+        }
+    }
+
+    async function loadSecuritySection() {
+        const content = document.getElementById('securityContent');
+        content.innerHTML = '<div class="panel-card"><div class="panel-header"><span class="panel-title">Güvenlik Logları</span></div><p style="color:var(--text-muted);padding:20px 0;">Güvenlik logları yakında aktif olacaktır.</p></div>';
+    }
+
+    async function loadSettingsSection() {
+        const content = document.getElementById('settingsContent');
+        content.innerHTML = createLoadingState();
+        try {
+            const settings = await apiCall('/settings');
+            content.innerHTML = `
+                <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="panel-card">
+                        <div class="panel-header"><span class="panel-title">Genel Ayarlar</span></div>
+                        <div class="form-group">
+                            <label>Site Başlığı</label>
+                            <input type="text" id="setting_siteTitle" class="form-control" value="${escapeHtml(settings.siteTitle || 'Epin Hesabım')}">
+                        </div>
+                        <div class="form-group">
+                            <label>İletişim E-posta</label>
+                            <input type="email" id="setting_contactEmail" class="form-control" value="${escapeHtml(settings.contactEmail || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label>Komisyon Oranı (%)</label>
+                            <input type="number" id="setting_commissionRate" class="form-control" value="${Number(settings.commissionRate || 0)}" min="0" max="100">
+                        </div>
+                    </div>
+                    <div class="panel-card">
+                        <div class="panel-header"><span class="panel-title">Özellikler</span></div>
+                        <div class="form-group" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border-color);">
+                            <div><strong style="color:#fff;font-size:14px;">Bakım Modu</strong><p style="font-size:12px;color:var(--text-muted);margin-top:2px;">Siteyi bakım moduna alır</p></div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="setting_maintenanceMode" ${settings.maintenanceMode ? 'checked' : ''}>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border-color);">
+                            <div><strong style="color:#fff;font-size:14px;">E-posta Bildirimleri</strong><p style="font-size:12px;color:var(--text-muted);margin-top:2px;">Kullanıcılara e-posta gönder</p></div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="setting_emailNotifications" ${settings.emailNotifications ? 'checked' : ''}>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border-color);">
+                            <div><strong style="color:#fff;font-size:14px;">Duyuru Görünürlüğü</strong><p style="font-size:12px;color:var(--text-muted);margin-top:2px;">Ana sayfa duyurularını göster</p></div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="setting_announcementVisible" ${settings.announcementVisible ? 'checked' : ''}>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;">
+                            <div><strong style="color:#fff;font-size:14px;">Promosyonlar</strong><p style="font-size:12px;color:var(--text-muted);margin-top:2px;">Promosyon ve kampanyaları aktif et</p></div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="setting_promotionsEnabled" ${settings.promotionsEnabled ? 'checked' : ''}>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-card" style="margin-top:24px;display:flex;justify-content:flex-end;gap:12px;">
+                    <button class="btn btn-secondary" onclick="loadSettingsSection()">Sıfırla</button>
+                    <button class="btn btn-primary" onclick="saveSettings()"><i class="fas fa-save"></i> Ayarları Kaydet</button>
+                </div>
+            `;
+        } catch (error) {
+            content.innerHTML = createErrorState('Ayarlar yüklenirken hata oluştu');
+            addNotification('Hata', 'Ayarlar yüklenirken hata oluştu', 'fa-exclamation-circle', 'error');
+        }
+    }
+
+    async function saveSettings() {
+        const updates = {
+            siteTitle: document.getElementById('setting_siteTitle').value || 'ITEMCI',
+            contactEmail: document.getElementById('setting_contactEmail').value || '',
+            commissionRate: Number(document.getElementById('setting_commissionRate').value || 0),
+            maintenanceMode: document.getElementById('setting_maintenanceMode').checked,
+            emailNotifications: document.getElementById('setting_emailNotifications').checked,
+            announcementVisible: document.getElementById('setting_announcementVisible').checked,
+            promotionsEnabled: document.getElementById('setting_promotionsEnabled').checked
+        };
+        try {
+            await apiCall('/settings', { method: 'PUT', body: JSON.stringify(updates) });
+            addNotification('Başarılı', 'Ayarlar kaydedildi', 'fa-save', 'success');
+        } catch (err) {
+            addNotification('Hata', 'Ayarlar kaydedilirken hata oluştu', 'fa-exclamation-circle', 'error');
+        }
+    }
+
+    // =====================
+    // USER ACTIONS
+    // =====================
+    function openEditModal(id, balance, status) {
+        const elId = document.getElementById('editUserId');
+        const elCurrent = document.getElementById('editCurrentBalance');
+        const elDisplay = document.getElementById('displayCurrentBalance');
+        const elAdd = document.getElementById('editAddBalance');
+        const elStatus = document.getElementById('editStatus');
+        const current = (typeof balance !== 'undefined' && balance !== null) ? Number(balance) : 0;
+        if (elId) elId.value = id || '';
+        if (elCurrent) elCurrent.value = current;
+        if (elDisplay) elDisplay.textContent = '₺' + current.toLocaleString('tr-TR');
+        if (elAdd) elAdd.value = current;
+        if (elStatus) elStatus.value = status || 'active';
+        openModal('editModal');
+    }
+
+    async function saveUserChanges() {
+        const id = document.getElementById('editUserId').value;
+        if (!id || id === 'undefined' || id === 'null') { addNotification('Hata', 'Geçersiz kullanıcı ID', 'fa-exclamation-circle', 'error'); return; }
+        const addBalanceInput = document.getElementById('editAddBalance');
+        const newBalance = Number(addBalanceInput ? (addBalanceInput.value || 0) : 0);
+        const status = document.getElementById('editStatus').value;
+        if (newBalance < 0) { addNotification('Hata', 'Bakiye negatif olamaz', 'fa-exclamation-circle', 'error'); return; }
+        console.log('Bakiye guncelleme istegi: userId=' + id + ', yeniBakiye=' + newBalance);
+        try {
+            const result = await apiCall('/user/' + id, { method: 'PUT', body: JSON.stringify({ balance: newBalance, status }) });
+            console.log('Bakiye guncelleme sonucu:', result);
+            if (result && result.success) {
+                addNotification('Başarılı', 'Bakiye ₺' + Number(newBalance).toLocaleString('tr-TR') + ' olarak güncellendi', 'fa-wallet', 'success');
+            } else {
+                addNotification('Hata', 'Sunucu başarılı yanıt vermedi', 'fa-exclamation-circle', 'error');
+            }
+            closeModal('editModal');
+            loadUsers();
+        } catch (err) { 
+            console.error('Bakiye guncelleme hatasi:', err);
+            addNotification('Hata', 'Kullanıcı güncellenirken hata oluştu: ' + (err.message || 'Bilinmeyen hata'), 'fa-exclamation-circle', 'error'); 
+        }
+    }
+
+    async function banUser(id, username) {
+        if (!confirm(username + ' kullanıcısını banlamak istediğinize emin misiniz?')) return;
+        try {
+            await apiCall('/ban-user/' + id, { method: 'PUT' });
+            addNotification('Başarılı', username + ' banlandı', 'fa-ban', 'success');
+            loadUsers();
+        } catch (err) { addNotification('Hata', 'Banlama başarısız', 'fa-exclamation-circle', 'error'); }
+    }
+
+    async function deleteUser(id, username) {
+        if (!confirm(username + ' kullanıcısını silmek istediğinize emin misiniz?')) return;
+        try {
+            await apiCall('/user/' + id, { method: 'DELETE' });
+            addNotification('Başarılı', username + ' silindi', 'fa-trash', 'success');
+            loadUsers();
+        } catch (err) { addNotification('Hata', 'Silme başarısız', 'fa-exclamation-circle', 'error'); }
+    }
+
+    // =====================
+    // PRODUCT ACTIONS
+    // =====================
+    async function approveProduct(id, title) {
+        if (!confirm(title + ' ilanını onaylamak istediğinize emin misiniz?')) return;
+        try {
+            await apiCall('/approve-product/' + id, { method: 'PUT' });
+            addNotification('Başarılı', title + ' onaylandı', 'fa-check-circle', 'success');
+            loadPendingProducts();
+            closeModal('productModal');
+        } catch (err) { addNotification('Hata', 'Onaylama başarısız', 'fa-exclamation-circle', 'error'); }
+    }
+
+    async function rejectProduct(id, title) {
+        if (!confirm(title + ' ilanını reddetmek istediğinize emin misiniz?')) return;
+        try {
+            await apiCall('/reject-product/' + id, { method: 'PUT' });
+            addNotification('Başarılı', title + ' reddedildi', 'fa-times-circle', 'success');
+            loadPendingProducts();
+            closeModal('productModal');
+        } catch (err) { addNotification('Hata', 'Reddetme başarısız', 'fa-exclamation-circle', 'error'); }
+    }
+
+    async function setProductActive(id, title) {
+        try {
+            await apiCall('/product-status/' + id, { method: 'PUT', body: JSON.stringify({ status: 'approved', saleStatus: 'available' }) });
+            addNotification('Başarılı', title + ' aktif edildi', 'fa-play-circle', 'success');
+            loadPendingProducts();
+            closeModal('productModal');
+        } catch (err) { addNotification('Hata', 'Aktif etme başarısız', 'fa-exclamation-circle', 'error'); }
+    }
+
+    async function setProductPassive(id, title) {
+        try {
+            await apiCall('/product-status/' + id, { method: 'PUT', body: JSON.stringify({ status: 'approved', saleStatus: 'reserved' }) });
+            addNotification('Başarılı', title + ' pasif edildi', 'fa-pause-circle', 'success');
+            loadPendingProducts();
+            closeModal('productModal');
+        } catch (err) { addNotification('Hata', 'Pasif etme başarısız', 'fa-exclamation-circle', 'error'); }
+    }
+
+    function openProductModal(id) {
+        if (!id || id === 'undefined' || id === 'null') { addNotification('Hata', 'Geçersiz ilan ID', 'fa-exclamation-circle', 'error'); return; }
+        const body = document.getElementById('productModalBody');
+        body.innerHTML = createLoadingState();
+        openModal('productModal');
+        (async () => {
+            try {
+                let product;
+                if (USE_MOCK_USERS) product = MOCK_PRODUCTS.find(p => p._id === id);
+                else product = await apiCall('/product/' + encodeURIComponent(id));
+                if (!product || (!product._id && !product.title)) throw new Error('İlan bulunamadı');
+                const safeId = escapeHtml(id);
+                const safeTitle = escapeHtml(product.title || 'Başlıksız');
+                body.innerHTML = '<div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;">' +
+                    '<img src="' + escapeHtml(product.image || '') + '" style="width:200px;height:150px;object-fit:cover;border-radius:12px;" onerror="this.style.display=\'none\'">' +
+                    '<div style="flex:1;min-width:200px;">' +
+                        '<h3 style="margin:0 0 10px 0;font-size:20px;">' + safeTitle + '</h3>' +
+                        '<p style="margin:0 0 8px 0;color:var(--text-muted);">' + escapeHtml(product.description || '') + '</p>' +
+                        '<p style="margin:0;font-weight:700;color:#fff;font-size:18px;">₺' + (product.price || 0).toLocaleString('tr-TR') + '</p>' +
+                        '<p style="margin:8px 0 0 0;color:var(--text-muted);font-size:13px;">Kategori: ' + escapeHtml(product.category || 'Genel') + '</p>' +
+                        '<p style="margin:4px 0 0 0;color:var(--text-muted);font-size:13px;">Satıcı: ' + escapeHtml(product.sellerName || 'Satıcı') + '</p>' +
+                        '<p style="margin:4px 0 0 0;font-size:13px;">Onay Durumu: <span class="status-pill ' + formatStatus(product.status).className + '">' + formatStatus(product.status).text + '</span></p>' +
+                        '<p style="margin:4px 0 0 0;font-size:13px;">Satış Durumu: <span class="status-pill ' + formatStatus(product.saleStatus).className + '">' + formatStatus(product.saleStatus).text + '</span></p>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="modal-footer" style="margin-top:20px;">' +
+                    (product.status !== 'approved' ? '<button class="btn btn-success" onclick="approveProduct(' + jsString(id) + ', ' + jsString(product.title) + ')"><i class="fas fa-check"></i> Onayla</button>' : '') +
+                    (product.status === 'approved' && product.saleStatus !== 'available' ? '<button class="btn btn-success" onclick="setProductActive(' + jsString(id) + ', ' + jsString(product.title) + ')"><i class="fas fa-play"></i> Aktif Et</button>' : '') +
+                    (product.status === 'approved' && product.saleStatus === 'available' ? '<button class="btn btn-warning" onclick="setProductPassive(' + jsString(id) + ', ' + jsString(product.title) + ')"><i class="fas fa-pause"></i> Pasif Et</button>' : '') +
+                    (product.status !== 'rejected' ? '<button class="btn btn-danger" onclick="rejectProduct(' + jsString(id) + ', ' + jsString(product.title) + ')"><i class="fas fa-times"></i> Reddet</button>' : '') +
+                    '<button class="btn btn-secondary" onclick="closeModal(\'productModal\')"><i class="fas fa-times"></i> Kapat</button>' +
+                '</div>';
+            } catch (err) {
+                body.innerHTML = createErrorState(err.message || 'İlan yüklenemedi') + '<div style="text-align:right;margin-top:12px;"><button class="btn btn-secondary" onclick="closeModal(\'productModal\')">Kapat</button></div>';
+            }
+        })();
+    }
+
+    // =====================
+    // AUTH
+    // =====================
+    function logoutAdmin() {
+        localStorage.removeItem('adminToken');
+        window.location.href = 'admin-login.html';
+    }
+
+    // =====================
+    // MOBILE SIDEBAR
+    // =====================
+    const sidebar = document.getElementById('sidebar');
+    document.getElementById('openSidebar').addEventListener('click', () => { sidebar.classList.add('active'); document.getElementById('closeSidebar').style.display = 'block'; });
+    document.getElementById('closeSidebar').addEventListener('click', () => { sidebar.classList.remove('active'); });
+
+    // =====================
+    // AUTH CHECK
+    // =====================
+    async function checkAdminAuth() {
+        const token = localStorage.getItem('adminToken');
+        if (!token) {
+            window.location.href = 'admin-login.html';
+            return false;
+        }
+        try {
+            const response = await fetch('http://localhost:3000/api/auth/me', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (!response.ok) throw new Error('Yetkilendirme hatası');
+            const user = await response.json();
+            if (user.role !== 'admin' && user.role !== 'super_admin') {
+                localStorage.removeItem('adminToken');
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+            // Admin bilgilerini guncelle
+            const adminNameEl = document.querySelector('.admin-info span');
+            const adminRoleEl = document.querySelector('.admin-info small');
+            const adminImg = document.querySelector('.admin-profile img');
+            if (adminNameEl) adminNameEl.textContent = user.username || 'Admin';
+            if (adminRoleEl) adminRoleEl.textContent = user.role === 'super_admin' ? 'Kurucu' : 'Yönetici';
+            if (adminImg) adminImg.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.username || 'Admin') + '&background=8b5cf6&color=fff';
+            return true;
+        } catch (err) {
+            localStorage.removeItem('adminToken');
+            window.location.href = 'admin-login.html';
+            return false;
+        }
+    }
+
+    // =====================
+    // INIT
+    // =====================
+    document.addEventListener('DOMContentLoaded', async function() {
+        const isAdmin = await checkAdminAuth();
+        if (isAdmin) loadDashboard();
+    });
+    </script>
+</body>
+</html>

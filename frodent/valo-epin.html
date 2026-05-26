@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valorant E-Pin - Epin Hesabım</title>
+    <meta name="description" content="Uygun fiyatlı ve güvenilir Valorant Points (VP) satın al. Anında teslimat ve güvenli ödeme seçenekleriyle Valorant e-pinleri burada.">
+    
+    <link rel="icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Global Site Styles */
+        * { font-family: 'Poppins', sans-serif; }
+        
+        body {
+            overflow-x: hidden !important;
+            min-height: 100vh;
+            background-image:
+                linear-gradient(180deg, rgba(8, 12, 26, 0.18), rgba(8, 12, 26, 0.22)),
+                url('assets/arkaplan.png');
+            background-repeat: no-repeat, repeat;
+            background-size: cover, 900px auto;
+            background-attachment: fixed, fixed;
+            background-position: center center, center center;
+            background-blend-mode: normal !important;
+        }
+
+        /* Yüzey Transparanlığı */
+        .page-container, .page-wrapper, .main-wrapper, .main-content, .content-wrapper, main {
+            background: transparent !important;
+            box-shadow: none !important;
+            border-color: rgba(255,255,255,0.06) !important;
+        }
+        body::after, body::before, .page-wrapper::before, .main-wrapper::before, .content-wrapper::before, .page-container::before {
+            display: none !important;
+            content: none !important;
+            background: none !important;
+        }
+
+        /* Topbar Styles */
+        .topbar {
+            background: linear-gradient(135deg, rgba(18, 8, 40, 0.98) 0%, rgba(46, 11, 95, 0.95) 45%, rgba(236, 72, 153, 0.65) 55%, rgba(26, 9, 60, 0.95) 80%);
+            border-bottom: 1px solid rgba(236, 72, 153, 0.4);
+            padding: 8px 0;
+            font-size: 13px;
+            box-shadow: inset 0 -2px 8px rgba(0, 0, 0, 0.45);
+        }
+        .topbar-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+        .topbar-left { display: flex; align-items: center; gap: 20px; }
+        .topbar-right { display: flex; align-items: center; gap: 15px; }
+        .topbar-dropdown { position: relative; }
+        .topbar-dropdown-btn { display: flex; align-items: center; gap: 6px; background: none; border: none; color: #e8e8f0; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: all 0.3s ease; font-size: 12px; font-weight: 500; }
+        .topbar-dropdown-btn:hover { color: #d4af37; background: rgba(212, 175, 55, 0.1); }
+        .topbar-dropdown-menu { position: absolute; top: 100%; right: 0; background: #1a1625; border: 1px solid #3a2f4a; border-radius: 8px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); min-width: 180px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; z-index: 3000; padding: 8px 0; margin-top: 5px; }
+        .topbar-dropdown:hover .topbar-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .topbar-dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: #e8e8f0; text-decoration: none; font-size: 13px; transition: all 0.2s ease; border-left: 3px solid transparent; }
+        .topbar-dropdown-item:hover { background: rgba(255, 255, 255, 0.05); color: #d4af37; border-left-color: #d4af37; text-decoration: none; }
+
+        @media (max-width: 768px) { .topbar { display: none; } }
+
+        /* Frontend Header Styles */
+        .frontend-header {
+            background: linear-gradient(90deg, #0a0f22 0%, #1b0d3b 35%, rgba(147, 51, 234, 0.65) 52%, #17093a 75%, #0a0f22 100%) !important;
+            border-bottom: none !important;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.35) !important;
+            position: relative;
+            z-index: 1100;
+        }
+        .frontend-header .header-top {
+            display: flex; align-items: center; justify-content: space-between; padding: 12px 24px;
+            background: transparent !important; border-bottom: 0 !important; width: 100%; position: relative;
+        }
+        .frontend-header .header-top::after{
+            content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+            background: linear-gradient(90deg, rgba(140,100,255,0), rgba(140,100,255,0.75), rgba(140,100,255,0)); pointer-events: none;
+        }
+        .logo-section { display: flex; align-items: center; gap: 12px; }
+        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; width: 100%; position: relative; z-index: 2201; }
+        .header-search-container { display: flex; align-items: center; flex: 1; max-width: 400px; margin: 0 15px; }
+        .header-search-box { width: 100%; display: flex; align-items: center; background: linear-gradient(135deg, rgba(24, 12, 50, 0.95), rgba(147, 51, 234, 0.55)); border: 1px solid rgba(147, 51, 234, 0.5); border-radius: 6px; padding: 0 16px; gap: 12px; height: 48px; box-shadow: inset 0 0 16px rgba(147, 51, 234, 0.35); }
+        .header-search-input { flex: 1; background: none !important; border: none !important; outline: none !important; color: #ffe2e2 !important; font-size: 15px; padding: 0 !important; height: 100%; box-shadow: none !important; }
+        .header-search-btn { background: #8b5cf6; border: none; color: white; cursor: pointer; padding: 8px 12px; border-radius: 4px; transition: all 0.3s ease; height: 36px; min-width: 36px; display: flex; align-items: center; justify-content: center; }
+        .header-actions { display: flex; align-items: center; gap: 8px; position: relative; z-index: 2202; }
+        .theme-toggle-btn { width: 40px; height: 40px; border-radius: 50%; background: #374151; border: 1px solid #4b5563; color: #d1d5db; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); }
+        .auth-buttons { display: flex; gap: 8px; }
+        .btn-register, .btn-login { color: white; padding: 12px 20px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; font-size: 15px; min-width: 120px; height: 48px; }
+        .btn-register { background: linear-gradient(135deg, #1e40af, #3b82f6); box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3); }
+        .btn-login { background: linear-gradient(135deg, #8b5cf6, #ec4899); box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3); }
+
+        .header-nav { display: flex; align-items: center; justify-content: flex-start; padding: 16px 32px; gap: 32px; width: 100%; background: transparent !important; position: relative; z-index: 1000; }
+        .nav-item { display: flex; align-items: center; gap: 8px; color: #e8e8f0; text-decoration: none; padding: 10px; border-radius: 8px; transition: all 0.3s ease; font-size: 15px; font-weight: 500; cursor: pointer; }
+        .nav-item i { font-size: 18px; }
+        .nav-item:hover { background: rgba(255, 255, 255, 0.05); text-decoration: none; }
+
+        @media (max-width: 992px) {
+            .header-nav, .header-search-container { display: none; }
+            .auth-buttons { display: none; }
+        }
+        @media (max-width: 768px) {
+            .header-content { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; column-gap: 10px; }
+            .logo-section { justify-self: center; }
+            .logo-section img { height: 32px !important; }
+            .header-actions { justify-self: end; }
+            .mobile-menu-toggle { display: block; background: none; border: none; color: #e8e8f0; font-size: 20px; cursor: pointer; padding: 8px; }
+            .mobile-account-btn { display: flex; align-items: center; justify-content: center; background: #8b5cf6; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; }
+            .theme-toggle-btn { width: 32px; height: 32px; font-size: 14px; }
+        }
+
+        /* Mobile Bottom Menu */
+        .mobile-bottom-menu { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10, 12, 28, 0.95); border-top: 1px solid rgba(255,255,255,0.12); padding: 8px 0; z-index: 1000; box-shadow: 0 -8px 35px rgba(0,0,0,0.65); backdrop-filter: blur(16px); }
+        .bottom-menu-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 4px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 10px; font-weight: 500; flex: 1; transition: all 0.3s ease; }
+        .bottom-menu-item i { font-size: 18px; margin-bottom: 2px; transition: transform 0.3s ease; }
+        .bottom-menu-item:hover, .bottom-menu-item.active { color: #ff4655; text-decoration: none; }
+        .bottom-menu-item:hover i { transform: scale(1.1); }
+        @media (max-width: 992px) { .mobile-bottom-menu { display: flex; justify-content: space-around; } }
+
+        /* ========================================================
+           VALORANT SAYFASINA ÖZEL E-PİN KART VE GRID TASARIMLARI
+           ======================================================== */
+        .valo-page-wrapper {
+            padding: 40px 0 60px 0;
+            min-height: calc(100vh - 400px);
+        }
+
+        /* Hero Banner */
+        .valo-hero {
+            background: linear-gradient(135deg, rgba(255, 70, 85, 0.15), rgba(15, 25, 35, 0.95)), url('assets/arkaplan.png') center/cover no-repeat;
+            border-radius: 16px;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 70, 85, 0.3);
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(255, 70, 85, 0.15);
+            position: relative;
+            overflow: hidden;
+            background-blend-mode: overlay;
+        }
+
+        .valo-hero::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at top, rgba(255,70,85,0.2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .valo-hero img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 15px rgba(255,70,85,0.6));
+            position: relative;
+            z-index: 2;
+        }
+
+        .valo-hero h1 {
+            color: #fff;
+            font-size: 32px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.8);
+            position: relative;
+            z-index: 2;
+        }
+
+        .valo-hero p {
+            color: #e2e8f0;
+            font-size: 15px;
+            margin-top: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Izgara Düzeni: PC 4'lü, Mobil 2'li */
+        .valo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        /* E-Pin Kart Tasarımı */
+        .valo-card {
+            display: flex;
+            flex-direction: column;
+            background: rgba(20, 23, 45, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            overflow: hidden;
+            text-decoration: none !important;
+            color: inherit;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+        }
+
+        .valo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 70, 85, 0.15);
+            border-color: rgba(255, 70, 85, 0.5);
+            text-decoration: none;
+        }
+
+        /* Resim Alanı (Görsel boyutları düzeltildi) */
+        .valo-img {
+            height: 180px;
+            background: radial-gradient(circle at center, rgba(30, 34, 53, 0.8) 0%, rgba(15, 18, 30, 0.9) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 20px; /* Görsellerin taşmasını önlemek için boşluk */
+        }
+
+        .valo-img img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Dev görsellerin karttan taşmasını engeller */
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+        }
+
+        .valo-card:hover .valo-img img {
+            transform: scale(1.12); /* Hover'da tatlı bir büyüme efekti */
+        }
+
+        /* Stok & İndirim Badge'leri */
+        .valo-stock {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            z-index: 2;
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            backdrop-filter: blur(4px);
+        }
+        .valo-stock.out {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .valo-discount-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #ff4655, #d13639);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(255, 70, 85, 0.4);
+            z-index: 2;
+        }
+
+        .valo-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            background: rgba(20, 23, 45, 0.8);
+        }
+
+        .valo-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 39px;
+        }
+
+        .valo-meta {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: #ffc107;
+            margin-bottom: 12px;
+        }
+        .valo-meta .cnt { color: #9ca3af; }
+
+        .valo-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            gap: 8px;
+        }
+
+        .valo-price-col {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .valo-price-old {
+            font-size: 11px;
+            color: #9ca3af;
+            text-decoration: line-through;
+            margin-bottom: -2px;
+        }
+
+        .valo-price {
+            color: #ff4655;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        /* Satın Al Butonu */
+        .valo-buy-btn {
+            background: linear-gradient(135deg, #ff4655, #d13639);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 70, 85, 0.2);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .valo-card:hover .valo-buy-btn {
+            box-shadow: 0 6px 16px rgba(255, 70, 85, 0.45);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Grid & Kart Uyarlamaları */
+        @media (max-width: 1200px) {
+            .valo-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        }
+        @media (max-width: 992px) {
+            .valo-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .valo-page-wrapper { padding: 20px 0; }
+            .valo-hero { padding: 25px 15px; margin-bottom: 25px; }
+            .valo-hero h1 { font-size: 22px; }
+            .valo-hero p { font-size: 13px; }
+            
+            /* Mobilde Tam Olarak 2'li Düzen */
+            .valo-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            
+            .valo-img { height: 140px; padding: 15px; }
+            .valo-body { padding: 12px; }
+            .valo-title { font-size: 12.5px; height: 35px; }
+            
+            .valo-footer { padding-top: 10px; }
+            .valo-price { font-size: 15px; }
+            
+            /* Butonu mobilde daha kompakt hale getirme */
+            .valo-buy-btn { padding: 6px 10px; font-size: 12px; }
+            .valo-stock { font-size: 9px; padding: 3px 6px; }
+        }
+        @media (max-width: 480px) {
+            .valo-grid { gap: 10px; }
+            .valo-img { height: 120px; padding: 10px; }
+            .valo-buy-btn span { display: none; } /* Mobilde çok dar ekranlarda 'Satın Al' yazısını gizle, sadece icon kalsın */
+            .valo-buy-btn i { margin: 0; }
+        }
+        @media (min-width: 481px) and (max-width: 768px) {
+            /* 2'li düzende ekran biraz büyükse buton yazısı kalsın */
+            .valo-buy-btn span { display: inline-block; }
+        }
+
+        /* ===== AUTH DROPDOWN & MOBILE PANEL CSS ===== */
+        .user-dropdown { position: relative; display: none; }
+        .user-dropdown-trigger { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: rgba(147,51,234,0.1); border: 1px solid rgba(147,51,234,0.3); border-radius: 10px; cursor: pointer; transition: all 0.3s ease; }
+        .user-dropdown-trigger:hover { background: rgba(147,51,234,0.15); border-color: rgba(147,51,234,0.5); box-shadow: 0 0 16px rgba(147,51,234,0.2); }
+        .user-avatar-small { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; border: 1.5px solid rgba(147,51,234,0.5); box-shadow: 0 0 12px rgba(147,51,234,0.3); }
+        .user-info-small { display: flex; flex-direction: column; gap: 2px; }
+        .username-small { font-size: 13px; font-weight: 600; color: #e8e8f0; }
+        .balance-small { font-size: 11px; color: rgba(255,255,255,0.7); }
+        .dropdown-arrow-small { font-size: 10px; transition: transform 0.3s ease; color: rgba(255,255,255,0.6); }
+        .user-dropdown.active .dropdown-arrow-small { transform: rotate(180deg); }
+        .user-dropdown-menu { position: absolute; top: calc(100% + 10px); right: 0; width: 280px; background: linear-gradient(180deg, rgba(10,15,34,0.98), rgba(27,13,59,0.95), rgba(147,51,234,0.5), rgba(23,9,58,0.95), rgba(10,15,34,0.98)); border: 1px solid rgba(147,51,234,0.4); border-radius: 14px; padding: 16px; z-index: 99999; opacity: 0; visibility: hidden; transform: translateY(-10px) scale(0.95); transition: all 0.3s ease; pointer-events: none; box-shadow: 0 12px 48px rgba(0,0,0,0.4), 0 0 32px rgba(147,51,234,0.2); backdrop-filter: blur(12px); }
+        .user-dropdown.active .user-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0) scale(1); pointer-events: auto; }
+        .dropdown-profile-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(147,51,234,0.2); }
+        .dropdown-avatar { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; border: 2px solid rgba(147,51,234,0.5); box-shadow: 0 0 16px rgba(147,51,234,0.4); }
+        .dropdown-username { font-size: 14px; font-weight: 700; color: #e8e8f0; margin-bottom: 4px; }
+        .dropdown-user-status { font-size: 11px; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 5px; }
+        .status-dot-small { width: 6px; height: 6px; background: #10b981; border-radius: 50%; box-shadow: 0 0 6px rgba(16,185,129,0.6); }
+        .dropdown-balance-card { background: linear-gradient(135deg, rgba(147,51,234,0.25), rgba(236,72,153,0.15)); border: 1px solid rgba(147,51,234,0.4); border-radius: 12px; padding: 12px; margin-bottom: 12px; box-shadow: 0 0 20px rgba(147,51,234,0.25); }
+        .balance-label-small { font-size: 10px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; font-weight: 600; }
+        .balance-amount-small { font-size: 20px; font-weight: 800; color: #fff; }
+        .dropdown-menu-item { display: flex; align-items: center; gap: 10px; padding: 10px; color: #e8e8f0; text-decoration: none; border-radius: 8px; transition: all 0.2s ease; }
+        .dropdown-menu-item:hover { background: rgba(147,51,234,0.1); color: #d4af37; }
+        .logout-menu-item { color: #ef4444; }
+        .logout-menu-item:hover { background: rgba(239,68,68,0.1); color: #ef4444; }
+
+        .profile-panel-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 2000; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        .profile-panel-backdrop.active { display: block; opacity: 1; pointer-events: auto; }
+        .mobile-profile-panel { position: fixed; top: 10px; bottom: 10px; left: 0; width: min(320px, 90vw); max-height: calc(100vh - 20px); background: linear-gradient(180deg, rgba(10,15,34,0.98), rgba(27,13,59,0.95), rgba(147,51,234,0.5), rgba(23,9,58,0.95), rgba(10,15,34,0.98)); border: 1px solid rgba(147,51,234,0.4); border-radius: 0 24px 24px 0; padding: 24px 20px; z-index: 2001; transform: translateX(-100%); transition: transform 0.35s ease; overflow-y: auto; }
+        .mobile-profile-panel.active { transform: translateX(0); }
+        .profile-panel-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid rgba(147,51,234,0.2); }
+        .profile-avatar { width: 64px; height: 64px; border-radius: 14px; object-fit: cover; border: 2px solid rgba(147,51,234,0.5); box-shadow: 0 0 20px rgba(147,51,234,0.4); }
+        .profile-username { font-size: 16px; font-weight: 700; color: #e8e8f0; margin-bottom: 4px; }
+        .profile-status { font-size: 12px; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 6px; }
+        .status-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px rgba(16,185,129,0.6); }
+        .balance-card { background: linear-gradient(135deg, rgba(147,51,234,0.25), rgba(236,72,153,0.15)); border: 1px solid rgba(147,51,234,0.4); border-radius: 14px; padding: 14px; margin-bottom: 20px; box-shadow: 0 0 24px rgba(147,51,234,0.3); }
+        .balance-label { font-size: 11px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-weight: 600; }
+        .balance-amount { font-size: 22px; font-weight: 800; color: #fff; }
+        .profile-menu { display: flex; flex-direction: column; gap: 4px; }
+        .profile-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: #e8e8f0; text-decoration: none; border-radius: 10px; transition: all 0.2s ease; }
+        .profile-menu-item:hover { background: rgba(147,51,234,0.1); color: #d4af37; }
+        .logout-item { color: #ef4444; }
+        .logout-item:hover { background: rgba(239,68,68,0.1); color: #ef4444; }
+        @media (max-width: 992px) { .user-dropdown { display: none !important; } }
+        @media (min-width: 769px) {
+            .mobile-menu-toggle,
+            .mobile-account-btn {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="frontend-header">
+        <div class="topbar">
+            <div class="topbar-content">
+                <div class="topbar-left"></div>
+                <div class="topbar-right">
+                    <div class="topbar-dropdown">
+                        <button class="topbar-dropdown-btn">
+                            <i class="fas fa-building"></i> <span>Kurumsal</span> <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="topbar-dropdown">
+                        <button class="topbar-dropdown-btn">
+                            <i class="fas fa-question-circle"></i> <span>Yardım</span> <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="header-top">
+            <div class="header-content">
+                <button class="mobile-menu-toggle" onclick="toggleMobilemenu()"><i class="fas fa-bars"></i></button>
+                <div class="logo-section">
+                    <a href="/">
+                        <img src="assets/uploads/servers/logod1ef6502-ec0d-.png" alt="Logo" style="height: 40px; max-width: 200px; object-fit: contain;">
+                    </a>
+                </div>
+                <div class="header-search-container">
+                    <div class="header-search-box">
+                        <input type="text" class="header-search-input" placeholder="Ürün, hesap veya e-pin ara...">
+                        <button class="header-search-btn"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle-btn" onclick="toggleTheme()"><i class="fas fa-sun" id="theme-icon"></i></button>
+                    <button class="mobile-account-btn" id="mobileAccountBtn"><i class="fas fa-user"></i></button>
+                    <div class="auth-buttons" id="authButtons"></div>
+                    <div class="user-dropdown" id="desktopUserDropdown" style="display: none;">
+                        <div class="user-dropdown-trigger" id="desktopDropdownTrigger">
+                            <img src="assets/img/avatar-1.png" alt="Profil" class="user-avatar-small" id="desktopUserAvatar">
+                            <div class="user-info-small">
+                                <span class="username-small" id="desktopUsername">Kullanıcı</span>
+                                <span class="balance-small" id="desktopBalance">₺0.00</span>
+                            </div>
+                            <i class="fas fa-chevron-down dropdown-arrow-small"></i>
+                        </div>
+                        <div class="user-dropdown-menu" id="desktopDropdownMenu">
+                            <div class="dropdown-profile-header">
+                                <img src="assets/img/avatar-1.png" alt="Profil" class="dropdown-avatar" id="desktopProfileAvatar">
+                                <div class="dropdown-user-info">
+                                    <div class="dropdown-username" id="desktopDropdownUsername">Kullanıcı Adı</div>
+                                    <div class="dropdown-user-status"><span class="status-dot-small"></span><span>Çevrimiçi</span></div>
+                                </div>
+                            </div>
+                            <div class="dropdown-balance-card">
+                                <div class="balance-label-small">BAKIYE</div>
+                                <div class="balance-amount-small" id="desktopDropdownBalance">₺0.00</div>
+                            </div>
+                            <a href="profilim.html" class="dropdown-menu-item"><i class="fas fa-user"></i><span>Profilim</span></a>
+                            <a href="ilanlarım.html" class="dropdown-menu-item"><i class="fas fa-list"></i><span>İlanlarım</span></a>
+                            <a href="/ilan-olustur" class="dropdown-menu-item"><i class="fas fa-plus-circle"></i><span>İlan Ekle</span></a>
+                            <a href="bakiye-ekle.html" class="dropdown-menu-item"><i class="fas fa-plus-circle"></i><span>Bakiye Yükle</span></a>
+                            <a href="para-çek.html" class="dropdown-menu-item"><i class="fas fa-wallet"></i><span>Para Çek</span></a>
+                            <a href="ayarlar.html" class="dropdown-menu-item"><i class="fas fa-cog"></i><span>Ayarlar</span></a>
+                            <a href="#" class="dropdown-menu-item logout-menu-item" onclick="confirmLogout()"><i class="fas fa-sign-out-alt"></i><span>Çıkış Yap</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="header-nav">
+            <div style="display: flex; align-items: center; justify-content: flex-start; gap: 20px; max-width: 1400px; margin: 0 auto; width: 100%; padding: 0 24px;">
+                <a href="/kategoriler" class="nav-item">
+                    <i class="ri-apps-line"></i> <span>Kategoriler</span>
+                </a>
+                <a href="valo-epin.html" class="nav-item" style="color: #ff4655;">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background-color: rgba(255,70,85,0.2) !important;">
+                        <img src="assets/uploads/menu/menu_1757953634_0cd71794.png" alt="Valorant" style="width:22px;height:22px;border-radius:4px;object-fit:cover;">
+                    </span>
+                    <span>Valorant E-Pin</span>
+                </a>
+                <a href="#butun-ilanlar" class="nav-item">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background-color: rgba(0,45,224,0.2) !important;">
+                        <i class="ti ti-coins"></i>
+                    </span>
+                    <span>İlanlar</span>
+                </a>
+                <div style="flex: 1 1 auto;"></div>
+                <a href="/ilan-olustur" class="nav-item">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background-color: rgba(0,225,255,0.2) !important;">
+                        <i class="ti ti-download"></i>
+                    </span>
+                    <span>İlan Ekle</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Profile Panel Backdrop -->
+    <div class="profile-panel-backdrop" id="profilePanelBackdrop"></div>
+
+    <!-- Mobile Premium Profile Panel -->
+    <div class="mobile-profile-panel" id="mobileProfilePanel">
+        <div class="profile-panel-header">
+            <img src="assets/img/avatar-1.png" alt="Profil" class="profile-avatar" id="profileAvatarImg">
+            <div class="profile-info">
+                <div class="profile-username" id="profileUsernameDisplay">Kullanıcı Adı</div>
+                <div class="profile-status"><span class="status-dot"></span><span>Çevrimiçi</span></div>
+            </div>
+        </div>
+        <div class="balance-card">
+            <div class="balance-label">Bakiye</div>
+            <div class="balance-amount" id="profileBalanceAmount">₺0.00</div>
+        </div>
+        <div class="profile-menu">
+            <a href="profilim.html" class="profile-menu-item"><i class="fas fa-user"></i><span>Profilim</span></a>
+            <a href="ilanlarım.html" class="profile-menu-item"><i class="fas fa-list"></i><span>İlanlarım</span></a>
+            <a href="/ilan-olustur" class="profile-menu-item"><i class="fas fa-plus-circle"></i><span>İlan Ekle</span></a>
+            <a href="bakiye-ekle.html" class="profile-menu-item"><i class="fas fa-plus-circle"></i><span>Bakiye Yükle</span></a>
+            <a href="para-çek.html" class="profile-menu-item"><i class="fas fa-wallet"></i><span>Para Çek</span></a>
+            <a href="ayarlar.html" class="profile-menu-item"><i class="fas fa-cog"></i><span>Ayarlar</span></a>
+            <a href="#" class="profile-menu-item logout-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Çıkış Yap</span></a>
+        </div>
+    </div>
+
+    <main class="valo-page-wrapper">
+        <div class="container" style="max-width: 1400px; margin: 0 auto; padding: 0 20px;">
+            
+            <div class="valo-hero">
+                <img src="assets/uploads/menu/menu_1757953634_0cd71794.png" alt="Valorant">
+                <h1>Valorant VP (E-Pin)</h1>
+                <p>Türkiye'nin en güvenilir pazar yerinden anında teslimat garantili Valorant Points satın al. Uygun fiyatlar ve güvenli ödeme ile öne geç!</p>
+            </div>
+
+            <div class="valo-grid">
+                
+                <a href="/epin-urunleri/valorant-115-vp" class="valo-card" title="Valorant 115 VP">
+                    <div class="valo-img">
+                        <span class="valo-stock in">Stok Var</span>
+                        <img src="assets/uploads/epin/d375-7253e2f15a6f647db717c8e147cc1002-1769639209.webp" alt="Valorant 115 VP">
+                    </div>
+                    <div class="valo-body">
+                        <div class="valo-title">Valorant 115 VP</div>
+                        <div class="valo-meta">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            <span class="cnt">(28)</span>
+                        </div>
+                        <div class="valo-footer">
+                            <div class="valo-price-col">
+                                <div class="valo-price">34.90 ₺</div>
+                            </div>
+                            <div class="valo-buy-btn">
+                                <i class="fas fa-shopping-cart"></i> <span>Satın Al</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/epin-urunleri/valorant-485-vp" class="valo-card" title="Valorant 485 VP">
+                    <div class="valo-img">
+                        <span class="valo-stock in">Stok Var</span>
+                        <div class="valo-discount-badge">%5 İndirim</div>
+                        <img src="assets/uploads/epin/d825-6b2f170947dcd3724916c1d4f4ee0423-1769639251.webp" alt="Valorant 485 VP">
+                    </div>
+                    <div class="valo-body">
+                        <div class="valo-title">Valorant 485 VP</div>
+                        <div class="valo-meta">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <span class="cnt">(156)</span>
+                        </div>
+                        <div class="valo-footer">
+                            <div class="valo-price-col">
+                                <div class="valo-price-old">152.60 ₺</div>
+                                <div class="valo-price">145.00 ₺</div>
+                            </div>
+                            <div class="valo-buy-btn">
+                                <i class="fas fa-shopping-cart"></i> <span>Satın Al</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/epin-urunleri/valorant-925-vp" class="valo-card" title="Valorant 925 VP">
+                    <div class="valo-img">
+                        <span class="valo-stock in">Stok Var</span>
+                        <img src="assets/uploads/epin/d1700-de98b1ddbb2756c43c7aa4ad633f34db-1769639347.webp" alt="Valorant 925 VP">
+                    </div>
+                    <div class="valo-body">
+                        <div class="valo-title">Valorant 925 VP</div>
+                        <div class="valo-meta">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                            <span class="cnt">(42)</span>
+                        </div>
+                        <div class="valo-footer">
+                            <div class="valo-price-col">
+                                <div class="valo-price">275.00 ₺</div>
+                            </div>
+                            <div class="valo-buy-btn">
+                                <i class="fas fa-shopping-cart"></i> <span>Satın Al</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/epin-urunleri/valorant-1850-vp" class="valo-card" title="Valorant 1850 VP">
+                    <div class="valo-img">
+                        <span class="valo-stock in">Stok Var</span>
+                        <div class="valo-discount-badge">Çok Satan</div>
+                        <img src="assets/uploads/epin/d2925-9257d952cc7ae0aec30b74033b1738a1-1769639394.webp" alt="Valorant 1850 VP">
+                    </div>
+                    <div class="valo-body">
+                        <div class="valo-title">Valorant 1850 VP</div>
+                        <div class="valo-meta">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <span class="cnt">(310)</span>
+                        </div>
+                        <div class="valo-footer">
+                            <div class="valo-price-col">
+                                <div class="valo-price">540.00 ₺</div>
+                            </div>
+                            <div class="valo-buy-btn">
+                                <i class="fas fa-shopping-cart"></i> <span>Satın Al</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/epin-urunleri/valorant-2850-vp" class="valo-card" title="Valorant 2850 VP">
+                    <div class="valo-img">
+                        <span class="valo-stock in">Stok Var</span>
+                        <img src="assets/uploads/epin/d4325-bee3cd2112bdef0555778f4a2322f786-1769639448.webp" alt="Valorant 2850 VP">
+                    </div>
+                    <div class="valo-body">
+                        <div class="valo-title">Valorant 2850 VP</div>
+                        <div class="valo-meta">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            <span class="cnt">(88)</span>
+                        </div>
+                        <div class="valo-footer">
+                            <div class="valo-price-col">
+                                <div class="valo-price">820.00 ₺</div>
+                            </div>
+                            <div class="valo-buy-btn">
+                                <i class="fas fa-shopping-cart"></i> <span>Satın Al</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/epin-urunleri/valorant-5350-vp" class="valo-card" title="Valorant 5350 VP">
+                    <div class="valo-img">
+                        <span class="valo-stock out">Stok Tükendi</span>
+                        <img src="assets/uploads/epin/dbattle-1b8946f3a9a4080e28bcdebe94a89b8e-1769639141.webp" alt="Valorant 5350 VP">
+                    </div>
+                    <div class="valo-body">
+                        <div class="valo-title">Valorant 5350 VP</div>
+                        <div class="valo-meta">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <span class="cnt">(14)</span>
+                        </div>
+                        <div class="valo-footer">
+                            <div class="valo-price-col">
+                                <div class="valo-price">1,500.00 ₺</div>
+                            </div>
+                            <div class="valo-buy-btn" style="background: #4b5563; box-shadow: none; cursor: not-allowed;" onclick="event.preventDefault();">
+                                <i class="fas fa-bell"></i> <span>Haber Ver</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/epin-urunleri/valorant-battle-pass" class="valo-card" title="Valorant Battle Pass">
+                    <div class="valo-img">
+                        <span class="valo-stock in">Stok Var</span>
+                        <div class="valo-discount-badge">Popüler</div>
+                        <img src="assets/uploads/epin/dbattle-1b8946f3a9a4080e28bcdebe94a89b8e-1769639141.webp" alt="Valorant Battle Pass">
+                    </div>
+                    <div class="valo-body">
+                        <div class="valo-title">Valorant Savaş Bileti (Battle Pass)</div>
+                        <div class="valo-meta">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <span class="cnt">(420)</span>
+                        </div>
+                        <div class="valo-footer">
+                            <div class="valo-price-col">
+                                <div class="valo-price">295.00 ₺</div>
+                            </div>
+                            <div class="valo-buy-btn">
+                                <i class="fas fa-shopping-cart"></i> <span>Satın Al</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="/epin-urunleri/valorant-random-hesap" class="valo-card" title="Valorant Random Hesap">
+                    <div class="valo-img">
+                        <span class="valo-stock in">Stok Var</span>
+                        <img src="assets/uploads/menu/menu_1770758297_7e96c5a2.webp" alt="Valorant Random Hesap">
+                    </div>
+                    <div class="valo-body">
+                        <div class="valo-title">Valorant Random Skinli Hesap (Garantili)</div>
+                        <div class="valo-meta">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
+                            <span class="cnt">(67)</span>
+                        </div>
+                        <div class="valo-footer">
+                            <div class="valo-price-col">
+                                <div class="valo-price">49.90 ₺</div>
+                            </div>
+                            <div class="valo-buy-btn">
+                                <i class="fas fa-shopping-cart"></i> <span>Satın Al</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+
+        </div>
+    </main>
+
+    <div class="footer-etbis" style="text-align:center; padding:20px 0;">
+        <img src="assets/etbislogo.png" alt="" style="max-width:220px; height:auto;">
+    </div>
+
+    <footer class="site-footer" style="background: rgba(10, 12, 28, 0.95); border-top: 1px solid rgba(255,255,255,0.06);">
+        <div class="footer-topbar" style="background: transparent; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 16px 0;">
+            <div class="topbar-container" style="max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between;">
+                <div class="top-logo">
+                    <a href="/"><img src="assets/uploads/servers/logod1ef6502-ec0d-.png" alt="Logo" style="height: 38px;"></a>
+                </div>
+                <div class="top-right">
+                    <div class="top-socials" style="display: flex; gap: 8px;">
+                        <a href="#" class="square-icon" style="width: 40px; height: 40px; background: #1a1c23; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff;"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="square-icon" style="width: 40px; height: 40px; background: #1a1c23; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff;"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottombar" style="background: transparent; padding: 14px 0;">
+            <div class="bottombar-container" style="max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; color: #e0e0e0; font-size: 13px;">
+                <div class="bottom-left"><span>© 2026 Tüm Hakları Saklıdır.</span></div>
+                <div class="bottom-right" style="display: flex; gap: 18px;">
+                    <a href="#" style="color: #b0b0b0; text-decoration: none;">Gizlilik</a> 
+                    <a href="#" style="color: #b0b0b0; text-decoration: none;">KVKK</a> 
+                    <a href="#" style="color: #b0b0b0; text-decoration: none;">Mesafeli Satış</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="mobile-bottom-menu">
+        <a href="/" class="bottom-menu-item"><i class="fas fa-home"></i><span>Ana Sayfa</span></a>
+        <a href="/kategoriler" class="bottom-menu-item"><i class="fas fa-th-large"></i><span>Kategoriler</span></a>
+        <a href="valo-epin.html" class="bottom-menu-item active" style="color: #ff4655;"><i class="fas fa-gamepad"></i><span>Valo Epin</span></a>
+        <a href="/ilan-olustur" class="bottom-menu-item"><i class="fas fa-plus"></i><span>İlan Ekle</span></a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Tema Değiştirme
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            const icon = document.getElementById('theme-icon');
+            if (icon) icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        
+        // Auth State Management
+        function confirmLogout() {
+            Swal.fire({
+                title: 'Çıkış Yap',
+                text: 'Hesabınızdan çıkış yapmak istediğinizden emin misiniz?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Evet, Çıkış Yap',
+                cancelButtonText: 'İptal',
+                confirmButtonColor: '#8b5cf6',
+                cancelButtonColor: '#6c757d'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Çıkış yapılıyor...',
+                        text: 'Lütfen bekleyin',
+                        icon: 'info',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => { Swal.showLoading(); }
+                    });
+                    setTimeout(() => {
+                        localStorage.removeItem('user');
+                        localStorage.removeItem('token');
+                        window.dispatchEvent(new Event('authStatusChanged'));
+                        Swal.fire({
+                            title: 'Çıkış Yapıldı',
+                            text: 'Güvenli bir şekilde çıkış yaptınız.',
+                            icon: 'success',
+                            confirmButtonText: 'Tamam',
+                            confirmButtonColor: '#8b5cf6'
+                        }).then(() => { window.location.reload(); });
+                    }, 700);
+                }
+            });
+        }
+
+        function updateAuthDisplay() {
+            const user = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            const desktopDropdown = document.getElementById('desktopUserDropdown');
+            const authButtons = document.getElementById('authButtons');
+
+            if (user && token) {
+                try {
+                    const userData = JSON.parse(user);
+                    const username = userData.username || 'Kullanıcı';
+                    const balance = userData.balance || '0.00';
+                    const avatar = userData.avatar || 'assets/img/avatar-1.png';
+
+                    if (desktopDropdown) desktopDropdown.style.display = 'flex';
+                    if (authButtons) authButtons.innerHTML = '';
+
+                    document.getElementById('desktopUsername').textContent = username;
+                    document.getElementById('desktopBalance').textContent = '₺' + parseFloat(balance).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    document.getElementById('desktopUserAvatar').src = avatar;
+                    document.getElementById('desktopProfileAvatar').src = avatar;
+                    document.getElementById('desktopDropdownUsername').textContent = username;
+                    document.getElementById('desktopDropdownBalance').textContent = '₺' + parseFloat(balance).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                    // Mobile panel
+                    document.getElementById('profileUsernameDisplay').textContent = username;
+                    document.getElementById('profileBalanceAmount').textContent = '₺' + parseFloat(balance).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    document.getElementById('profileAvatarImg').src = avatar;
+                } catch (e) { console.error('Auth display error:', e); }
+            } else {
+                if (desktopDropdown) desktopDropdown.style.display = 'none';
+                if (authButtons) {
+                    authButtons.innerHTML = `
+                        <button class="btn-login" onclick="window.location.href='login.html'"><i class="fas fa-sign-in-alt"></i><span>Giriş Yap</span></button>
+                        <button class="btn-register" onclick="window.location.href='register.html'"><i class="fas fa-user-plus"></i><span>Kayıt Ol</span></button>
+                    `;
+                }
+            }
+        }
+
+        async function fetchUserData() {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            try {
+                const response = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } });
+                if (!response.ok) return;
+                const userData = await response.json();
+                if (userData && userData._id) {
+                    const existing = localStorage.getItem('user');
+                    const merged = existing ? { ...JSON.parse(existing), ...userData } : userData;
+                    localStorage.setItem('user', JSON.stringify(merged));
+                    updateAuthDisplay();
+                }
+            } catch (e) { console.error('fetchUserData error:', e); }
+        }
+
+        // Desktop dropdown toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const desktopTrigger = document.getElementById('desktopDropdownTrigger');
+            const desktopDropdown = document.getElementById('desktopUserDropdown');
+            if (desktopTrigger && desktopDropdown) {
+                desktopTrigger.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    desktopDropdown.classList.toggle('active');
+                });
+                document.addEventListener('click', function(e) {
+                    if (!desktopDropdown.contains(e.target)) {
+                        desktopDropdown.classList.remove('active');
+                    }
+                });
+            }
+
+            // Mobile account button
+            const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+            const mobileProfilePanel = document.getElementById('mobileProfilePanel');
+            const profilePanelBackdrop = document.getElementById('profilePanelBackdrop');
+
+            if (mobileAccountBtn && mobileProfilePanel && profilePanelBackdrop) {
+                mobileAccountBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const user = localStorage.getItem('user');
+                    const token = localStorage.getItem('token');
+                    if (!(user && token)) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    if (mobileProfilePanel.classList.contains('active')) {
+                        mobileProfilePanel.classList.remove('active');
+                        profilePanelBackdrop.classList.remove('active');
+                        document.body.style.overflow = '';
+                    } else {
+                        mobileProfilePanel.classList.add('active');
+                        profilePanelBackdrop.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+
+                profilePanelBackdrop.addEventListener('click', function() {
+                    mobileProfilePanel.classList.remove('active');
+                    profilePanelBackdrop.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+
+                const logoutBtn = document.getElementById('logoutBtn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        mobileProfilePanel.classList.remove('active');
+                        profilePanelBackdrop.classList.remove('active');
+                        document.body.style.overflow = '';
+                        confirmLogout();
+                    });
+                }
+            }
+
+            updateAuthDisplay();
+            fetchUserData();
+            setInterval(fetchUserData, 10000);
+            window.addEventListener('storage', updateAuthDisplay);
+            window.addEventListener('authStatusChanged', updateAuthDisplay);
+
+            // Theme init
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const icon = document.getElementById('theme-icon');
+            if (icon) icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+    </script>
+</body>
+</html>

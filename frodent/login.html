@@ -1,0 +1,228 @@
+﻿
+
+<!doctype html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>test aşaması - Giriş</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#0b0c12; --surface:#141624; --border-color:#222436; --text-color:#e5e7eb; --text-muted:#9ca3af; --brand:#8b5cf6; --success:#10b981; --blue:#2563eb; --google:#ef4444; --twitch:#8b5cf6; --discord:#5865F2; --facebook:#1877F2; }
+    html, body { height: 100%; }
+    body { margin:0; color: var(--text-color); font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial; background: var(--bg); }
+    .page { min-height: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 24px; padding-bottom: 40px; position: relative; }
+    /* Formu üstten biraz indir, alttan nefes alanı bırak */
+    /* Kartı V bölgesinde daha aşağı konumlandır (ekran boyutuna göre) */
+    /* Üst blok (logo + form + kutucuklar) tek kolon halinde sık aralıkla */
+    .auth-block { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: clamp(70px, 10vh, 140px); }
+    .site-logo { position: relative; z-index:1; margin: 0; display:flex; align-items:center; justify-content:center; }
+    .site-logo a { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; color: inherit; }
+    .site-logo img { max-height: 46px; object-fit: contain; display:block; filter: drop-shadow(0 2px 8px rgba(0,0,0,.35)); }
+    .site-logo .logo-text { font-weight: 900; letter-spacing:.3px; font-size: 22px; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,.45); }
+    .page .card { margin-top: 0; margin-bottom: 0; }
+    /* V içinde arka plan görseli + overlay (slider benzeri) */
+    .page::before { content:""; position:absolute; inset:0; z-index:0; background:
+      url('/assets/img/visuals/login_form_68c980a7d591a_1758036135.jpg') center/cover no-repeat fixed; 
+      clip-path: polygon(0 0, 100% 0, 100% 38%, 50% 58%, 0 38%); }
+    .page::after { content:""; position:absolute; inset:0; z-index:0; background:
+      linear-gradient(180deg, rgba(20,22,36,.55) 0%, rgba(20,22,36,.75) 45%, rgba(20,22,36,.95) 100%);
+      clip-path: polygon(0 0, 100% 0, 100% 38%, 50% 58%, 0 38%); }
+    .card { position: relative; z-index: 1; width: 100%; max-width: 420px; background: rgba(18,16,31,0.95); border-radius: 18px; box-shadow: 0 25px 60px rgba(5,5,20,0.65); padding: 32px 34px 28px; border: 1px solid rgba(255,255,255,0.06); }
+    .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom: 24px; }
+    .title { font-size: 24px; font-weight: 800; color:#f8fafc; margin: 0; }
+    .modal-close { width:36px; height:36px; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); color:#a5b4fc; display:flex; align-items:center; justify-content:center; cursor:pointer; transition: all 0.2s ease; }
+    .modal-close:hover { border-color: rgba(255,255,255,0.4); color:#fff; background: rgba(255,255,255,0.08); }
+    form { display:grid; gap:12px; }
+    label { font-size: 13px; color: var(--text-muted); }
+    .input { display:flex; align-items:center; height: 54px !important; gap:10px; border:1px solid rgba(226,232,240,0.25); background: rgba(14,15,30,0.9); border-radius:12px; padding:0 14px; }
+    .input i { color:#94a3b8; }
+    .input input { flex:1; background:transparent; border:0; outline:0; color:#f8fafc; font-size:14px; }
+    .input.with-action { padding-right: 44px; position: relative; }
+    .action { position:absolute; right:8px; top:50%; transform: translateY(-50%); width:32px; height:32px; display:grid; place-items:center; border:1px solid var(--border-color); border-radius:8px; background:#1a1625; color:var(--text-color); cursor:pointer; }
+    .btn { width:100%; height:48px; border-radius:14px; border:0; background: linear-gradient(135deg, #a855f7, #7c3aed); color:white; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; font-size:15px; }
+    button, .btn { font-family: inherit; }
+    .providers { display:flex; gap:12px; margin-top: 6px; }
+    .provider { flex:1; height:44px; border-radius:10px; border:0; color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px; cursor:not-allowed; opacity:.9; }
+    .provider.g { background: var(--google); }
+    .provider.f { background: var(--facebook); }
+    .provider.t { background: var(--twitch); }
+    .muted { margin-top: 8px; text-align:center; font-size:13px; color: var(--text-muted); }
+    .muted a { color:#a78bfa; text-decoration:none; }
+    .cta { margin-top: 12px; width:100%; height:48px; border:0; border-radius:12px; background:#10b981; color:#ffffff; font-weight:800; box-shadow: 0 12px 30px rgba(16,185,129,.25); cursor:pointer; }
+    /* Steps */
+    .steps-wrap { width:100%; max-width: 1100px; position: relative; z-index:1; margin: 40px auto 16px auto; padding: 0 14px; }
+    .steps-header { text-align:center; margin-bottom: 12px; }
+    .steps-subtitle { color: #c7d2fe; font-size: 13px; opacity:.9; margin:0; }
+    .steps-title { color:#a5b4fc; font-size: 20px; font-weight: 800; margin:6px 0 12px 0; }
+    .steps { display:grid; grid-template-columns: repeat(3, minmax(200px, 1fr)); gap:48px; justify-items:center; }
+    .step { width:100%; max-width: 260px; height: 160px; background:#0f1118; border:1px solid var(--border-color); border-radius:12px; padding:16px 12px; text-align:center; transition:.2s; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:10px; }
+    .step-icon { width:48px; height:48px; border-radius: 50%; background: rgba(34,197,94,0.18); border: 1px solid rgba(34,197,94,0.35); display:flex; align-items:center; justify-content:center; }
+    .step-icon i { font-size:20px; color:#22c55e; }
+    .step-head { display:flex; flex-direction:column; gap:2px; margin-top: 4px; }
+    .step-title-top { color:#c7ccda; font-weight:800; font-size:14px; }
+    .step-title-sub { color:#9ca3af; font-size:12px; }
+    .step-divider { width:28px; height:2px; background: rgba(255,255,255,0.12); margin: 6px auto; }
+    .step-desc { color:#b0b7c6; font-size:12px; line-height:1.2; }
+    .step:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,.28); }
+    @media (max-width: 900px) { .auth-block { margin-top: 60px; gap: 10px; } .steps { gap:28px; } }
+    @media (max-width: 700px) { .steps { grid-template-columns: 1fr; gap:28px; } }
+    @media (max-width: 600px){
+      html, body { overflow-x:hidden; }
+      .page { padding:16px 34px; max-width:100vw; }
+      .card { padding:16px; }
+      .input { height:52px !important; }
+      .steps-wrap { padding:0 8px; }
+      .g-recaptcha { transform: scale(0.92); transform-origin:left top; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="auth-block">
+      <!-- Site logo above the form -->
+      <div class="site-logo">
+            <a href="/">
+              <img src="/assets/settings/dark_logo_1775388028.png" alt="Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div class="logo-text" style="display:none;">
+          test aşaması        </div>
+            </a>
+      </div>
+      <div class="card">
+      <div class="card-header">
+        <div class="title">Giriş Yap</div>
+        </div>
+      <form id="loginForm" novalidate>
+          <div>
+            <div class="input">
+              <i class="fa-solid fa-user"></i>
+              <input id="identifier" name="identifier" type="text" placeholder="Kullanıcı adı veya E‑posta" required value="">
+                </div>
+              </div>
+          <div>
+            <div class="input with-action">
+              <i class="fa-solid fa-key"></i>
+              <input id="password" name="password" type="password" placeholder="Parola" required>
+              <button type="button" class="action" data-toggle="password" aria-label="Parolayı göster"><i class="fa-solid fa-eye-slash"></i></button>
+              </div>
+            </div>
+                      <button type="submit" class="btn">Giriş Yap <i class="fa-solid fa-arrow-right-long"></i></button>
+          <div class="providers">
+            <button type="button" class="provider g"><i class="fa-brands fa-google"></i> Google</button>
+            <button type="button" class="provider f"><i class="fa-brands fa-facebook-f"></i> Facebook</button>
+            <button type="button" class="provider t"><i class="fa-brands fa-twitch"></i> Twitch</button>
+            </div>
+          <div class="muted"><a href="/sifre-sifirla">Şifremi Unuttum</a></div>
+          </form>
+        <button class="cta" onclick="location.href='/uyelik'">KAYIT OL</button>
+      </div>
+      <!-- Steps outside the form card -->
+      <div class="steps-wrap">
+        <div class="steps-header">
+          <p class="steps-subtitle">Avantajlarla Dolu</p>
+          <div class="steps-title"> test aşaması DÜNYASINA SEN DE KATIL!</div>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-icon"><i class="fa-solid fa-bolt"></i></div>
+            <div class="step-head">
+              <div class="step-title-top">Işık Hızında</div>
+              <div class="step-title-sub">Teslimat</div>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step-desc">Anında Gönderim Garantisi</div>
+          </div>
+          <div class="step">
+            <div class="step-icon" style="background: rgba(59,130,246,.18); border-color: rgba(59,130,246,.35);"><i class="fa-solid fa-headset" style="color:#3b82f6"></i></div>
+            <div class="step-head">
+              <div class="step-title-top">7 Gün 24 Saat</div>
+              <div class="step-title-sub">Müşteri Desteği</div>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step-desc">Her Zaman Yanınızdayız</div>
+          </div>
+          <div class="step">
+            <div class="step-icon" style="background: rgba(139,92,246,.18); border-color: rgba(139,92,246,.35);"><i class="fa-solid fa-gift" style="color:#8b5cf6"></i></div>
+            <div class="step-head">
+              <div class="step-title-top">Avantajlı</div>
+              <div class="step-title-sub">İndirimleri Keşfedin</div>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step-desc">En Özel Kampanyalar</div>
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+(function(){
+      const btn = document.querySelector('.action[data-toggle]');
+      if (btn) btn.addEventListener('click', function(){
+    const input = document.getElementById(this.getAttribute('data-toggle'));
+    if (!input) return; const icon = this.querySelector('i');
+        if (input.type === 'password') { input.type = 'text'; icon.classList.replace('fa-eye-slash','fa-eye'); }
+        else { input.type = 'password'; icon.classList.replace('fa-eye','fa-eye-slash'); }
+      });
+})();
+</script>
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+  const form = document.getElementById('loginForm');
+  const submitBtn = document.querySelector('.btn[type="submit"]');
+
+  if(!form){
+    console.error('loginForm not found');
+    return;
+  }
+
+  // Fallback: ensure clicking the visible button submits the form
+  if(submitBtn){
+    submitBtn.addEventListener('click', function(){
+      if(typeof form.requestSubmit === 'function') form.requestSubmit();
+      else form.dispatchEvent(new Event('submit', {cancelable:true}));
+    });
+  }
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    console.log('loginForm submit fired');
+
+    const identifier = document.getElementById('identifier').value;
+    const password = document.getElementById('password').value;
+
+    if(!identifier || !password){
+      Swal.fire({ icon:'warning', title:'Eksik Bilgi', text:'Lütfen tüm alanları doldurun.', confirmButtonColor:'#f59e0b', background:'#14172a', color:'#ffffff' });
+      return;
+    }
+
+    try{
+      const response = await fetch('/api/auth/login', {
+        method:'POST', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify({ identifier, password })
+      });
+
+      const result = await response.json();
+
+      if(response.ok){
+        localStorage.setItem('token', result.token);
+        localStorage.setItem('user', JSON.stringify(result.user));
+        Swal.fire({ icon:'success', title:'Başarılı', text:'Giriş başarılı.', confirmButtonColor:'#2563eb', background:'#14172a', color:'#ffffff' }).then(()=>{ window.location.href='/'; });
+      }else{
+        Swal.fire({ icon:'error', title:'Giriş Başarısız', text: result.error || 'Kullanıcı adı/e-posta veya parola hatalı.', confirmButtonColor:'#7c3aed', background:'#14172a', color:'#ffffff' });
+      }
+
+    }catch(err){
+      console.error('login error', err);
+      Swal.fire({ icon:'error', title:'Sunucu Hatası', text:'Backend bağlantısı başarısız.', confirmButtonColor:'#ef4444', background:'#14172a', color:'#ffffff' });
+    }
+  });
+});
+
+</script>
+</body>
+</html>

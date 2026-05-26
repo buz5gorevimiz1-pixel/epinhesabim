@@ -1,0 +1,12 @@
+const fs = require('fs');
+const path = require('path');
+const p = path.resolve(__dirname, 'frodent', 'ilan-detay.html');
+let text = fs.readFileSync(p, 'utf8');
+text = text.replace(/\.back-link\s*\{[\s\S]*?\n\s*\}/g, '');
+text = text.replace(/<a class=\"back-link\"[\s\S]*?<\/a>\s*/g, '');
+text = text.replace(/\n{3,}/g, '\n\n');
+text = text.replace(/width: min\(1200px, calc\(100% - 32px\)\);/, 'width: min(1140px, calc(100% - 32px));');
+text = text.replace(/min-height: calc\(100vh - 48px\);/, 'min-height: 100vh;');
+text = text.replace(/padding: 24px 0;/, 'padding: 24px 16px;');
+fs.writeFileSync(p, text, 'utf8');
+console.log('Removed back-link styles and markup');

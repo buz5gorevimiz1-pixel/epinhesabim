@@ -1,0 +1,96 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                   ItemCI - HIZLI BAŞLAT                      ║
+╚═══════════════════════════════════════════════════════════════╝
+
+📋 ADIM 1: Bağımlılıkları Kur
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Çift tıkla: INSTALL-DEPENDENCIES.cmd
+
+Bu npm paketlerini kuracak:
+  ✓ express (API server)
+  ✓ mongoose (MongoDB)
+  ✓ bcryptjs (Şifre encryption)
+  ✓ jsonwebtoken (Auth token)
+  ✓ dotenv (Çevre değişkenleri)
+  ✓ cors (Cross-origin requests)
+
+⏱️  1-2 dakika sürebilir...
+
+
+📋 ADIM 2: MongoDB Çalıştırıyor mu?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Çift tıkla: CHECK-MONGODB.cmd
+
+Eğer ✗ ÇALIŞMIYOR derse:
+  1. Powershell veya CMD'yi yönetici olarak aç
+  2. Şu komutu çalıştır: mongod
+  3. Başka bir pencerede CHECK-MONGODB.cmd'i çalıştır
+
+
+📋 ADIM 3: Backend Sunucuyu Başlat
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Çift tıkla: BASLA-BACKEND.cmd
+
+Bekle ve gördüğün satırı ara:
+  ✓ MongoDB connected
+  ✓ Backend çalışıyor: http://localhost:3000
+
+Başarılıysa devam et!
+
+
+📋 ADIM 4: Tarayıcıda Testa Başla
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+URL'yi aç:
+  http://localhost:3000
+
+Testler:
+
+✓ Test 1: Kayıt Ol
+  1. http://localhost:3000/uyelik
+  2. Form doldur (adı, email, telefon, kullanıcı adı, şifre)
+  3. "Kayıt Ol" butonuna tıkla
+  4. "Kayıt başarılı" mesajını bekle
+
+✓ Test 2: Giriş Yap
+  1. http://localhost:3000/giris-yap
+  2. Kayıt ettiğin kullanıcı adı veya email gir
+  3. Şifreni gir
+  4. "Giriş Yap" butonuna tıkla
+  5. "Giriş başarılı" mesajını bekle
+  6. Otomatik olarak ana sayfa yüklenmeli
+
+✓ Test 3: localStorage Kontrol
+  1. Tarayıcıda F12 (DevTools) aç
+  2. Console sekmesine git
+  3. Şu komutu yazıp Enter'e bas:
+     localStorage.getItem('token')
+  4. Token görünüyorsa giriş başarılı ✓
+
+
+🔍 SORUN GIDERME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ "MongoDB Error: connect ECONNREFUSED"
+  → Çözüm: MongoDB sunucusunu başlat (CHECK-MONGODB.cmd)
+
+❌ "Giriş yapıldıktan sonra boş sayfa veya 405 hatası"
+  → Çözüm: Var! Tüm dosyalar güncellenmiş. Sayfayı yenile (F5)
+
+❌ "npm: command not found"
+  → Çözüm: Node.js yüklü değil. https://nodejs.org adresinden indir
+
+❌ "Cannot find module 'express'"
+  → Çözüm: INSTALL-DEPENDENCIES.cmd'i çalıştır
+
+❌ "CORS hatası"
+  → Çözüm: Backend'in CORS middleware'i aktif, sorun olmaması gerek
+
+❌ "PORT 3000 kullanımda"
+  → Çözüm: Başka bir backend çalışıyor mı kontrol et
+
+═══════════════════════════════════════════════════════════════
+
+💡 İPUCU: Tüm bu .cmd dosyaları Windows CMD'de çalıştırıcı
+         Çift tıklamak yeterli!
+
+═══════════════════════════════════════════════════════════════

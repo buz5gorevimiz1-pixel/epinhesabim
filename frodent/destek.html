@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destek Merkezi - ItemSatış Premium</title>
+    <link rel="stylesheet" href="assets/listings.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-base: #050507;
+            --bg-surface: rgba(20, 20, 25, 0.4);
+            --bg-surface-hover: rgba(30, 30, 40, 0.6);
+            --primary: #8b5cf6;
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --border-light: rgba(255, 255, 255, 0.08);
+            --border-focus: rgba(139, 92, 246, 0.5);
+            --glow-primary: 0 0 20px rgba(139, 92, 246, 0.3);
+            --glow-secondary: 0 0 20px rgba(236, 72, 153, 0.3);
+            --transition-speed: 0.4s;
+        }
+
+        /* Gündüz Modu (Light Mode) Ayarları */
+        :root.light-mode {
+            --bg-base: #f3f4f6;
+            --bg-surface: rgba(255, 255, 255, 0.7);
+            --bg-surface-hover: rgba(255, 255, 255, 0.9);
+            --text-main: #111827;
+            --text-muted: #4b5563;
+            --border-light: rgba(0, 0, 0, 0.08);
+            --border-focus: rgba(139, 92, 246, 0.6);
+            --glow-primary: 0 10px 25px rgba(139, 92, 246, 0.15);
+            --glow-secondary: 0 10px 25px rgba(236, 72, 153, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.05), transparent 25%);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-base);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.6);
+        }
+
+        /* Navbar */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 5, 7, 0.3);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-light);
+            transition: background var(--transition-speed) ease, border-color var(--transition-speed) ease;
+        }
+
+        :root.light-mode header {
+            background: rgba(243, 244, 246, 0.4);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-home-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 15px;
+            padding: 10px 18px;
+            border-radius: 12px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .back-home-btn:hover {
+            transform: translateX(-4px);
+            border-color: var(--border-focus);
+            box-shadow: var(--glow-primary);
+        }
+
+        .nav-brand {
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .nav-brand { display: block; }
+        }
+
+        .theme-toggle-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            transform: scale(1.05) rotate(8deg);
+            border-color: var(--border-focus);
+            box-shadow: var(--glow-primary);
+        }
+
+        /* Hero Section (Search) */
+        .support-hero {
+            position: relative;
+            padding: 80px 24px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+
+        .hero-bg-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            height: 60vw;
+            max-width: 800px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 40%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .support-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .support-hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        .support-hero p {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            gap: 12px;
+            padding: 8px;
+            background: rgba(20, 20, 25, 0.6);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        :root.light-mode .search-wrapper {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-wrapper:focus-within {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1), 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 18px 16px 18px 54px;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .search-input:focus { outline: none; }
+        .search-input::placeholder { color: rgba(156, 163, 175, 0.6); }
+
+        .search-btn {
+            padding: 0 32px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-btn:hover {
+            transform: scale(1.02);
+            box-shadow: var(--glow-secondary);
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 24px;
+            animation: fadeUpIn 0.6s ease forwards;
+        }
+
+        @keyframes fadeUpIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Support Categories Grid */
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title i { color: var(--primary); }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .support-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: block;
+        }
+
+        .support-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--border-focus);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3), var(--glow-primary);
+            background: var(--bg-surface-hover);
+        }
+
+        .support-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            background: rgba(15, 15, 20, 0.6);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: var(--primary);
+            transition: all 0.4s ease;
+        }
+
+        :root.light-mode .support-icon {
+            background: rgba(255,255,255,0.8);
+            border-color: rgba(0,0,0,0.05);
+        }
+
+        .support-card:hover .support-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .support-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .support-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* FAQ Accordion */
+        .faq-section {
+            margin-bottom: 60px;
+        }
+
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .faq-item {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active {
+            border-color: var(--border-focus);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            background: var(--bg-surface-hover);
+        }
+
+        .faq-question {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--text-main);
+            user-select: none;
+        }
+
+        .faq-question i {
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+            color: var(--primary);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(10, 10, 15, 0.2);
+        }
+
+        :root.light-mode .faq-answer {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .faq-answer-inner {
+            padding: 0 24px 24px;
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Contact CTA Block */
+        .contact-cta {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.05));
+            border: 1px solid var(--border-focus);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-cta::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .contact-cta h2 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .contact-cta p {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            font-size: 15px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            border: none;
+            box-shadow: var(--glow-secondary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(236, 72, 153, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-surface);
+            color: var(--text-main);
+            border: 1px solid var(--border-light);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--border-focus);
+            background: var(--bg-surface-hover);
+            transform: translateY(-2px);
+        }
+
+        .ticket-panel {
+            display: none;
+            margin-top: 28px;
+            padding: 28px;
+            border-radius: 22px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-focus);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: var(--glow-primary);
+            text-align: left;
+        }
+
+        .ticket-panel.active {
+            display: block;
+            animation: fadeUpIn 0.35s ease forwards;
+        }
+
+        .ticket-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .ticket-field label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .ticket-field input,
+        .ticket-field textarea {
+            width: 100%;
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            background: rgba(10, 10, 15, 0.45);
+            color: var(--text-main);
+            padding: 14px 16px;
+            outline: none;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        :root.light-mode .ticket-field input,
+        :root.light-mode .ticket-field textarea {
+            background: rgba(255, 255, 255, 0.75);
+        }
+
+        .ticket-field input:focus,
+        .ticket-field textarea:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        }
+
+        .ticket-submit-btn {
+            width: 100%;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .screen-popup-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(3, 7, 18, 0.76);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 9999;
+        }
+
+        .screen-popup-overlay.active {
+            display: flex;
+        }
+
+        .screen-popup {
+            width: min(430px, 100%);
+            padding: 34px 28px;
+            border-radius: 24px;
+            text-align: center;
+            background: var(--bg-surface-hover);
+            border: 1px solid var(--border-focus);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+        }
+
+        .screen-popup-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.13);
+            color: #10b981;
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .screen-popup h3 {
+            margin: 0 0 12px;
+            color: var(--text-main);
+            font-size: 1.55rem;
+        }
+
+        .screen-popup p {
+            margin: 0 0 22px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.96rem;
+        }
+
+        .screen-popup button {
+            width: 100%;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 18px;
+            color: #fff;
+            font-weight: 800;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .support-hero { padding: 50px 16px; }
+            .support-hero h1 { font-size: 32px; }
+            .search-wrapper { flex-direction: column; background: transparent; border: none; box-shadow: none; padding: 0; }
+            .search-input { width: 100%; background: rgba(20, 20, 25, 0.8); border: 1px solid var(--border-light); border-radius: 16px; }
+            .search-icon { top: 26px; }
+            .search-btn { width: 100%; padding: 16px; border-radius: 16px; }
+            .main-container { padding: 40px 16px; }
+            .cta-buttons { flex-direction: column; }
+            .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+            .ticket-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="index.html" class="back-home-btn">
+                    <i class="ri-arrow-left-line"></i>
+                    <span>Anasayfa</span>
+                </a>
+                <div class="nav-brand">Destek Merkezi</div>
+            </div>
+            
+            <button id="themeToggle" class="theme-toggle-btn" title="Temayı Değiştir">
+                <i class="ri-moon-clear-line"></i>
+            </button>
+        </div>
+    </header>
+
+    <section class="support-hero">
+        <div class="hero-bg-glow"></div>
+        <div class="support-hero-content">
+            <h1>Nasıl yardımcı olabiliriz?</h1>
+            <p>Aklınıza takılan soruların cevaplarını bulun veya destek ekibimizle hızlıca iletişime geçin.</p>
+            
+            <div class="search-wrapper">
+                <i class="ri-search-line search-icon"></i>
+                <input type="text" id="helpSearch" class="search-input" placeholder="Sorununuzu kısaca yazın... (Örn: Bakiye, Çekiliş, Şifre)">
+                <button class="search-btn">Makalelerde Ara</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-container">
+        
+        <h2 class="section-title"><i class="ri-apps-2-line"></i> Yardım Kategorileri</h2>
+        <div class="category-grid">
+            <a href="#" class="support-card">
+                <div class="support-icon"><i class="ri-wallet-3-line"></i></div>
+                <h3>Bakiye ve Finans</h3>
+                <p>Para yatırma, bakiye çekme işlemleri ve komisyon oranları hakkında bilgiler.</p>
+            </a>
+            <a href="#" class="support-card">
+                <div class="support-icon"><i class="ri-shopping-bag-3-line"></i></div>
+                <h3>Alışveriş ve İlanlar</h3>
+                <p>İlan oluşturma kuralları, teslimat süreçleri ve sipariş onayı hakkında rehberler.</p>
+            </a>
+            <a href="#" class="support-card">
+                <div class="support-icon"><i class="ri-shield-keyhole-line"></i></div>
+                <h3>Hesap Güvenliği</h3>
+                <p>Şifre yenileme, kimlik onayı ve iki adımlı doğrulama (2FA) işlemleri.</p>
+            </a>
+            <a href="#" class="support-card">
+                <div class="support-icon"><i class="ri-gift-line"></i></div>
+                <h3>Çekiliş ve Kasalar</h3>
+                <p>Sistemdeki oyun parası çekilişleri ve loot box (kasa) modüllerinin işleyişi.</p>
+            </a>
+        </div>
+
+        <div class="faq-section">
+            <h2 class="section-title"><i class="ri-question-answer-line"></i> Sıkça Sorulan Sorular</h2>
+            <div class="faq-list">
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Para çekme taleplerim ne zaman onaylanır?</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <br>Para çekme talepleriniz otomatik finans sistemimiz sayesinde genellikle <strong>5 ila 15 dakika</strong> içerisinde işleme alınarak banka hesabınıza aktarılır. Çok nadir durumlarda, banka altyapısından kaynaklı gecikmeler yaşanabilir. Bakiye hesabınızdan anında düşülür, işlem detayı admin panelinden takip edilmektedir.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Satın aldığım hesap/ürün bilgilerine nasıl ulaşırım?</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <br>Siparişiniz satıcı tarafından onaylanıp teslim edildiğinde, ürün bilgileri doğrudan sipariş detayları sayfanıza şifreli olarak yansır. Ayrıca sistemimize kayıtlı e-posta adresinize ve site içi bildirimlerinize anlık uyarı gönderilir.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>İlanım neden reddedildi veya taslaktan silindi?</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <br>İlanlarınız genellikle eksik bilgi, hatalı kategori seçimi veya yasaklı kelime kullanımından dolayı reddedilebilir. Lütfen profesyonel ilan profilinizi düzenlerken açıklama kısmına hesap ile ilgili detaylı ve doğru bilgiler girdiğinizden emin olun.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Kasa açılımlarından çıkan ürünler bakiyeme nasıl yansır?</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <br>Kasalar sayfamız üzerinden açtığınız oyun paraları (Örn: Valorant VP, PUBG UC) anında sistem bakiyenize eşit değerde yansıtılır veya doğrudan e-pin kodu olarak profilinizdeki ödüller kısmına eklenir. Çekiliş kazançları da aynı mantıkla otomatik teslim edilir.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="contact-cta">
+            <h2>Hala yardıma mı ihtiyacınız var?</h2>
+            <p>Gelişmiş makalelerimiz sorununuzu çözmediyse, 7/24 aktif destek ekibimiz sizin için burada.</p>
+            
+            <div class="cta-buttons">
+                <a href="#" class="btn-primary" id="openTicketForm">
+                    <i class="ri-ticket-2-line"></i> Destek Talebi (Ticket) Oluştur
+                </a>
+                <a href="#" class="btn-secondary">
+                    <i class="ri-customer-service-2-line"></i> Canlı Destek'e Bağlan
+                </a>
+            </div>
+
+            <div class="ticket-panel" id="ticketPanel">
+                <div class="ticket-grid">
+                    <div class="ticket-field">
+                        <label for="ticketUsername">Kullanıcı Adı</label>
+                        <input type="text" id="ticketUsername" placeholder="Kullanıcı adınızı girin">
+                    </div>
+                    <div class="ticket-field">
+                        <label for="ticketMessage">Ticket Mesajınız</label>
+                        <textarea id="ticketMessage" rows="5" placeholder="Destek almak istediğiniz konuyu detaylıca yazın..."></textarea>
+                    </div>
+                </div>
+                <button type="button" class="btn-primary ticket-submit-btn" id="createTicketBtn">
+                    <i class="ri-send-plane-line"></i> Ticketi Oluştur
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="screen-popup-overlay" id="ticketSuccessPopup">
+        <div class="screen-popup">
+            <div class="screen-popup-icon">✓</div>
+            <h3>Başarıyla Oluşturuldu</h3>
+            <p>Not: Ticketiniz Admin Ağımıza İletildi. En kısa sürede bu konu ile alakalı destek alacaksınız.</p>
+            <button type="button" id="closeTicketPopup">Tamam</button>
+        </div>
+    </div>
+
+    <script>
+        // Gece / Gündüz Modülü (Theme Toggle)
+        const themeToggle = document.getElementById('themeToggle');
+        
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.classList.add('light-mode');
+            themeToggle.innerHTML = '<i class="ri-sun-line"></i>';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('light-mode');
+            if (document.documentElement.classList.contains('light-mode')) {
+                themeToggle.innerHTML = '<i class="ri-sun-line"></i>';
+                localStorage.setItem('theme', 'light');
+            } else {
+                themeToggle.innerHTML = '<i class="ri-moon-clear-line"></i>';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // SSS (FAQ) Akordiyon Mantığı
+        const faqItems = document.querySelectorAll('.faq-item');
+
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            const answer = item.querySelector('.faq-answer');
+
+            question.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+
+                // Diğer tüm açık olanları kapat (Opsiyonel, daha temiz bir görünüm için)
+                faqItems.forEach(otherItem => {
+                    otherItem.classList.remove('active');
+                    otherItem.querySelector('.faq-answer').style.maxHeight = null;
+                });
+
+                // Tıklanan öğeyi aç/kapat
+                if (!isActive) {
+                    item.classList.add('active');
+                    // İçeriğin gerçek yüksekliğini hesaplayıp max-height'e ata
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                }
+            });
+        });
+
+        // Arama Çubuğu Efekti (Sadece Görsel Etkileşim)
+        const searchInput = document.getElementById('helpSearch');
+        const faqQuestions = document.querySelectorAll('.faq-question span');
+
+        searchInput.addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            
+            faqItems.forEach(item => {
+                const text = item.querySelector('.faq-question span').innerText.toLowerCase();
+                if(text.includes(val)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        const openTicketForm = document.getElementById('openTicketForm');
+        const ticketPanel = document.getElementById('ticketPanel');
+        const createTicketBtn = document.getElementById('createTicketBtn');
+        const ticketSuccessPopup = document.getElementById('ticketSuccessPopup');
+        const closeTicketPopup = document.getElementById('closeTicketPopup');
+        const ticketUsername = document.getElementById('ticketUsername');
+        const ticketMessage = document.getElementById('ticketMessage');
+
+        openTicketForm.addEventListener('click', (e) => {
+            e.preventDefault();
+            ticketPanel.classList.add('active');
+            ticketPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            ticketUsername.focus();
+        });
+
+        createTicketBtn.addEventListener('click', () => {
+            if (!ticketUsername.value.trim() || !ticketMessage.value.trim()) {
+                return;
+            }
+
+            ticketUsername.value = '';
+            ticketMessage.value = '';
+            ticketPanel.classList.remove('active');
+            ticketSuccessPopup.classList.add('active');
+        });
+
+        closeTicketPopup.addEventListener('click', () => {
+            ticketSuccessPopup.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profilim - Premium Epin Hesabım</title>
+    <meta name="description" content="Profesyonel kullanıcı profil sayfası, hesabınızın tüm özetini ve iletişim bilgilerini bu ekranda görün.">
+    <link rel="icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            --accent-color: #a855f7;
+            --bg-color: #030305;
+            --glass-bg: rgba(13, 14, 21, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        html, body {
+            min-height: 100%;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Dinamik Arka Plan Efekti */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 50% 30%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 40%);
+            z-index: -1;
+            animation: rotateBg 30s linear infinite;
+        }
+
+        @keyframes rotateBg {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3, .username, .stat-card strong {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .page-shell {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Yüzen Cam Kartlar */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.03), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.7s ease;
+        }
+
+        .glass-card:hover::before {
+            left: 200%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(168, 85, 247, 0.15);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        /* Üst Menü Tasarımı */
+        .frontend-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(3, 3, 5, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 16px 24px;
+        }
+
+        .header-search-box {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 99px;
+            padding: 6px 6px 6px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .header-search-box:focus-within {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .header-search-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .header-search-btn {
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .header-search-btn:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 8px;
+            padding: 0 24px 16px;
+            max-width: 1300px;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+
+        .header-nav a {
+            color: var(--text-muted);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .header-nav a.active, .header-nav a:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .header-nav a.active {
+            background: var(--primary-gradient);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+        }
+
+        /* Sayfa Başlığı */
+        .page-title {
+            margin: 50px 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .page-title h1 {
+            font-size: 48px;
+            margin: 0;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .page-title p {
+            margin: 8px 0 0;
+            color: var(--text-muted);
+            font-size: 15px;
+            max-width: 600px;
+        }
+
+        /* Profil Izgarası */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 30px;
+        }
+
+        /* Sol Profil Kartı */
+        .profile-card-main {
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .profile-avatar-block {
+            text-align: center;
+            position: relative;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px;
+        }
+
+        .avatar-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            z-index: 0;
+            animation: pulseGlow 2s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(168, 85, 247, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0); }
+        }
+
+        .profile-avatar-block img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            position: relative;
+            z-index: 1;
+            border: 4px solid var(--bg-color);
+        }
+
+        .username {
+            font-size: 28px;
+            margin: 0 0 8px;
+            font-weight: 700;
+        }
+
+        .role-tag {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 99px;
+            background: rgba(168, 85, 247, 0.1);
+            color: #c084fc;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Bilgi Listesi */
+        .profile-info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .profile-info-item {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .profile-info-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .profile-info-item label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-info-item strong {
+            font-size: 16px;
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Bakiye Kartı Özel Tasarım */
+        .balance-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+            border-color: rgba(168, 85, 247, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .balance-card strong {
+            font-size: 32px !important;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .balance-details {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .balance-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        /* Sağ Detay Alanı */
+        .profile-details {
+            padding: 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .detail-section h2 {
+            font-size: 22px;
+            margin: 0 0 8px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-section h2::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 24px;
+            background: var(--primary-gradient);
+            border-radius: 4px;
+        }
+
+        .detail-section p.desc {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin: 0 0 24px;
+            line-height: 1.6;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .detail-card {
+            padding: 20px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .detail-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .detail-card label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-card p {
+            margin: 0;
+            color: var(--text-main);
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        /* Butonlar */
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .button-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* Düzenleme Alanı Inputları */
+        .edit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .edit-grid input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-main);
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .edit-grid input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.15);
+        }
+
+        /* Bildirimler (Toast) */
+        .toast-container {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .toast {
+            min-width: 300px;
+            padding: 16px 20px;
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.95);
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: auto;
+            border-left: 4px solid;
+        }
+
+        .toast.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast-success { border-color: var(--success); }
+        .toast-info { border-color: #3b82f6; }
+        .toast-warning { border-color: var(--warning); }
+
+        .theme-toggle-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+        }
+
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(15deg);
+        }
+
+        /* Mobil Menü Sistemi */
+        .mobile-menu-toggle {
+            display: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-main);
+            font-size: 18px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-page-title { display: none; }
+
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .mobile-menu-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: min(320px, 85vw);
+            height: 100vh;
+            background: rgba(8, 8, 14, 0.98);
+            backdrop-filter: blur(30px);
+            border-left: 1px solid rgba(255,255,255,0.06);
+            z-index: 1200;
+            transform: translateX(110%);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 24px;
+        }
+
+        .mobile-menu-panel.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .mobile-menu-brand {
+            font-size: 20px;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .mobile-menu-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-main);
+            font-size: 16px;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+        }
+
+        .mobile-menu-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+        }
+
+        .mobile-menu-profile img {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(168,85,247,0.4);
+        }
+
+        .mobile-menu-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .mobile-menu-role {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .mobile-menu-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 0 20px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .mobile-menu-stat {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .mobile-menu-stat-label {
+            display: block;
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .mobile-menu-stat-value {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .mobile-menu-nav {
+            display: flex;
+            flex-direction: column;
+            padding: 12px 16px;
+            gap: 4px;
+        }
+
+        .mobile-menu-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-menu-nav a i {
+            width: 22px;
+            text-align: center;
+            color: var(--accent-color);
+        }
+
+        .mobile-menu-nav a:hover,
+        .mobile-menu-nav a.active {
+            background: rgba(168,85,247,0.1);
+            color: #fff;
+        }
+
+        .mobile-menu-details {
+            padding: 16px 20px;
+            margin-top: auto;
+        }
+
+        .mobile-menu-details-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .mobile-menu-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 13px;
+        }
+
+        .mobile-menu-detail-row span {
+            color: var(--text-muted);
+        }
+
+        .mobile-menu-detail-row strong {
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        @media (max-width: 992px) {
+            .profile-grid { grid-template-columns: 1fr; }
+            .avatar-wrapper { width: 120px; height: 120px; }
+            .page-title h1 { font-size: 36px; }
+        }
+
+        @media (max-width: 768px) {
+            /* Header düzeni */
+            .header-content {
+                padding: 12px 16px;
+                align-items: center;
+            }
+            .header-brand {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }
+            .brand-logo { font-size: 20px !important; }
+            .brand-page-title {
+                display: block;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-muted);
+                font-family: 'Outfit', sans-serif;
+            }
+            .header-search-box { display: none; }
+            .header-actions {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .mobile-menu-toggle { display: inline-flex; }
+            .header-nav { display: none; }
+
+            .page-shell { padding: 0 12px 30px; }
+            .page-title { margin: 20px 0 16px; }
+            .page-title h1 { display: none; }
+            .page-title p { font-size: 13px; }
+
+            .profile-grid { gap: 16px; }
+            .profile-card-main { padding: 20px 16px; gap: 16px; }
+            .avatar-wrapper { width: 90px; height: 90px; margin-bottom: 12px; }
+            .username { font-size: 20px; }
+            .role-tag { font-size: 11px; padding: 4px 12px; }
+
+            .profile-info-list {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .profile-info-item { padding: 12px; border-radius: 12px; }
+            .profile-info-item strong { font-size: 14px; }
+            .profile-info-item label { font-size: 10px; }
+
+            .balance-card { padding: 14px !important; }
+            .balance-card strong { font-size: 22px !important; }
+            .balance-details { margin-top: 10px; padding-top: 10px; }
+            .balance-row { font-size: 12px; margin-bottom: 6px; }
+
+            .profile-details { padding: 20px 16px; gap: 24px; }
+            .detail-section h2 { font-size: 18px; }
+            .detail-section p.desc { font-size: 13px; margin-bottom: 16px; }
+
+            .detail-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .edit-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .edit-grid input { padding: 12px 14px; font-size: 14px; }
+
+            .detail-card { padding: 14px; border-radius: 12px; }
+            .detail-card p { font-size: 14px; }
+            .detail-card label { font-size: 10px; margin-bottom: 4px; }
+
+            .button-row { gap: 8px; }
+            .btn { padding: 10px 18px; font-size: 13px; }
+            .button-row .btn { flex: 1; justify-content: center; }
+
+            .toast-container { right: 12px; bottom: 12px; }
+            .toast { min-width: unset; width: calc(100vw - 48px); }
+        }
+
+        @media (max-width: 480px) {
+            .detail-grid { grid-template-columns: 1fr; }
+            .edit-grid { grid-template-columns: 1fr; }
+            .profile-info-list { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="frontend-header">
+        <div class="header-content">
+            <div class="header-brand">
+                <div class="brand-logo" style="font-size: 24px; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: 1px;">
+                    Epin<span style="color: #a855f7;">Hesabım</span>
+                </div>
+                <div class="brand-page-title">Kullanıcı Profili</div>
+            </div>
+            <div class="header-search-box">
+                <input id="headerSearchInput" type="text" class="header-search-input" placeholder="Hesabınızda arayın...">
+                <button id="headerSearchBtn" class="header-search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="header-actions">
+                <button class="theme-toggle-btn" id="themeToggleBtn" title="Tema değiştir"><i class="fas fa-sun" id="themeIcon"></i></button>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" title="Menü" aria-label="Menü"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a href="index.html">Ana Sayfa</a>
+            <a href="profilim.html" class="active">Profilim</a>
+            <a href="ilan-olustur.html">İlan Ekle</a>
+            <a href="#">Bakiye İşlemleri</a>
+            <a href="#">Ayarlar</a>
+        </nav>
+    </header>
+
+    <!-- Mobil Menü Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <div class="mobile-menu-panel" id="mobileMenuPanel">
+        <div class="mobile-menu-header">
+            <div class="mobile-menu-brand">Epin<span style="color: #a855f7;">Dünyam</span></div>
+            <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Kapat"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="mobile-menu-profile">
+            <img id="mobileMenuAvatar" src="assets/img/avatar-1.png" alt="Profil" onerror="this.src='https://via.placeholder.com/60/1a1a24/a855f7?text=U'">
+            <div class="mobile-menu-user">
+                <div class="mobile-menu-name" id="mobileMenuName">Kullanıcı</div>
+                <div class="mobile-menu-role" id="mobileMenuRole">Üye</div>
+            </div>
+        </div>
+        <div class="mobile-menu-stats">
+            <div class="mobile-menu-stat">
+                <span class="mobile-menu-stat-label">Üyelik</span>
+                <span class="mobile-menu-stat-value" id="mobileMenuStatus">Premium</span>
+            </div>
+            <div class="mobile-menu-stat">
+                <span class="mobile-menu-stat-label">Son Giriş</span>
+                <span class="mobile-menu-stat-value" id="mobileMenuLastLogin">-</span>
+            </div>
+            <div class="mobile-menu-stat">
+                <span class="mobile-menu-stat-label">Bakiye</span>
+                <span class="mobile-menu-stat-value" id="mobileMenuBalance">₺0,00</span>
+            </div>
+        </div>
+        <nav class="mobile-menu-nav">
+            <a href="index.html"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="profilim.html" class="active"><i class="fas fa-user"></i> Profilim</a>
+            <a href="ilan-olustur.html"><i class="fas fa-plus-circle"></i> İlan Ekle</a>
+            <a href="#"><i class="fas fa-wallet"></i> Bakiye İşlemleri</a>
+            <a href="#"><i class="fas fa-cog"></i> Ayarlar</a>
+        </nav>
+        <div class="mobile-menu-details">
+            <div class="mobile-menu-details-title">Hesap Bilgileri</div>
+            <div class="mobile-menu-detail-row">
+                <span>Ad Soyad</span>
+                <strong id="mobileMenuFullName">-</strong>
+            </div>
+            <div class="mobile-menu-detail-row">
+                <span>Kullanıcı Adı</span>
+                <strong id="mobileMenuUsername">-</strong>
+            </div>
+            <div class="mobile-menu-detail-row">
+                <span>E-posta</span>
+                <strong id="mobileMenuEmail">-</strong>
+            </div>
+            <div class="mobile-menu-detail-row">
+                <span>Onay Durumu</span>
+                <strong id="mobileMenuVerified">Bekliyor</strong>
+            </div>
+        </div>
+    </div>
+
+    <main class="page-shell">
+        <section class="page-title">
+            <div>
+                <h1>Kullanıcı Profili</h1>
+                <p>Hesap metrikleriniz, güvenlik durumunuz ve kişisel detaylarınız tek bir profesyonel panelde.</p>
+            </div>
+            <div class="button-row">
+                <button type="button" class="btn btn-primary" onclick="showEditProfile()"><i class="fas fa-pen"></i> Profili Düzenle</button>
+                <button type="button" class="btn btn-secondary" onclick="openSecuritySettings()"><i class="fas fa-shield-alt"></i> Güvenlik</button>
+            </div>
+        </section>
+
+        <div class="profile-grid">
+            <section class="profile-card-main glass-card">
+                <div class="profile-avatar-block">
+                    <div class="avatar-wrapper">
+                        <img id="profilePhoto" src="assets/img/avatar-1.png" alt="Profil Fotoğrafı" onerror="this.src='https://via.placeholder.com/150/1a1a24/a855f7?text=Profil'">
+                    </div>
+                    <h2 class="username" id="profileName">Merve Yıldız</h2>
+                    <div class="role-tag" id="profileRoleTag">Profesyonel Satıcı</div>
+                </div>
+                
+                <div class="profile-info-list">
+                    <div class="profile-info-item">
+                        <label>Üyelik Durumu</label>
+                        <strong id="profileMemberStatus">Premium Üye</strong>
+                    </div>
+                    <div class="profile-info-item">
+                        <label>Son Giriş</label>
+                        <strong id="profileLastLogin">23 Mayıs 2026 · 10:46</strong>
+                    </div>
+                    
+                    <div class="profile-info-item balance-card">
+                        <label>Güncel Bakiye</label>
+                        <strong id="profileBalance">₺8.420,50</strong>
+                        
+                        <div class="balance-details">
+                            <div class="balance-row">
+                                <span style="color: var(--text-muted);">Bekleyen Çekim:</span>
+                                <span id="pendingWithdrawal" style="color: var(--warning); font-weight: 600;">₺0,00</span>
+                            </div>
+                            <div class="balance-row">
+                                <span style="color: var(--text-muted);">Toplam Çekilen:</span>
+                                <span id="totalWithdrawn" style="color: var(--success); font-weight: 600;">₺0,00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="profile-details glass-card">
+                <div class="detail-section">
+                    <h2>Kişisel Bilgiler</h2>
+                    <p class="desc">Platform üzerindeki görünürlüğünüzü ve iletişim tercihlerinizi belirleyen temel hesap bilgileriniz.</p>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <label>Ad Soyad</label>
+                            <p id="profileFullName">Merve Yıldız</p>
+                        </div>
+                        <div class="detail-card">
+                            <label>Kullanıcı Adı</label>
+                            <p id="profileUsername">@merveitems</p>
+                        </div>
+                        <div class="detail-card">
+                            <label>E-posta Adresi</label>
+                            <p id="profileEmail">merve@yildiz.com</p>
+                        </div>
+                        <div class="detail-card">
+                            <label>Telefon Numarası</label>
+                            <p id="profilePhone">+90 532 123 45 67</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h2>Doğrulama & İletişim</h2>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <label>Kayıtlı Bölge</label>
+                            <p id="profileLocation">İstanbul, Türkiye</p>
+                        </div>
+                        <div class="detail-card">
+                            <label>Hesap Onayı</label>
+                            <p id="profileVerifiedStatus"><span class="badge"><i class="fas fa-check-circle" style="margin-right:4px;"></i> Doğrulanmış</span></p>
+                        </div>
+                        <div class="detail-card">
+                            <label>Parola Durumu</label>
+                            <p id="profilePasswordChanged">2 hafta önce güncellendi</p>
+                        </div>
+                        <div class="detail-card">
+                            <label>Koruma Seviyesi</label>
+                            <p id="profileSecurityStatus">2 Adımlı Doğrulama (2FA) Aktif</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section id="editProfileSection" class="glass-card detail-section profile-details" style="display:none; margin-top: 30px;">
+            <h2><i class="fas fa-user-edit" style="color: var(--accent-color);"></i> Profili Düzenle</h2>
+            <p class="desc">Aşağıdaki formu kullanarak platformda görünen kişisel detaylarınızı güncelleyebilirsiniz.</p>
+            <div class="edit-grid">
+                <div class="detail-card" style="background: transparent; border:none; padding:0;">
+                    <label>Ad Soyad</label>
+                    <input id="inputFullName" type="text" placeholder="Ad Soyadınızı girin">
+                </div>
+                <div class="detail-card" style="background: transparent; border:none; padding:0;">
+                    <label>Kullanıcı Adı</label>
+                    <input id="inputUsername" type="text" placeholder="@kullaniciadi">
+                </div>
+                <div class="detail-card" style="background: transparent; border:none; padding:0;">
+                    <label>E-posta</label>
+                    <input id="inputEmail" type="email" placeholder="ornek@mail.com">
+                </div>
+                <div class="detail-card" style="background: transparent; border:none; padding:0;">
+                    <label>Telefon</label>
+                    <input id="inputPhone" type="tel" placeholder="+90 5XX XXX XX XX">
+                </div>
+            </div>
+            <div class="button-row" style="margin-top: 24px;">
+                <button type="button" class="btn btn-primary" onclick="saveProfile()"><i class="fas fa-save"></i> Değişiklikleri Kaydet</button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditProfile()">İptal Et</button>
+            </div>
+        </section>
+
+        <section id="securitySection" class="glass-card detail-section profile-details" style="display:none; margin-top: 30px;">
+            <h2><i class="fas fa-lock" style="color: var(--accent-color);"></i> Güvenlik Merkezi</h2>
+            <p class="desc">Hesap erişimlerinizi denetleyin ve koruma kalkanlarınızı aktif tutun.</p>
+            <div class="detail-grid">
+                <div class="detail-card">
+                    <label>2 Adımlı Doğrulama (2FA)</label>
+                    <p id="securityTwoFactor" style="color: var(--success); font-weight: 600;">Aktif ve Koruyor</p>
+                </div>
+                <div class="detail-card">
+                    <label>Son Parola Değişikliği</label>
+                    <p id="securityLastPasswordChange">2 hafta önce</p>
+                </div>
+                <div class="detail-card">
+                    <label>Aktif Oturum Durumu</label>
+                    <p id="securitySessionStatus">Güvenli / Çevrimiçi</p>
+                </div>
+                <div class="detail-card">
+                    <label>Şifre Güç Skoru</label>
+                    <p id="securityPasswordStrength">Çok Güçlü</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script>
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = document.getElementById('themeIcon');
+        const htmlTag = document.documentElement;
+        const headerSearchInput = document.getElementById('headerSearchInput');
+        const headerSearchBtn = document.getElementById('headerSearchBtn');
+        const editProfileSection = document.getElementById('editProfileSection');
+        const securitySection = document.getElementById('securitySection');
+        const toastContainer = document.getElementById('toastContainer');
+
+        const profileFields = {
+            photo: document.getElementById('profilePhoto'),
+            name: document.getElementById('profileName'),
+            role: document.getElementById('profileRoleTag'),
+            memberStatus: document.getElementById('profileMemberStatus'),
+            lastLogin: document.getElementById('profileLastLogin'),
+            balance: document.getElementById('profileBalance'),
+            fullName: document.getElementById('profileFullName'),
+            username: document.getElementById('profileUsername'),
+            email: document.getElementById('profileEmail'),
+            phone: document.getElementById('profilePhone'),
+            location: document.getElementById('profileLocation'),
+            verifiedStatus: document.getElementById('profileVerifiedStatus'),
+            passwordChanged: document.getElementById('profilePasswordChanged'),
+            securityStatus: document.getElementById('profileSecurityStatus')
+        };
+
+        const editInputs = {
+            fullName: document.getElementById('inputFullName'),
+            username: document.getElementById('inputUsername'),
+            email: document.getElementById('inputEmail'),
+            phone: document.getElementById('inputPhone')
+        };
+
+        function capitalize(text) {
+            if (!text) return '';
+            return text.charAt(0).toUpperCase() + text.slice(1);
+        }
+
+        function getUserFromStorage() {
+            const raw = localStorage.getItem('user');
+            if (!raw) return null;
+            try {
+                return JSON.parse(raw);
+            } catch (e) {
+                console.error('Profil verisi okunamadı:', e);
+                return null;
+            }
+        }
+
+        function redirectToLogin() {
+            showToast('Profil sayfasını görmek için lütfen giriş yapın.', 'warning');
+            setTimeout(() => { window.location.href = 'login.html'; }, 700);
+        }
+
+        function updateThemeIcon() {
+            const current = htmlTag.getAttribute('data-theme');
+            themeIcon.className = current === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        function toggleTheme() {
+            const next = htmlTag.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            htmlTag.setAttribute('data-theme', next);
+            updateThemeIcon();
+            showToast(`Tema ${next === 'dark' ? 'Karanlık' : 'Aydınlık'} moda geçirildi.`, 'info');
+        }
+
+        function showToast(message, type = 'success') {
+            if (!toastContainer) return;
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}" style="margin-right:8px;"></i> ${message}`;
+            toastContainer.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.add('visible');
+            });
+
+            setTimeout(() => {
+                toast.classList.remove('visible');
+                toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+            }, 3200);
+        }
+
+        function fillProfileData(user) {
+            const displayName = user.fullName || user.username || 'Kullanıcı';
+            const usernameText = user.username ? '@' + user.username.replace(/^@/, '') : 'Kullanıcı';
+            const roleText = user.role === 'admin' ? 'Yönetici' : 'Profesyonel Satıcı';
+            const balanceValue = parseFloat(user.balance || 0);
+
+            profileFields.photo.src = user.avatar || 'assets/img/avatar-1.png';
+            profileFields.name.textContent = displayName;
+            profileFields.role.textContent = roleText;
+            profileFields.memberStatus.textContent = user.status ? capitalize(user.status) + ' Üye' : 'Premium Üye';
+            profileFields.lastLogin.textContent = user.lastLogin || new Date().toLocaleString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            profileFields.balance.textContent = '₺' + balanceValue.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            profileFields.fullName.textContent = displayName;
+            profileFields.username.textContent = usernameText;
+            profileFields.email.textContent = user.email || 'Bilgi yok';
+            profileFields.phone.textContent = user.phone || 'Bilgi yok';
+            profileFields.location.textContent = user.location || 'Türkiye';
+            if (user.verificationStatus === 'approved') {
+                profileFields.verifiedStatus.innerHTML = '<span class="badge" style="background: rgba(16, 185, 129, 0.12); color: #10b981; border-color: rgba(16, 185, 129, 0.25);"><i class="fas fa-check-circle" style="margin-right:4px;"></i> Onaylı</span>';
+            } else if (user.verificationStatus === 'pending') {
+                profileFields.verifiedStatus.innerHTML = '<span class="badge" style="background: rgba(245, 158, 11, 0.12); color: #f59e0b; border-color: rgba(245, 158, 11, 0.25);"><i class="fas fa-clock" style="margin-right:4px;"></i> İncelemede</span>';
+            } else if (user.verificationStatus === 'rejected') {
+                profileFields.verifiedStatus.innerHTML = '<span class="badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2);"><i class="fas fa-times-circle" style="margin-right:4px;"></i> Reddedildi</span>';
+            } else {
+                profileFields.verifiedStatus.innerHTML = '<span class="badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2);"><i class="fas fa-times-circle" style="margin-right:4px;"></i> Doğrulanmadı</span>';
+            }
+            profileFields.passwordChanged.textContent = user.passwordChangedAt || 'Birkaç hafta önce';
+            profileFields.securityStatus.textContent = user.twoFactorEnabled ? '2 faktörlü doğrulama açık' : '2 faktörlü doğrulama kapalı';
+
+            if (editInputs.fullName) editInputs.fullName.value = user.fullName || '';
+            if (editInputs.username) editInputs.username.value = user.username || '';
+            if (editInputs.email) editInputs.email.value = user.email || '';
+            if (editInputs.phone) editInputs.phone.value = user.phone || '';
+
+            // Mobil menü veri senkronizasyonu
+            const mobileAvatar = document.getElementById('mobileMenuAvatar');
+            const mobileName = document.getElementById('mobileMenuName');
+            const mobileRole = document.getElementById('mobileMenuRole');
+            const mobileStatus = document.getElementById('mobileMenuStatus');
+            const mobileLastLogin = document.getElementById('mobileMenuLastLogin');
+            const mobileBalance = document.getElementById('mobileMenuBalance');
+            const mobileFullName = document.getElementById('mobileMenuFullName');
+            const mobileUsername = document.getElementById('mobileMenuUsername');
+            const mobileEmail = document.getElementById('mobileMenuEmail');
+            const mobileVerified = document.getElementById('mobileMenuVerified');
+
+            if (mobileAvatar) mobileAvatar.src = user.avatar || 'assets/img/avatar-1.png';
+            if (mobileName) mobileName.textContent = displayName;
+            if (mobileRole) mobileRole.textContent = roleText;
+            if (mobileStatus) mobileStatus.textContent = user.status ? capitalize(user.status) + ' Üye' : 'Premium Üye';
+            if (mobileLastLogin) mobileLastLogin.textContent = user.lastLogin || new Date().toLocaleDateString('tr-TR');
+            if (mobileBalance) mobileBalance.textContent = '₺' + balanceValue.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            if (mobileFullName) mobileFullName.textContent = displayName;
+            if (mobileUsername) mobileUsername.textContent = usernameText;
+            if (mobileEmail) mobileEmail.textContent = user.email || '-';
+            if (mobileVerified) {
+                if (user.verificationStatus === 'approved') mobileVerified.textContent = 'Onaylı';
+                else if (user.verificationStatus === 'pending') mobileVerified.textContent = 'İncelemede';
+                else if (user.verificationStatus === 'rejected') mobileVerified.textContent = 'Reddedildi';
+                else mobileVerified.textContent = 'Bekliyor';
+            }
+        }
+
+        async function fetchFreshUserData() {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            try {
+                const res = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } });
+                if (!res.ok) return;
+                const userData = await res.json();
+                if (userData && userData._id) {
+                    const existing = localStorage.getItem('user');
+                    const merged = existing ? { ...JSON.parse(existing), ...userData } : userData;
+                    localStorage.setItem('user', JSON.stringify(merged));
+                    fillProfileData(merged);
+                }
+            } catch (e) { console.error('fetchFreshUserData error:', e); }
+        }
+
+        async function fetchWithdrawalStats() {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            try {
+                const res = await fetch('/api/withdrawals/stats', { headers: { 'Authorization': 'Bearer ' + token } });
+                if (!res.ok) return;
+                const data = await res.json();
+                const pendingEl = document.getElementById('pendingWithdrawal');
+                const totalEl = document.getElementById('totalWithdrawn');
+                if (pendingEl) pendingEl.textContent = '₺' + parseFloat(data.pendingTotal || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                if (totalEl) totalEl.textContent = '₺' + parseFloat(data.completedWithdrawn || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            } catch (e) { console.error('fetchWithdrawalStats error:', e); }
+        }
+
+        function loadProfileData() {
+            const user = getUserFromStorage();
+            if (!user) {
+                redirectToLogin();
+                return;
+            }
+            fillProfileData(user);
+            fetchFreshUserData();
+            fetchWithdrawalStats();
+        }
+
+        function showEditProfile() {
+            const user = getUserFromStorage();
+            if (!user) return redirectToLogin();
+            securitySection.style.display = 'none';
+            editProfileSection.style.display = 'block';
+            editProfileSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (editInputs.fullName) editInputs.fullName.focus();
+            showToast('Profil düzenleme moduna girildi.', 'info');
+        }
+
+        function closeEditProfile() {
+            editProfileSection.style.display = 'none';
+            showToast('Profil düzenleme iptal edildi.', 'warning');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openSecuritySettings() {
+            editProfileSection.style.display = 'none';
+            securitySection.style.display = 'block';
+            securitySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            showToast('Güvenlik ayarları paneline erişildi.', 'info');
+        }
+
+        async function saveProfile() {
+            const user = getUserFromStorage();
+            if (!user) return redirectToLogin();
+
+            const token = localStorage.getItem('token');
+            if (!token) return redirectToLogin();
+
+            const updated = {
+                fullName: editInputs.fullName.value.trim() || user.fullName,
+                username: editInputs.username.value.trim() || user.username,
+                email: editInputs.email.value.trim() || user.email,
+                phone: editInputs.phone.value.trim() || user.phone
+            };
+
+            try {
+                const res = await fetch('/api/user/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(updated)
+                });
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.error || 'Güncelleme başarısız');
+
+                const merged = { ...user, ...result.user };
+                localStorage.setItem('user', JSON.stringify(merged));
+                fillProfileData(merged);
+                closeEditProfile();
+                showToast('Profil bilgileriniz başarıyla güncellendi.', 'success');
+            } catch (err) {
+                showToast('Hata: ' + err.message, 'error');
+            }
+        }
+
+        function performSearch() {
+            const query = headerSearchInput.value.trim();
+            if (query) {
+                showToast(`${query} aranıyor...`, 'info');
+                setTimeout(() => {
+                    window.location.href = `index.html?q=${encodeURIComponent(query)}`;
+                }, 300);
+            } else {
+                showToast('Boş arama ile ana sayfaya yönlendiriliyorsunuz.', 'warning');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 300);
+            }
+        }
+
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', toggleTheme);
+        }
+
+        if (headerSearchBtn) {
+            headerSearchBtn.addEventListener('click', performSearch);
+        }
+
+        if (headerSearchInput) {
+            headerSearchInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        }
+
+        // Mobil Menü JS
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileMenuPanel = document.getElementById('mobileMenuPanel');
+
+        function openMobileMenu() {
+            if (mobileMenuOverlay && mobileMenuPanel) {
+                mobileMenuOverlay.classList.add('active');
+                mobileMenuPanel.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeMobileMenu() {
+            if (mobileMenuOverlay && mobileMenuPanel) {
+                mobileMenuOverlay.classList.remove('active');
+                mobileMenuPanel.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        if (mobileMenuToggle) mobileMenuToggle.addEventListener('click', openMobileMenu);
+        if (mobileMenuClose) mobileMenuClose.addEventListener('click', closeMobileMenu);
+        if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateThemeIcon();
+            loadProfileData();
+        });
+    </script>
+</body>
+</html>
