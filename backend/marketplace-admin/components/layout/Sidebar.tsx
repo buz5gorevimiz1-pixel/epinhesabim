@@ -87,9 +87,9 @@ export function Sidebar() {
               {!collapsed && (
                 <>
                   <span className="flex-1">{item.label}</span>
-                  {item.badge ? (
-                    <Badge variant="accent" size="sm">{item.badge}</Badge>
-                  ) : null}
+{"badge" in item && item.badge ? (
+  <Badge variant="accent" size="sm">{item.badge}</Badge>
+) : null}
                 </>
               )}
               {collapsed && isActive && (
