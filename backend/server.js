@@ -5,6 +5,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 
 const User = require('./models/User');
 const Product = require('./models/Product');
@@ -14,6 +15,11 @@ const Order = require('./models/Order');
 const Withdrawal = require('./models/Withdrawal');
 
 const upload = require('./config/multer');
+
+// NEW MODULAR AUTH SYSTEM
+const authService = require('./services/authService');
+const authRoutes = require('./routes/auth');
+const globalErrorHandler = require('./middleware/errorHandler');
 
 const app = express();
 const JWT_SECRET = process.env.JWT_SECRET || 'itemci_secret_123_gizli_anahtar';
@@ -42,16 +48,72 @@ const verifyAdmin = (req, res, next) => {
     }
   });
 };
+
+// Sadece super_admin erişebilir
+const verifySuperAdmin = (req, res, next) => {
+  verifyToken(req, res, () => {
+    if (req.user && req.user.role === 'super_admin') {
+      next();
+    } else {
+      return res.status(403).json({ error: 'Sadece super_admin erişebilir.' });
+    }
+  });
+};
 // ------------------------------------
 
-app.use(cors());
+app.use(cors({
+  origin: function (origin, callback) {
+    callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-// MIDDLEWARE
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// ── CATEGORY NORMALIZATION HELPERS ──
+function normalizeCategorySlug(name) {
+  if (!name) return 'genel';
+  const trMap = { ç: 'c', ğ: 'g', ı: 'i', ö: 'o', ş: 's', ü: 'u', Ç: 'C', Ğ: 'G', İ: 'I', Ö: 'O', Ş: 'S', Ü: 'U' };
+  return name
+    .replace(/[çğıöşüÇĞİÖŞÜ]/g, ch => trMap[ch] || ch)
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function normalizeCategoryName(name) {
+  if (!name) return 'Genel';
+  return name.trim().replace(/^\w/, c => c.toUpperCase());
+}
+
+async function normalizeExistingProducts() {
+  try {
+    if (mongoConnected) {
+      const products = await Product.find({ $or: [{ categorySlug: { $exists: false } }, { categorySlug: '' }] }).lean();
+      for (const p of products) {
+        const slug = normalizeCategorySlug(p.category);
+        const name = normalizeCategoryName(p.category);
+        await Product.updateOne({ _id: p._id }, { $set: { categorySlug: slug, categoryName: name } });
+      }
+      console.log(`Normalized ${products.length} products.`);
+    }
+    // in-memory fallback
+    inMemoryStorage.products.forEach(p => {
+      if (!p.categorySlug) {
+        p.categorySlug = normalizeCategorySlug(p.category);
+        p.categoryName = normalizeCategoryName(p.category);
+      }
+    });
+  } catch (err) {
+    console.error('Normalize error:', err);
+  }
+}
 
 // MEMORY DATABASE
 let users = [];
@@ -101,6 +163,9 @@ mongoose.connect(MONGO_URI)
 
   mongoConnected = true;
 
+  // Normalize existing products without categorySlug
+  await normalizeExistingProducts();
+
   const dbUsers =
     await User.find();
 
@@ -121,6 +186,12 @@ mongoose.connect(MONGO_URI)
     });
   }
 
+  // Initialize new modular auth service
+  authService.setUsers(users);
+  authService.setMongoStatus(true);
+  authService.setUserModel(User);
+  console.log('✓ Auth service initialized');
+
   console.log(`✓ ${users.length} kullanıcı yüklendi`);
 
 })
@@ -129,6 +200,11 @@ mongoose.connect(MONGO_URI)
   console.log('⚠ MongoDB bağlantı hatası');
 
   mongoConnected = false;
+
+  // Initialize auth service with memory-only users
+  authService.setUsers(users);
+  authService.setMongoStatus(false);
+  authService.setUserModel(User);
 
 });
 
@@ -982,8 +1058,7 @@ app.get('/api/products', async (req, res) => {
       const products = await Product.find({ status: 'approved' }).sort({ createdAt: -1 }).lean();
       const mappedProducts = products.map((product) => ({
         ...product,
-        id: product._id,
-        status: product.saleStatus || 'available'
+        id: product._id
       }));
       return res.json(mappedProducts);
     }
@@ -992,6 +1067,38 @@ app.get('/api/products', async (req, res) => {
   } catch (err) {
     console.error('Ürünler alınırken hata:', err);
     res.status(500).json({ error: 'Ürünler alınamadı.' });
+  }
+});
+
+app.get('/api/listings', async (req, res) => {
+  try {
+    const { category, sort = 'createdAt', order = 'desc', page = 1, limit = 20 } = req.query;
+    const query = { status: 'approved' };
+    if (category) {
+      query.categorySlug = normalizeCategorySlug(category);
+    }
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const sortObj = {};
+    sortObj[sort] = order === 'asc' ? 1 : -1;
+
+    if (mongoConnected) {
+      const [products, total] = await Promise.all([
+        Product.find(query).sort(sortObj).skip(skip).limit(parseInt(limit)).lean(),
+        Product.countDocuments(query)
+      ]);
+      return res.json({
+        listings: products.map(p => ({ ...p, id: p._id })),
+        pagination: { page: parseInt(page), limit: parseInt(limit), total, totalPages: Math.ceil(total / parseInt(limit)) }
+      });
+    }
+
+    let filtered = inMemoryStorage.products.filter(p => p.status === 'approved');
+    if (category) filtered = filtered.filter(p => p.categorySlug === normalizeCategorySlug(category));
+    return res.json({ listings: filtered, pagination: { page: 1, limit: filtered.length, total: filtered.length, totalPages: 1 } });
+  } catch (err) {
+    console.error('Listings error:', err);
+    res.status(500).json({ error: 'İlanlar alınamadı.' });
   }
 });
 
@@ -1006,8 +1113,7 @@ app.get('/api/my-products/:sellerId', async (req, res) => {
       const products = await Product.find({ sellerId }).sort({ createdAt: -1 }).lean();
       return res.json(products.map((product) => ({
         ...product,
-        id: product._id,
-        status: product.saleStatus || product.status || 'available'
+        id: product._id
       })));
     }
 
@@ -1047,8 +1153,7 @@ app.get('/api/products/:productId', async (req, res) => {
 
       return res.json({
         ...product,
-        id: product._id,
-        status: product.saleStatus || 'available'
+        id: product._id
       });
     }
 
@@ -1170,6 +1275,38 @@ path.join(__dirname,'../frodent/admin-dashboard.html')
 
 });
 
+app.get('/giris', (req, res) => {
+
+res.sendFile(
+path.join(__dirname, '../frodent/login.html')
+);
+
+});
+
+app.get('/kayit-ol', (req, res) => {
+
+res.sendFile(
+path.join(__dirname, '../frodent/register.html')
+);
+
+});
+
+app.get('/admin', (req, res) => {
+
+res.sendFile(
+path.join(__dirname, '../frodent/admin-login.html')
+);
+
+});
+
+app.get('/dashboard', (req, res) => {
+
+res.sendFile(
+path.join(__dirname, '../frodent/admin-dashboard2.html')
+);
+
+});
+
 app.post('/api/user/verification', verifyToken, upload.single('image'), async (req, res) => {
   try {
     const imageUrl = req.file?.path || req.file?.secure_url || req.file?.url;
@@ -1247,6 +1384,9 @@ break;
 
 }
 
+const categorySlug = normalizeCategorySlug(category);
+const categoryName = normalizeCategoryName(category);
+
 const imagePath = req.file ? req.file.path : req.body.imageUrl;
 
 if (!imagePath) {
@@ -1268,6 +1408,8 @@ sellerId,
 sellerName,
 
 category,
+categorySlug,
+categoryName,
 
 status:'pending',
 
@@ -1844,15 +1986,213 @@ app.post('/api/balance/top-up', verifyToken, async (req, res) => {
   }
 });
 
+// ADMIN MANAGEMENT (Sadece super_admin)
+app.get('/api/admin/admins', verifySuperAdmin, async (req, res) => {
+  try {
+    if (mongoConnected) {
+      const admins = await User.find({ role: { $in: ['admin', 'super_admin'] } })
+        .select('_id fullName username email role status balance createdAt')
+        .sort({ createdAt: -1 });
+      return res.json(admins);
+    }
+    const admins = users.filter(u => u.role === 'admin' || u.role === 'super_admin');
+    res.json(admins);
+  } catch (err) {
+    console.error('Admin list error:', err);
+    res.status(500).json({ error: 'Adminler alınamadı.' });
+  }
+});
+
+app.post('/api/admin/create-admin', verifySuperAdmin, async (req, res) => {
+  try {
+    const { full_name, email, phone, username, password, role } = req.body;
+    if (!full_name || !email || !phone || !username || !password) {
+      return res.status(400).json({ error: 'Tüm alanları doldurun.' });
+    }
+    const normalizedEmail = String(email).toLowerCase().trim();
+    const normalizedUsername = String(username).toLowerCase().trim();
+    const newRole = role === 'super_admin' ? 'super_admin' : 'admin';
+
+    if (mongoConnected) {
+      const emailExists = await User.findOne({ email: normalizedEmail });
+      if (emailExists) return res.status(409).json({ error: 'Bu e-posta zaten kayıtlı.' });
+      const usernameExists = await User.findOne({ username: normalizedUsername });
+      if (usernameExists) return res.status(409).json({ error: 'Bu kullanıcı adı kullanımda.' });
+
+      const passwordHash = await bcrypt.hash(password, 10);
+      const newUser = new User({
+        fullName: full_name,
+        email: normalizedEmail,
+        phone: phone,
+        username: normalizedUsername,
+        passwordHash: passwordHash,
+        role: newRole,
+        status: 'active',
+        balance: 0
+      });
+      await newUser.save();
+      return res.json({ success: true, user: newUser });
+    }
+
+    // In-memory fallback
+    if (users.find(u => u.email === normalizedEmail)) {
+      return res.status(409).json({ error: 'Bu e-posta zaten kayıtlı.' });
+    }
+    if (users.find(u => u.username === normalizedUsername)) {
+      return res.status(409).json({ error: 'Bu kullanıcı adı kullanımda.' });
+    }
+    const passwordHash = await bcrypt.hash(password, 10);
+    const userObj = {
+      _id: String(Date.now()),
+      fullName: full_name,
+      email: normalizedEmail,
+      phone: phone,
+      username: normalizedUsername,
+      passwordHash: passwordHash,
+      role: newRole,
+      status: 'active',
+      balance: 0,
+      createdAt: new Date()
+    };
+    users.push(userObj);
+    res.json({ success: true, user: userObj });
+  } catch (err) {
+    console.error('Create admin error:', err);
+    res.status(500).json({ error: 'Admin oluşturulamadı.' });
+  }
+});
+
+app.delete('/api/admin/delete-admin/:id', verifySuperAdmin, async (req, res) => {
+  try {
+    if (mongoConnected) {
+      const user = await User.findByIdAndDelete(req.params.id);
+      if (!user) return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+      return res.json({ success: true });
+    }
+    const idx = users.findIndex(u => u._id === req.params.id);
+    if (idx === -1) return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+    users.splice(idx, 1);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Delete admin error:', err);
+    res.status(500).json({ error: 'Admin silinemedi.' });
+  }
+});
+
+app.put('/api/admin/update-role/:id', verifySuperAdmin, async (req, res) => {
+  try {
+    const { role } = req.body;
+    if (!['user', 'admin', 'super_admin'].includes(role)) {
+      return res.status(400).json({ error: 'Geçersiz rol.' });
+    }
+    if (mongoConnected) {
+      const user = await User.findByIdAndUpdate(req.params.id, { role }, { new: true })
+        .select('_id fullName username email role status balance createdAt');
+      if (!user) return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+      return res.json({ success: true, user });
+    }
+    const user = users.find(u => u._id === req.params.id);
+    if (!user) return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+    user.role = role;
+    res.json({ success: true, user });
+  } catch (err) {
+    console.error('Update role error:', err);
+    res.status(500).json({ error: 'Rol güncellenemedi.' });
+  }
+});
+
+// NEW MODULAR AUTH ROUTES (Admin Panel)
+const userRoutes = require('./routes/users');
+const listingRoutes = require('./routes/listings');
+const financeRoutes = require('./routes/finance');
+const auditRoutes = require('./routes/audit');
+const dashboardRoutes = require('./routes/dashboard');
+
+app.use('/api/v2/auth', authRoutes);
+app.use('/api/v2/users', userRoutes);
+app.use('/api/v2/listings', listingRoutes);
+app.use('/api/v2/finance', financeRoutes);
+app.use('/api/v2/audit-logs', auditRoutes);
+app.use('/api/v2/dashboard', dashboardRoutes);
+app.use('/api/v2/sliders', require('./routes/sliders'));
+
+// ── UPLOAD ENDPOINTS ──
+app.post('/api/upload/images', verifyToken, upload.array('images', 10), async (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ success: false, error: 'Dosya bulunamadı.' });
+    }
+    const urls = req.files.map(f => ({
+      url: f.path || f.secure_url || f.url,
+      publicId: f.filename || f.public_id,
+      originalName: f.originalname,
+      size: f.size,
+    }));
+    res.json({ success: true, images: urls, count: urls.length });
+  } catch (err) {
+    console.error('[UPLOAD] Error:', err);
+    res.status(500).json({ success: false, error: 'Yükleme başarısız.' });
+  }
+});
+
+app.post('/api/upload/single', verifyToken, upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'Dosya bulunamadı.' });
+    }
+    res.json({
+      success: true,
+      image: {
+        url: req.file.path || req.file.secure_url || req.file.url,
+        publicId: req.file.filename || req.file.public_id,
+        originalName: req.file.originalname,
+        size: req.file.size,
+      }
+    });
+  } catch (err) {
+    console.error('[UPLOAD] Error:', err);
+    res.status(500).json({ success: false, error: 'Yükleme başarısız.' });
+  }
+});
+
+// Multer error handler
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(413).json({ success: false, error: 'Dosya çok büyük. Maksimum 50MB.' });
+    }
+    if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+      return res.status(400).json({ success: false, error: 'Çok fazla dosya yüklendi. Maksimum 10 adet.' });
+    }
+    return res.status(400).json({ success: false, error: err.message });
+  }
+  if (err.message && err.message.includes('Sadece görsel')) {
+    return res.status(400).json({ success: false, error: err.message });
+  }
+  next(err);
+});
+
+// Global error handler
+app.use(globalErrorHandler);
+
+// SOCKET.IO
+const http = require('http');
+const { initSocketIO } = require('./services/socketService');
+
+const server = http.createServer(app);
+initSocketIO(server);
+
 // START SERVER
 const PORT = 3000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
 
 console.log(); console.log(`╔══════════════════════════════════════╗`); console.log(`║ ITEMCI BACKEND ║`); console.log(`╚══════════════════════════════════════╝`); console.log();
 console.log(`✓ Backend: http://localhost:${PORT}`);
 console.log(`✓ Login:   http://localhost:${PORT}/giris-yap`);
 console.log(`✓ Register:http://localhost:${PORT}/uyelik`);
+console.log(`✓ Admin API: http://localhost:${PORT}/api/v2/auth`);
+console.log(`✓ Socket.IO: ws://localhost:${PORT}`);
 
 console.log(``);
 

@@ -563,6 +563,7 @@
             <button class="menu-item" data-section="system"><i class="fas fa-server"></i> <span>Sistem Durumu</span></button>
             <button class="menu-item" data-section="security"><i class="fas fa-shield-alt"></i> <span>Güvenlik</span></button>
             <button class="menu-item" data-section="settings"><i class="fas fa-cog"></i> <span>Ayarlar</span></button>
+            <button class="menu-item" data-section="adminManagement" id="adminMenuItem" style="display:none;"><i class="fas fa-user-shield"></i> <span>Admin Yönetimi</span></button>
 
             <div style="margin-top: 40px;"></div>
             <button class="menu-item" onclick="logoutAdmin()" style="color: var(--danger);"><i class="fas fa-sign-out-alt"></i> <span>Çıkış Yap</span></button>
@@ -664,6 +665,24 @@
                 </div>
             </div>
 
+            <!-- ADMIN MANAGEMENT SECTION -->
+            <div class="section" id="adminManagementSection">
+                <h1 class="page-title">Admin Yönetimi</h1>
+                <div class="panel-card">
+                    <div class="panel-header" style="flex-wrap:wrap; gap:12px;">
+                        <span class="panel-title">Yöneticiler ve Yetkili Kullanıcılar</span>
+                        <button class="btn btn-primary btn-sm" onclick="openCreateAdminModal()"><i class="fas fa-plus"></i> Yeni Admin Oluştur</button>
+                    </div>
+                    <div id="adminManagementContent"><div class="loading-state"><div class="spinner"></div><p>Yükleniyor...</p></div></div>
+                </div>
+                <div class="panel-card" style="margin-top:24px;">
+                    <div class="panel-header">
+                        <span class="panel-title">Tüm Kullanıcılar (Rol Yönetimi)</span>
+                    </div>
+                    <div id="adminUserRolesContent"><div class="loading-state"><div class="spinner"></div><p>Yükleniyor...</p></div></div>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -705,6 +724,91 @@
         </div>
     </div>
 
+    <!-- ROLE CHANGE MODAL -->
+    <div class="modal-overlay" id="roleChangeModal">
+        <div class="modal-box" style="width:400px;">
+            <button class="modal-close" onclick="closeModal('roleChangeModal')"><i class="fas fa-times"></i></button>
+            <div style="text-align:center; margin-bottom:20px;">
+                <div style="width:56px; height:56px; border-radius:50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display:flex; align-items:center; justify-content:center; margin:0 auto 14px; font-size:22px; color:#fff;">
+                    <i class="fas fa-user-tag"></i>
+                </div>
+                <h3 style="font-size:18px; margin-bottom:4px;">Rol Değiştir</h3>
+                <p style="color:var(--text-muted); font-size:13px;" id="roleChangeUsername">Kullanıcı</p>
+            </div>
+            <input type="hidden" id="roleChangeUserId">
+            <input type="hidden" id="roleChangeCurrentRole">
+            <div class="form-group">
+                <label>Yeni Rol</label>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <label style="display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:10px; border:1px solid var(--border-color); background:rgba(0,0,0,0.2); cursor:pointer; transition:.2s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor=''">
+                        <input type="radio" name="roleOption" value="user" style="accent-color:var(--primary); width:16px; height:16px;">
+                        <div>
+                            <div style="font-weight:600; font-size:14px;">User</div>
+                            <div style="font-size:12px; color:var(--text-muted);">Standart kullanıcı</div>
+                        </div>
+                    </label>
+                    <label style="display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:10px; border:1px solid var(--border-color); background:rgba(0,0,0,0.2); cursor:pointer; transition:.2s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor=''">
+                        <input type="radio" name="roleOption" value="admin" style="accent-color:var(--primary); width:16px; height:16px;">
+                        <div>
+                            <div style="font-weight:600; font-size:14px;">Admin</div>
+                            <div style="font-size:12px; color:var(--text-muted);">Yönetici yetkileri</div>
+                        </div>
+                    </label>
+                    <label style="display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:10px; border:1px solid var(--border-color); background:rgba(0,0,0,0.2); cursor:pointer; transition:.2s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor=''">
+                        <input type="radio" name="roleOption" value="super_admin" style="accent-color:var(--primary); width:16px; height:16px;">
+                        <div>
+                            <div style="font-weight:600; font-size:14px;">Super Admin</div>
+                            <div style="font-size:12px; color:var(--text-muted);">Tam yetki (admin yönetimi dahil)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('roleChangeModal')">İptal</button>
+                <button class="btn btn-primary" onclick="submitRoleChange()"><i class="fas fa-save"></i> Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CREATE ADMIN MODAL -->
+    <div class="modal-overlay" id="createAdminModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('createAdminModal')"><i class="fas fa-times"></i></button>
+            <h3 style="margin-bottom:20px;font-size:18px;">Yeni Admin Oluştur</h3>
+            <div class="form-group">
+                <label for="caFullName">Ad Soyad</label>
+                <input type="text" id="caFullName" class="form-control" placeholder="Örn: Ahmet Yılmaz">
+            </div>
+            <div class="form-group">
+                <label for="caEmail">E-Posta</label>
+                <input type="email" id="caEmail" class="form-control" placeholder="admin@epinhesabim.com">
+            </div>
+            <div class="form-group">
+                <label for="caPhone">Telefon</label>
+                <input type="text" id="caPhone" class="form-control" placeholder="05XX XXX XX XX">
+            </div>
+            <div class="form-group">
+                <label for="caUsername">Kullanıcı Adı</label>
+                <input type="text" id="caUsername" class="form-control" placeholder="admin_username">
+            </div>
+            <div class="form-group">
+                <label for="caPassword">Şifre</label>
+                <input type="password" id="caPassword" class="form-control" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+                <label for="caRole">Rol</label>
+                <select id="caRole" class="form-control">
+                    <option value="admin">Admin</option>
+                    <option value="super_admin">Super Admin</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('createAdminModal')">İptal</button>
+                <button class="btn btn-primary" onclick="submitCreateAdmin()"><i class="fas fa-plus"></i> Oluştur</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT -->
     <script>
     // =====================
@@ -725,6 +829,7 @@
         { _id: 'p1', title: 'Premium Valorant Hesabı', description: 'Hesap 10+ rank skin içerir.', image: 'assets/uploads/listings/listing_392_1778261611_69fe1e6b80649.webp', price: 4500, category: 'Valorant', sellerName: 'TrustSeller', status: 'pending', saleStatus: 'available' },
         { _id: 'p2', title: 'PUBG Mobile Hesabı', description: '50K BP, premium skinler.', image: 'assets/img/placeholder.jpg', price: 12000, category: 'PUBG', sellerName: 'GameHub', status: 'pending', saleStatus: 'available' }
     ];
+    let currentAdminRole = null;
     let adminSettings = {
         maintenanceMode: false,
         emailNotifications: true,
@@ -907,7 +1012,8 @@
         salesSection: loadSalesSection,
         systemSection: loadSystemSection,
         securitySection: loadSecuritySection,
-        settingsSection: loadSettingsSection
+        settingsSection: loadSettingsSection,
+        adminManagementSection: loadAdminManagement
     };
 
     function showSection(sectionId) {
@@ -1426,6 +1532,7 @@
                 window.location.href = 'admin-login.html';
                 return false;
             }
+            currentAdminRole = user.role;
             // Admin bilgilerini guncelle
             const adminNameEl = document.querySelector('.admin-info span');
             const adminRoleEl = document.querySelector('.admin-info small');
@@ -1433,11 +1540,171 @@
             if (adminNameEl) adminNameEl.textContent = user.username || 'Admin';
             if (adminRoleEl) adminRoleEl.textContent = user.role === 'super_admin' ? 'Kurucu' : 'Yönetici';
             if (adminImg) adminImg.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.username || 'Admin') + '&background=8b5cf6&color=fff';
+            // Sadece super_admin Admin Yönetimi menüsünü görsün
+            const adminMenu = document.getElementById('adminMenuItem');
+            if (adminMenu) {
+                adminMenu.style.display = user.role === 'super_admin' ? '' : 'none';
+            }
             return true;
         } catch (err) {
             localStorage.removeItem('adminToken');
             window.location.href = 'admin-login.html';
             return false;
+        }
+    }
+
+    // =====================
+    // ADMIN MANAGEMENT
+    // =====================
+    async function loadAdminManagement() {
+        const adminContent = document.getElementById('adminManagementContent');
+        const userRolesContent = document.getElementById('adminUserRolesContent');
+        adminContent.innerHTML = createLoadingState();
+        userRolesContent.innerHTML = createLoadingState();
+
+        try {
+            // Admin listesi
+            const admins = await apiCall('/admins');
+            if (!admins || admins.length === 0) {
+                adminContent.innerHTML = createEmptyState('Henüz admin bulunmuyor', 'fa-user-shield');
+            } else {
+                adminContent.innerHTML = '<div style="overflow-x:auto;"><table><thead><tr><th>Kullanıcı</th><th>Email</th><th>Rol</th><th>Durum</th><th>Bakiye</th><th>İşlemler</th></tr></thead><tbody>' +
+                    admins.map(admin => {
+                        const roleClass = admin.role === 'super_admin' ? 'status-danger' : 'status-success';
+                        const roleText = admin.role === 'super_admin' ? 'Super Admin' : 'Admin';
+                        const st = formatStatus(admin.status);
+                        return '<tr>' +
+                            '<td><div class="user-cell"><img src="https://ui-avatars.com/api/?name=' + encodeURIComponent(admin.username || 'A') + '&background=8b5cf6&color=fff"><div><div style="font-weight:600;">' + escapeHtml(admin.username) + '</div></div></div></td>' +
+                            '<td>' + escapeHtml(admin.email) + '</td>' +
+                            '<td><span class="status-pill ' + roleClass + '">' + roleText + '</span></td>' +
+                            '<td><span class="status-pill ' + st.className + '">' + st.text + '</span></td>' +
+                            '<td>₺' + Number(admin.balance || 0).toLocaleString('tr-TR') + '</td>' +
+                            '<td class="action-td">' +
+                                '<button class="action-sm edit" title="Rol Değiştir" onclick="openRoleModal(' + jsString(admin._id) + ', ' + jsString(admin.username) + ', ' + jsString(admin.role) + ')"><i class="fas fa-user-tag"></i></button>' +
+                                '<button class="action-sm delete" title="Sil" onclick="deleteAdmin(' + jsString(admin._id) + ', ' + jsString(admin.username) + ')"><i class="fas fa-trash"></i></button>' +
+                            '</td>' +
+                        '</tr>';
+                    }).join('') +
+                    '</tbody></table></div>';
+            }
+        } catch (error) {
+            adminContent.innerHTML = createErrorState('Admin listesi alınamadı');
+            addNotification('Hata', 'Admin listesi yüklenirken hata oluştu', 'fa-exclamation-circle', 'error');
+        }
+
+        try {
+            // Tüm kullanıcılar (rol yönetimi için)
+            const users = await apiCall('/users');
+            if (!users || users.length === 0) {
+                userRolesContent.innerHTML = createEmptyState('Kullanıcı bulunamadı', 'fa-users');
+            } else {
+                userRolesContent.innerHTML = '<div style="overflow-x:auto;"><table><thead><tr><th>Kullanıcı</th><th>Email</th><th>Mevcut Rol</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>' +
+                    users.map(user => {
+                        const st = formatStatus(user.status);
+                        const roleBadge = user.role === 'super_admin' ? '<span class="status-pill status-danger">Super Admin</span>' :
+                                         user.role === 'admin' ? '<span class="status-pill status-success">Admin</span>' :
+                                         '<span class="status-pill status-pending">User</span>';
+                        return '<tr>' +
+                            '<td><div class="user-cell"><img src="https://ui-avatars.com/api/?name=' + encodeURIComponent(user.username || 'U') + '&background=8b5cf6&color=fff"><div><div style="font-weight:600;">' + escapeHtml(user.username) + '</div></div></div></td>' +
+                            '<td>' + escapeHtml(user.email) + '</td>' +
+                            '<td>' + roleBadge + '</td>' +
+                            '<td><span class="status-pill ' + st.className + '">' + st.text + '</span></td>' +
+                            '<td class="action-td">' +
+                                '<button class="action-sm edit" title="Rol Değiştir" onclick="openRoleModal(' + jsString(user._id) + ', ' + jsString(user.username) + ', ' + jsString(user.role) + ')"><i class="fas fa-user-tag"></i></button>' +
+                            '</td>' +
+                        '</tr>';
+                    }).join('') +
+                    '</tbody></table></div>';
+            }
+        } catch (error) {
+            userRolesContent.innerHTML = createErrorState('Kullanıcı rolleri alınamadı');
+        }
+    }
+
+    function openCreateAdminModal() {
+        document.getElementById('caFullName').value = '';
+        document.getElementById('caEmail').value = '';
+        document.getElementById('caPhone').value = '';
+        document.getElementById('caUsername').value = '';
+        document.getElementById('caPassword').value = '';
+        document.getElementById('caRole').value = 'admin';
+        openModal('createAdminModal');
+    }
+
+    async function submitCreateAdmin() {
+        const fullName = document.getElementById('caFullName').value.trim();
+        const email = document.getElementById('caEmail').value.trim();
+        const phone = document.getElementById('caPhone').value.trim();
+        const username = document.getElementById('caUsername').value.trim();
+        const password = document.getElementById('caPassword').value;
+        const role = document.getElementById('caRole').value;
+
+        if (!fullName || !email || !phone || !username || !password) {
+            addNotification('Uyarı', 'Tüm alanları doldurun', 'fa-exclamation-circle', 'warning');
+            return;
+        }
+
+        try {
+            await apiCall('/create-admin', {
+                method: 'POST',
+                body: JSON.stringify({ full_name: fullName, email, phone, username, password, role })
+            });
+            closeModal('createAdminModal');
+            addNotification('Başarılı', 'Yeni admin oluşturuldu', 'fa-check-circle', 'success');
+            loadAdminManagement();
+        } catch (error) {
+            addNotification('Hata', 'Admin oluşturulamadı', 'fa-exclamation-circle', 'error');
+        }
+    }
+
+    async function deleteAdmin(id, username) {
+        if (!confirm('"' + username + '" kullanıcısını silmek istediğinize emin misiniz?')) return;
+        try {
+            await apiCall('/delete-admin/' + id, { method: 'DELETE' });
+            addNotification('Başarılı', username + ' silindi', 'fa-check-circle', 'success');
+            loadAdminManagement();
+        } catch (error) {
+            addNotification('Hata', 'Silme işlemi başarısız', 'fa-exclamation-circle', 'error');
+        }
+    }
+
+    function openRoleModal(id, username, currentRole) {
+        document.getElementById('roleChangeUserId').value = id;
+        document.getElementById('roleChangeCurrentRole').value = currentRole;
+        document.getElementById('roleChangeUsername').textContent = username;
+
+        const radios = document.querySelectorAll('input[name="roleOption"]');
+        radios.forEach(r => {
+            r.checked = (r.value === currentRole);
+        });
+
+        openModal('roleChangeModal');
+    }
+
+    async function submitRoleChange() {
+        const id = document.getElementById('roleChangeUserId').value;
+        const username = document.getElementById('roleChangeUsername').textContent;
+        const currentRole = document.getElementById('roleChangeCurrentRole').value;
+        const selected = document.querySelector('input[name="roleOption"]:checked');
+        if (!selected) {
+            addNotification('Uyarı', 'Lütfen bir rol seçin', 'fa-exclamation-circle', 'warning');
+            return;
+        }
+        const role = selected.value;
+        if (role === currentRole) {
+            closeModal('roleChangeModal');
+            return;
+        }
+        try {
+            await apiCall('/update-role/' + id, {
+                method: 'PUT',
+                body: JSON.stringify({ role })
+            });
+            closeModal('roleChangeModal');
+            addNotification('Başarılı', username + ' rolü güncellendi: ' + role, 'fa-check-circle', 'success');
+            loadAdminManagement();
+        } catch (error) {
+            addNotification('Hata', 'Rol güncellenemedi', 'fa-exclamation-circle', 'error');
         }
     }
 

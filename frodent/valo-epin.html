@@ -438,6 +438,70 @@
                 display: none !important;
             }
         }
+        .valo-card { cursor: pointer; }
+
+        /* E-Pin Modal */
+        .epin-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(6px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .epin-modal-overlay.active { display: flex; }
+        .epin-modal {
+            background: #1a1c23;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            max-width: 420px;
+            width: 100%;
+            padding: 32px 28px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: epinModalIn 0.3s ease;
+        }
+        @keyframes epinModalIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.96); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .epin-modal .icon-wrap {
+            width: 64px; height: 64px;
+            border-radius: 50%;
+            background: rgba(34,197,94,0.12);
+            color: #22c55e;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 28px;
+        }
+        .epin-modal .icon-wrap.error { background: rgba(239,68,68,0.12); color: #ef4444; }
+        .epin-modal h3 { margin: 0 0 6px; font-size: 20px; color: #fff; }
+        .epin-modal h3.error { color: #ef4444; }
+        .epin-modal p { margin: 0 0 20px; color: rgba(255,255,255,0.65); font-size: 14px; }
+        .epin-code-box {
+            background: #12131a;
+            border: 1px dashed rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            letter-spacing: 2px;
+            color: #fbbf24;
+            margin-bottom: 16px;
+            user-select: all;
+        }
+        .epin-modal .actions { display: flex; gap: 10px; justify-content: center; }
+        .epin-modal .btn {
+            border: none; border-radius: 10px; padding: 10px 18px; font-size: 14px;
+            cursor: pointer; transition: .2s;
+        }
+        .epin-modal .btn-primary { background: #22c55e; color: #fff; }
+        .epin-modal .btn-primary:hover { background: #16a34a; }
+        .epin-modal .btn-ghost { background: rgba(255,255,255,0.08); color: #fff; }
+        .epin-modal .btn-ghost:hover { background: rgba(255,255,255,0.14); }
     </style>
 </head>
 <body>
@@ -978,6 +1042,169 @@
             const icon = document.getElementById('theme-icon');
             if (icon) icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         });
+    </script>
+
+    <!-- E-Pin Modal -->
+    <div class="epin-modal-overlay" id="epinModalOverlay">
+        <div class="epin-modal">
+            <div class="icon-wrap" id="epinIconWrap"><i class="fas fa-check-circle"></i></div>
+            <h3 id="epinModalTitle">Başarıyla Satın Alındı!</h3>
+            <p id="epinModalDesc">İşleminiz başarıyla tamamlandı. E-Pin kodunuz aşağıdadır.</p>
+            <div class="epin-code-box" id="epinCodeBox">---- ---- ----</div>
+            <div class="actions" id="epinModalActions">
+                <button class="btn btn-primary" id="epinPrimaryBtn"><i class="fas fa-copy"></i> Kopyala</button>
+                <button class="btn btn-ghost" id="epinCloseBtn">Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            function generateEpinCode() {
+                const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+                let code = '';
+                for (let i = 0; i < 12; i++) {
+                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return code.substring(0,4) + '-' + code.substring(4,8) + '-' + code.substring(8,12);
+            }
+
+            function parsePrice(text) {
+                return parseFloat(text.replace(/[^\d.]/g, '')) || 0;
+            }
+
+            function getUserBalance() {
+                try {
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    return parseFloat(user.balance) || 0;
+                } catch (e) {
+                    return 0;
+                }
+            }
+
+            function setUserBalance(newBalance) {
+                try {
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    user.balance = parseFloat(newBalance).toFixed(2);
+                    localStorage.setItem('user', JSON.stringify(user));
+                    if (typeof updateAuthDisplay === 'function') updateAuthDisplay();
+                } catch (e) { console.error('setUserBalance error:', e); }
+            }
+
+            const overlay = document.getElementById('epinModalOverlay');
+            const iconWrap = document.getElementById('epinIconWrap');
+            const title = document.getElementById('epinModalTitle');
+            const desc = document.getElementById('epinModalDesc');
+            const codeBox = document.getElementById('epinCodeBox');
+            const primaryBtn = document.getElementById('epinPrimaryBtn');
+            const closeBtn = document.getElementById('epinCloseBtn');
+
+            function closeModal() {
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            function openSuccessModal() {
+                codeBox.style.display = '';
+                codeBox.textContent = generateEpinCode();
+                iconWrap.innerHTML = '<i class="fas fa-check-circle"></i>';
+                iconWrap.className = 'icon-wrap';
+                title.textContent = 'Başarıyla Satın Alındı!';
+                title.className = '';
+                desc.textContent = 'İşleminiz başarıyla tamamlandı. E-Pin kodunuz aşağıdadır.';
+                primaryBtn.style.display = '';
+                primaryBtn.innerHTML = '<i class="fas fa-copy"></i> Kopyala';
+                closeBtn.textContent = 'Kapat';
+
+                primaryBtn.onclick = function() {
+                    const text = codeBox.textContent.trim();
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(text).then(() => {
+                            primaryBtn.innerHTML = '<i class="fas fa-check"></i> Kopyalandı';
+                            setTimeout(() => {
+                                primaryBtn.innerHTML = '<i class="fas fa-copy"></i> Kopyala';
+                            }, 1500);
+                        });
+                    } else {
+                        const ta = document.createElement('textarea');
+                        ta.value = text;
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(ta);
+                        primaryBtn.innerHTML = '<i class="fas fa-check"></i> Kopyalandı';
+                        setTimeout(() => {
+                            primaryBtn.innerHTML = '<i class="fas fa-copy"></i> Kopyala';
+                        }, 1500);
+                    }
+                };
+
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function openInsufficientModal(needed) {
+                codeBox.style.display = 'none';
+                iconWrap.innerHTML = '<i class="fas fa-times-circle"></i>';
+                iconWrap.className = 'icon-wrap error';
+                title.textContent = 'Bakiye Yetersiz';
+                title.className = 'error';
+                desc.innerHTML = 'Bakiyeniz bu ürünü satın almak için yetersiz.<br><span style="color:#fbbf24; font-weight:700; margin-top:6px; display:inline-block;">Eksik Bakiye: ₺' + needed.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + '</span>';
+                primaryBtn.style.display = '';
+                primaryBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Bakiye Yükle';
+                closeBtn.textContent = 'Kapat';
+
+                primaryBtn.onclick = function() {
+                    window.location.href = 'bakiye-ekle.html';
+                };
+
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            closeBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) closeModal();
+            });
+
+            document.querySelectorAll('.valo-buy-btn').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const userStr = localStorage.getItem('user');
+                    const token = localStorage.getItem('token');
+                    if (!(userStr && token)) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
+                    const card = btn.closest('.valo-card');
+                    if (!card) return;
+                    const stockOut = card.querySelector('.valo-stock.out');
+                    if (stockOut) return;
+
+                    const priceEl = card.querySelector('.valo-price');
+                    if (!priceEl) return;
+                    const price = parsePrice(priceEl.textContent);
+                    if (price <= 0) return;
+
+                    const balance = getUserBalance();
+                    if (balance >= price) {
+                        setUserBalance(balance - price);
+                        openSuccessModal();
+                    } else {
+                        openInsufficientModal(price - balance);
+                    }
+                });
+            });
+
+            document.querySelectorAll('a.valo-card').forEach(function(card) {
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                });
+            });
+        })();
     </script>
 </body>
 </html>

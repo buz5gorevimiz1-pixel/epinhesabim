@@ -1,4 +1,4 @@
-
+﻿
 <!DOCTYPE html>
 <html lang="tr" data-theme="dark">
 <head>
@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Ana Sayfa - Epin Hesabım </title>
-            <meta name="description" content="Test aşaması, oyunlar, dijital ürünler ve epin alışverişinde güvenilir adresiniz. Uygun fiyat, hızlı teslimat ve güvenli ödeme seçenekleriyle hemen keşfedin.">
-            <meta name="keywords" content="Test aşaması, oyunlar, dijital ürünler ve epin alışverişinde güvenilir adresiniz. Uygun fiyat, hızlı teslimat ve güvenli ödeme seçenekleriyle hemen keşfedin.">
+            <meta name="description" content="Epin Hesabım, oyunlar, dijital ürünler ve epin alışverişinde güvenilir adresiniz. Uygun fiyat, hızlı teslimat ve güvenli ödeme seçenekleriyle hemen keşfedin.">
+            <meta name="keywords" content="Epin Hesabım, oyunlar, dijital ürünler ve epin alışverişinde güvenilir adresiniz. Uygun fiyat, hızlı teslimat ve güvenli ödeme seçenekleriyle hemen keşfedin.">
             <link rel="icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
     <link rel="shortcut icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
@@ -2998,7 +2998,7 @@ main{
 }
 
 .messages-empty::before {
-  content: '💬';
+  content: 'ğŸ’¬';
   display: block;
   font-size: 42px;
   margin-bottom: 14px;
@@ -3174,7 +3174,7 @@ main > .container{
 </style>
 
 <style>
-/* ===== TOYEPİN TARZI HEADER (Çabukpazar) ===== */
+/* ===== TOYEPN TARZI HEADER (Çabukpazar) ===== */
 /* Bu blok dosyanın EN SONUNDA; tüm eski stilleri ezmek için burada. */
 
 /* Logo satırı da dahil: topbar + header-top + header-nav aynı tonda olsun */
@@ -3399,6 +3399,35 @@ main > .container{
   border-radius:8px;
   color:white;
 }
+
+/* ”€”€ CMS Hero Slider ”€”€ */
+#cms-slider { width:100%; position:relative; overflow:hidden; }
+.cms-slide {
+  position:relative; width:100%; min-height:320px; display:flex; align-items:center; justify-content:center;
+  background-size:cover; background-position:center; transition: opacity 0.5s ease;
+}
+.cms-slide-overlay {
+  position:absolute; inset:0; background: linear-gradient(90deg, rgba(8,12,26,0.85) 0%, rgba(8,12,26,0.4) 60%, rgba(8,12,26,0.2) 100%);
+}
+.cms-slide-content {
+  position:relative; z-index:2; max-width:1200px; width:100%; padding:48px 24px;
+}
+.cms-slide-title { font-size:28px; font-weight:700; color:#fff; margin-bottom:8px; text-shadow:0 2px 12px rgba(0,0,0,0.5); }
+.cms-slide-desc { font-size:15px; color:rgba(255,255,255,0.85); margin-bottom:20px; max-width:560px; line-height:1.5; }
+.cms-slide-btn {
+  display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border-radius:10px;
+  font-size:14px; font-weight:600; color:#fff; text-decoration:none; transition: transform 0.2s, box-shadow 0.2s;
+}
+.cms-slide-btn:hover { transform: translateY(-2px); }
+.cms-slider-dots { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:3; }
+.cms-slider-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.3); cursor:pointer; transition: background 0.2s; }
+.cms-slider-dot.active { background:#fff; }
+@media (max-width: 640px) {
+  .cms-slide { min-height:260px; }
+  .cms-slide-title { font-size:20px; }
+  .cms-slide-desc { font-size:13px; }
+  .cms-slide-content { padding:28px 16px; }
+}
 </style>
 </head>
 <body>
@@ -3579,7 +3608,7 @@ onclick="confirmLogout()">
             <div style="display: flex; align-items: center; justify-content: flex-start; gap: 20px; max-width: 1400px; margin: 0 auto; width: 100%; padding: 0 24px;">
                 <!-- Fixed Kategoriler dropdown -->
                 <div class="nav-item has-dropdown" style="min-width:120px;">
-                    <a href="/kategoriler" style="display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;">
+                    <a href="katagoriler2.html" style="display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;">
                         <i class="ri-apps-line"></i>
                         <span>Kategoriler</span>
                     </a>
@@ -3591,218 +3620,218 @@ onclick="confirmLogout()">
                                 <input type="text" id="categoriesSearchInput" placeholder="Arama yapın..." autocomplete="off">
                                 <i class="fas fa-search" style="font-size:14px; opacity:0.8;"></i>
                             </div>
-                            <a href="/kategoriler" class="btn-all-categories">Tüm Kategoriler</a>
+                            <a href="katagoriler2.html" class="btn-all-categories">Tüm Kategoriler</a>
                         </div>
                         <div id="categoriesGrid" class="categories-grid">
-                                                            <a href="kategoriler.html?id=brawl-stars" class="category-card">
+                                                            <a href="kategori-detay.html?slug=brawl-stars" class="category-card">
                                     <img src="assets/uploads/servers/epinfybrawl1-min32703.png" alt="Brawl Stars">
                                     <span>Brawl Stars</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=cabal-online" class="category-card">
+                                                            <a href="kategori-detay.html?slug=cabal-online" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/cabal-online-968.png" alt="Cabal Online">
                                     <span>Cabal Online</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=cabal-online-alz" class="category-card">
+                                                            <a href="kategori-detay.html?slug=cabal-online-alz" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/cabal-online-alz-924.png" alt="Cabal Online Alz">
                                     <span>Cabal Online Alz</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=call-of-dragons" class="category-card">
+                                                            <a href="kategori-detay.html?slug=call-of-dragons" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/call-of-dragons-150.png" alt="Call of Dragons">
                                     <span>Call of Dragons</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=call-of-duty-boost" class="category-card">
+                                                            <a href="kategori-detay.html?slug=call-of-duty-boost" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/call-of-duty-boost-103.png" alt="Call of Duty Boost">
                                     <span>Call of Duty Boost</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=call-of-duty-mobile" class="category-card">
+                                                            <a href="kategori-detay.html?slug=call-of-duty-mobile" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/call-of-duty-mobile-165.png" alt="Call of Duty Mobile">
                                     <span>Call of Duty Mobile</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=call-of-duty-warzone" class="category-card">
+                                                            <a href="kategori-detay.html?slug=call-of-duty-warzone" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/call-of-duty-warzone-85.png" alt="Call of Duty Warzone">
                                     <span>Call of Duty Warzone</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=candy-crush-saga" class="category-card">
+                                                            <a href="kategori-detay.html?slug=candy-crush-saga" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/5dfa5e48726a5-main-0b779d7edcc8aafe7336e427370ca02d3fbee20d.png" alt="Candy Crush Saga">
                                     <span>Candy Crush Saga</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=canva-hesap" class="category-card">
+                                                            <a href="kategori-detay.html?slug=canva-hesap" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/canva-861.png" alt="Canva Hesap">
                                     <span>Canva Hesap</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=capcut" class="category-card">
+                                                            <a href="kategori-detay.html?slug=capcut" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/capcut-980.png" alt="CapCut">
                                     <span>CapCut</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=captain-tsubasa-dream-team" class="category-card">
+                                                            <a href="kategori-detay.html?slug=captain-tsubasa-dream-team" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/captain-tsubasa-dream-team-198.png" alt="Captain Tsubasa: Dream Team">
                                     <span>Captain Tsubasa: Dream Team</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=car-parking-multiplayer" class="category-card">
+                                                            <a href="kategori-detay.html?slug=car-parking-multiplayer" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/car-parking-multiplayer-542.png" alt="Car Parking Multiplayer">
                                     <span>Car Parking Multiplayer</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=carrefoursa" class="category-card">
+                                                            <a href="kategori-detay.html?slug=carrefoursa" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/carrefoursa-890.png" alt="CarrefourSA">
                                     <span>CarrefourSA</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=carx-street" class="category-card">
+                                                            <a href="kategori-detay.html?slug=carx-street" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/carx-street-823.png" alt="CarX Street">
                                     <span>CarX Street</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=castle-clash" class="category-card">
+                                                            <a href="kategori-detay.html?slug=castle-clash" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/castle-clash-153.png" alt="Castle Clash">
                                     <span>Castle Clash</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=cd-key" class="category-card">
+                                                            <a href="kategori-detay.html?slug=cd-key" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/marvel-s-spider-man-remastered-60.png" alt="CD KEY">
                                     <span>CD KEY</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=chess" class="category-card">
+                                                            <a href="kategori-detay.html?slug=chess" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/chess-960.png" alt="Chess">
                                     <span>Chess</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=chronal-nexus" class="category-card">
+                                                            <a href="kategori-detay.html?slug=chronal-nexus" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/chronal-nexus-968.png" alt="Chronal Nexus">
                                     <span>Chronal Nexus</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=city-of-crime" class="category-card">
+                                                            <a href="kategori-detay.html?slug=city-of-crime" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/city-of-crime-690.png" alt="City of Crime">
                                     <span>City of Crime</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=clash-of-clans-boost" class="category-card">
+                                                            <a href="kategori-detay.html?slug=clash-of-clans-boost" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/clash-of-clans-boost-354.png" alt="Clash of Clans Boost">
                                     <span>Clash of Clans Boost</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=clash-of-clans-random-hesap" class="category-card">
+                                                            <a href="kategori-detay.html?slug=clash-of-clans-random-hesap" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/clash-of-clans-random-hesap-964.png" alt="Clash of Clans Random Hesap">
                                     <span>Clash of Clans Random Hesap</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=clash-of-kings" class="category-card">
+                                                            <a href="kategori-detay.html?slug=clash-of-kings" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/clash-of-kings-332.png" alt="Clash of Kings">
                                     <span>Clash of Kings</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=clash-royale-boost" class="category-card">
+                                                            <a href="kategori-detay.html?slug=clash-royale-boost" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/clash-royale-boost-150.png" alt="Clash Royale Boost">
                                     <span>Clash Royale Boost</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=clash-royale-random-hesap" class="category-card">
+                                                            <a href="kategori-detay.html?slug=clash-royale-random-hesap" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/clash-royale-random-hesap-483.png" alt="Clash Royale Random Hesap">
                                     <span>Clash Royale Random Hesap</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=combat-arms" class="category-card">
+                                                            <a href="kategori-detay.html?slug=combat-arms" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/combat-arms-429.png" alt="Combat Arms">
                                     <span>Combat Arms</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=conquer-online" class="category-card">
+                                                            <a href="kategori-detay.html?slug=conquer-online" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/conquer-online-215.png" alt="Conquer Online">
                                     <span>Conquer Online</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=conquerors-blade" class="category-card">
+                                                            <a href="kategori-detay.html?slug=conquerors-blade" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/conquerors-blade-321.png" alt="Conquerors Blade">
                                     <span>Conquerors Blade</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=counter-strike-2" class="category-card">
+                                                            <a href="kategori-detay.html?slug=counter-strike-2" class="category-card">
                                     <img src="assets/uploads/servers/epinfycs1-min55885.png" alt="Counter-Strike 2">
                                     <span>Counter-Strike 2</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=craft-aura" class="category-card">
+                                                            <a href="kategori-detay.html?slug=craft-aura" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/craft-aura-338.png" alt="Craft Aura">
                                     <span>Craft Aura</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=critical-ops" class="category-card">
+                                                            <a href="kategori-detay.html?slug=critical-ops" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/critical-ops-243.png" alt="Critical Ops">
                                     <span>Critical Ops</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=critical-strike" class="category-card">
+                                                            <a href="kategori-detay.html?slug=critical-strike" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/critical-strike-625.png" alt="Critical Strike">
                                     <span>Critical Strike</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=crossfire" class="category-card">
+                                                            <a href="kategori-detay.html?slug=crossfire" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/5df8b51720331-main-40682f5b16f756e04c59185b294aae7d9b86c58d.png" alt="CrossFire">
                                     <span>CrossFire</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=crunchyroll" class="category-card">
+                                                            <a href="kategori-detay.html?slug=crunchyroll" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/crunchyroll-770.png" alt="Crunchyroll">
                                     <span>Crunchyroll</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=crunchyroll-hesap" class="category-card">
+                                                            <a href="kategori-detay.html?slug=crunchyroll-hesap" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/crunchyroll-782.png" alt="Crunchyroll Hesap">
                                     <span>Crunchyroll Hesap</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=crystal-of-atlan" class="category-card">
+                                                            <a href="kategori-detay.html?slug=crystal-of-atlan" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/crystal-of-atlan-871.png" alt="Crystal of Atlan">
                                     <span>Crystal of Atlan</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=cs-2-boost" class="category-card">
+                                                            <a href="kategori-detay.html?slug=cs-2-boost" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/cs-2-boost-664.png" alt="CS2 Boost">
                                     <span>CS2 Boost</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=cs2-ilan-pazari" class="category-card">
+                                                            <a href="kategori-detay.html?slug=cs2-ilan-pazari" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/cs2-hesap-satisi-331.png" alt="CS2 Hesap Satışı">
                                     <span>CS2 Hesap Satışı</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=cs2-topluluk-sunuculari" class="category-card">
+                                                            <a href="kategori-detay.html?slug=cs2-topluluk-sunuculari" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/rewind-jailbreak-619.png" alt="CS2 Topluluk Sunucuları">
                                     <span>CS2 Topluluk Sunucuları</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=cubic-castles" class="category-card">
+                                                            <a href="kategori-detay.html?slug=cubic-castles" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/cubic-castles-106.png" alt="Cubic Castles">
                                     <span>Cubic Castles</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=discord" class="category-card">
+                                                            <a href="kategori-detay.html?slug=discord" class="category-card">
                                     <img src="assets/uploads/servers/epinfydc1-min78460.png" alt="Discord">
                                     <span>Discord</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=efootball-mobile" class="category-card">
+                                                            <a href="kategori-detay.html?slug=efootball-mobile" class="category-card">
                                     <img src="https://cdn.itemsatis.com/uploads/category_images/efootball-pes-2024-mobile-453.png" alt="eFootball Mobile">
                                     <span>eFootball Mobile</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=fortnite" class="category-card">
+                                                            <a href="kategori-detay.html?slug=fortnite" class="category-card">
                                     <img src="assets/uploads/servers/epinfyfort150571.png" alt="Fortnite">
                                     <span>Fortnite</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=google-play" class="category-card">
+                                                            <a href="kategori-detay.html?slug=google-play" class="category-card">
                                     <img src="assets/uploads/servers/epinfygplay-min43170.png" alt="Google Play">
                                     <span>Google Play</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=instagram" class="category-card">
+                                                            <a href="kategori-detay.html?slug=instagram" class="category-card">
                                     <img src="assets/uploads/servers/epinfyig1-min19126.png" alt="Instagram">
                                     <span>Instagram</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=league-of-legends" class="category-card">
+                                                            <a href="kategori-detay.html?slug=league-of-legends" class="category-card">
                                     <img src="assets/uploads/servers/epinfylol1-min1373.png" alt="League of Legends">
                                     <span>League of Legends</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=mobile-legends" class="category-card">
+                                                            <a href="kategori-detay.html?slug=mobile-legends" class="category-card">
                                     <img src="assets/uploads/servers/epinfymlbb1-min75095.png" alt="Mobile Legends">
                                     <span>Mobile Legends</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=pubg-mobile" class="category-card">
+                                                            <a href="kategori-detay.html?slug=pubg-mobile" class="category-card">
                                     <img src="assets/uploads/servers/epinfypubg1-min56374-1769604580.png" alt="Pubg Mobile">
                                     <span>Pubg Mobile</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=sosyal-medya" class="category-card">
+                                                            <a href="kategori-detay.html?slug=sosyal-medya" class="category-card">
                                     <img src="assets/uploads/servers/alexander-shatov-mr4jg4syof8-unsplash-1757935346.webp" alt="Sosyal Medya">
                                     <span>Sosyal Medya</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=steam" class="category-card">
+                                                            <a href="kategori-detay.html?slug=steam" class="category-card">
                                     <img src="assets/uploads/servers/epinfysteam1-min49514.png" alt="Steam">
                                     <span>Steam</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=tiktok" class="category-card">
+                                                            <a href="kategori-detay.html?slug=tiktok" class="category-card">
                                     <img src="assets/uploads/servers/epinfytt1-min83558.png" alt="TikTok">
                                     <span>TikTok</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=twitter" class="category-card">
+                                                            <a href="kategori-detay.html?slug=twitter" class="category-card">
                                     <img src="assets/uploads/servers/epinfytwitter-min88116.png" alt="Twitter">
                                     <span>Twitter</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=valorant" class="category-card">
+                                                            <a href="kategori-detay.html?slug=valorant" class="category-card">
                                     <img src="assets/uploads/servers/epinfyvalo-12-250292.png" alt="Valorant">
                                     <span>Valorant</span>
                                 </a>
-                                                            <a href="kategoriler.html?id=youtube" class="category-card">
+                                                            <a href="kategori-detay.html?slug=youtube" class="category-card">
                                     <img src="assets/uploads/servers/epinfyyt-min20069.png" alt="YouTube">
                                     <span>YouTube</span>
                                 </a>
@@ -3985,6 +4014,9 @@ onclick="confirmLogout()">
         </nav>
     </header>
 
+    <!-- CMS Hero Slider -->
+    <div id="cms-slider"></div>
+
     <!-- Mobile Profile Panel Backdrop -->
     <div class="profile-panel-backdrop" id="profilePanelBackdrop"></div>
 
@@ -4059,7 +4091,7 @@ onclick="confirmLogout()">
             <i class="fas fa-home"></i>
             <span>Ana Sayfa</span>
         </a>
-        <a href="kategoriler.html" class="bottom-menu-item">
+        <a href="katagoriler2.html" class="bottom-menu-item">
             <i class="fas fa-th-large"></i>
             <span>Kategoriler</span>
         </a>
@@ -4279,12 +4311,12 @@ onclick="confirmLogout()">
     </div>
 
     <div class="form-group">
-        <label>Şifre</label>
+        <label>şifre</label>
 
         <input
             type="password"
             name="password"
-            placeholder="Şifrenizi girin"
+            placeholder="şifrenizi girin"
             required
         >
     </div>
@@ -4310,7 +4342,7 @@ onclick="confirmLogout()">
             <div style="background: rgba(255, 255, 255, 0.05); margin: 20px -16px -16px -16px; padding: 20px 16px; border-radius: 0 0 14px 14px; text-align: center;">
                 <div style="margin-bottom: 15px;">
                     <a href="/sifre-sifirla" style="color: #a78bfa; text-decoration: none; font-size: 13px;">
-                        Şifrenizi mi Unuttunuz?
+                        şifrenizi mi Unuttunuz?
                     </a>
                 </div>
                 <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 15px;">
@@ -4717,7 +4749,7 @@ onclick="confirmLogout()">
                 const href = item.getAttribute('href');
                 if (href === currentPath || 
                     (currentPath === '/' && href === '/') ||
-                    (currentPath.startsWith('/kategoriler') && href === '/kategoriler') ||
+                    (currentPath.startsWith('katagoriler2.html') && href === 'katagoriler2.html') ||
                     (currentPath.startsWith('/mesajlarim') && href === '/mesajlarim') ||
                     (currentPath.startsWith('/ilan-ekle') && href === '/ilan-ekle') ||
                     (currentPath.startsWith('/kontrol-paneli') && href === '/kontrol-paneli') ||
@@ -5396,11 +5428,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 <!-- Left: Popular products (30%) -->
                 <div class="popular-column">
                                                                                                     <a href="" class="popular-card popular-banner-card">
-                                <img src="assets/img/sliders/69d2c9ad110c0_1775421869.png" alt="PUBG MOBİLE">
+                                <img src="assets/img/sliders/69d2c9ad110c0_1775421869.png" alt="PUBG MOBLE">
                                                                 <div class="popular-overlay">
                                                                         <div class="popular-title">Pubg Mobile Ürünleri</div>
                                                                                                             <div class="popular-meta">
-                                        <span class="server">PUBG MOBİLE</span>
+                                        <span class="server">PUBG MOBLE</span>
                                     </div>
                                                                     </div>
                                                             </a>
@@ -5445,8 +5477,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <span class="carousel-timer-progress"><span class="carousel-timer-progress-bar"></span></span>
                             </div>
                             <div class="carousel-nav">
-                                <button class="carousel-btn prev" onclick="changeSlide(-1)">❮</button>
-                                <button class="carousel-btn next" onclick="changeSlide(1)">❯</button>
+                                <button class="carousel-btn prev" onclick="changeSlide(-1)">®</button>
+                                <button class="carousel-btn next" onclick="changeSlide(1)">¯</button>
                             </div>
                                                     </div>
                     </div>
@@ -5566,7 +5598,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .ipcard.vitrin:hover{box-shadow:0 0 25px rgba(255,138,0,.9),0 0 45px rgba(98,0,234,.6)}
 
 
-      /* Mobilde sağdaki "İlan Pazarı" butonu gizlenmesin */
+      /* Mobilde sağdaki "lan Pazarı" butonu gizlenmesin */
       .tabs-header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
       .tabs-left{flex:1 1 auto;min-width:0}
       .tabs-all-btn{flex:0 0 auto;white-space:nowrap}
@@ -5780,7 +5812,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                 <div id="epin-tab-8" class="epin-tab-panel active">
                     <div class="epin-grid-home">
-                                                <a href="/epin-urunleri/120-ejderha-paras-1" class="epin-card-home" title="Pubg Mobile 1800 UC">
+                                                <a href="pubg-uc.html" class="epin-card-home" title="Pubg Mobile 1800 UC">
                             <div class="epin-img">
                                                                 <img src="assets/uploads/epin/505x505-resize-1800uc-yrdnkn7uox-1769638636.webp" alt="Pubg Mobile 1800 UC">
                                                             </div>
@@ -5800,7 +5832,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                                     </div>
                             </div>
                         </a>
-                                                <a href="/epin-urunleri/200-ejderha-parasi" class="epin-card-home" title="Pubg Mobile 325 UC">
+                                                <a href="pubg-uc.html" class="epin-card-home" title="Pubg Mobile 325 UC">
                             <div class="epin-img">
                                                                 <img src="assets/uploads/epin/325uc-thycsanapn-1769638442.webp" alt="Pubg Mobile 325 UC">
                                                             </div>
@@ -5820,7 +5852,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                                     </div>
                             </div>
                         </a>
-                                                <a href="/epin-urunleri/100-ejderha-parasi" class="epin-card-home" title="Pubg Mobile 3850 UC">
+                                                <a href="pubg-uc.html" class="epin-card-home" title="Pubg Mobile 3850 UC">
                             <div class="epin-img">
                                                                 <img src="assets/uploads/epin/ekran-goruntusu-2026-01-29-3850-1769638817.png" alt="Pubg Mobile 3850 UC">
                                                             </div>
@@ -5840,7 +5872,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                                     </div>
                             </div>
                         </a>
-                                                <a href="/epin-urunleri/500-ejderha-parasi" class="epin-card-home" title="Pubg Mobile 60 UC">
+                                                <a href="pubg-uc.html" class="epin-card-home" title="Pubg Mobile 60 UC">
                             <div class="epin-img">
                                                                 <img src="assets/uploads/epin/60uc-3dsfsq8qlq-1769638398.webp" alt="Pubg Mobile 60 UC">
                                                             </div>
@@ -5860,7 +5892,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                                     </div>
                             </div>
                         </a>
-                                                <a href="/epin-urunleri/140-ejderha-parasi" class="epin-card-home" title="Pubg Mobile 660 UC">
+                                                <a href="pubg-uc.html" class="epin-card-home" title="Pubg Mobile 660 UC">
                             <div class="epin-img">
                                                                 <img src="assets/uploads/epin/660uc-pgk4hqomla-1769638549.webp" alt="Pubg Mobile 660 UC">
                                                             </div>
@@ -5880,7 +5912,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                                     </div>
                             </div>
                         </a>
-                                                <a href="/epin-urunleri/pubg-mobile-8100-uc" class="epin-card-home" title="Pubg Mobile 8100 UC">
+                                                <a href="pubg-uc.html" class="epin-card-home" title="Pubg Mobile 8100 UC">
                             <div class="epin-img">
                                                                 <img src="assets/uploads/epin/ekran-goruntusu-2026-01-29-012226-1769638966.png" alt="Pubg Mobile 8100 UC">
                                                             </div>
@@ -5904,7 +5936,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                                 <div id="epin-tab-19" class="epin-tab-panel ">
                     <div class="epin-grid-home">
-                                                <a href="/epin-urunleri/valorant-1700-vp" class="epin-card-home" title="Valorant 1700 VP">
+                                                <a href="valo-epin.html" class="epin-card-home" title="Valorant 1700 VP">
                             <div class="epin-img">
                                                                 <img src="assets/uploads/epin/d1700-de98b1ddbb2756c43c7aa4ad633f34db-1769639347.webp" alt="Valorant 1700 VP">
                                                             </div>
@@ -5924,7 +5956,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                                     </div>
                             </div>
                         </a>
-                                                <a href="/epin-urunleri/valorant-2925-vp" class="epin-card-home" title="Valorant 2925 VP">
+                                                <a href="valo-epin.html" class="epin-card-home" title="Valorant 2925 VP">
                             <div class="epin-img">
                                                                 <img src="assets/uploads/epin/d2925-9257d952cc7ae0aec30b74033b1738a1-1769639394.webp" alt="Valorant 2925 VP">
                                                             </div>
@@ -5944,7 +5976,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                                     </div>
                             </div>
                         </a>
-                                                <a href="/epin-urunleri/valorant-375-vp" class="epin-card-home" title="Valorant 375 VP">
+                                                <a href="valo-epin.html" class="epin-card-home" title="Valorant 375 VP">
                             <div class="epin-img">
                                                                 <img src="assets/uploads/epin/d375-7253e2f15a6f647db717c8e147cc1002-1769639209.webp" alt="Valorant 375 VP">
                                                             </div>
@@ -5964,7 +5996,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                                     </div>
                             </div>
                         </a>
-                                                <a href="/epin-urunleri/valorant-4325-vp" class="epin-card-home" title="Valorant 4325 VP">
+                                                <a href="valo-epin.html" class="epin-card-home" title="Valorant 4325 VP">
                             <div class="epin-img">
                                                                 <img src="assets/uploads/epin/d4325-bee3cd2112bdef0555778f4a2322f786-1769639448.webp" alt="Valorant 4325 VP">
                                                             </div>
@@ -5984,7 +6016,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                                     </div>
                             </div>
                         </a>
-                                                <a href="/epin-urunleri/valorant-825-vp" class="epin-card-home" title="Valorant 825 VP">
+                                                <a href="valo-epin.html" class="epin-card-home" title="Valorant 825 VP">
                             <div class="epin-img">
                                                                 <img src="assets/uploads/epin/d825-6b2f170947dcd3724916c1d4f4ee0423-1769639251.webp" alt="Valorant 825 VP">
                                                             </div>
@@ -6004,7 +6036,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                                     </div>
                             </div>
                         </a>
-                                                <a href="/epin-urunleri/valorant-battle-pass" class="epin-card-home" title="Valorant Battle Pass">
+                                                <a href="valo-epin.html" class="epin-card-home" title="Valorant Battle Pass">
                             <div class="epin-img">
                                                                 <img src="assets/uploads/epin/dbattle-1b8946f3a9a4080e28bcdebe94a89b8e-1769639141.webp" alt="Valorant Battle Pass">
                                                             </div>
@@ -6059,7 +6091,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         </section>
         
-        <!-- Sosyal Medya İlanları -->
+        <!-- Sosyal Medya lanları -->
         <section class="social-media-section">
             <div class="container">
                 <h2 class="section-title">Sosyal Medya Hizmetleri</h2>
@@ -6118,10 +6150,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="blog-title-wrap"><div class="blog-icon-box"><i class="far fa-newspaper"></i></div><h3>Haberler</h3></div>
             </div>
             <div class="blog-grid">
-                                <a href="#" class="blog-card" title="League of Legends Yeni Darkin Şampiyonu...">
-                    <div class="blog-thumb"><img src="https://cdn.itemsatis.com/uploads/news/74f51c428995f68868cae8d77834f561-9536.png?height=160" alt="League of Legends Yeni Darkin Şampiyonu..."></div>
+                                <a href="#" class="blog-card" title="League of Legends Yeni Darkin şampiyonu...">
+                    <div class="blog-thumb"><img src="https://cdn.itemsatis.com/uploads/news/74f51c428995f68868cae8d77834f561-9536.png?height=160" alt="League of Legends Yeni Darkin şampiyonu..."></div>
                     <div class="blog-body">
-                        <div class="blog-item-title">League of Legends Yeni Darkin Şampiyonu...</div>
+                        <div class="blog-item-title">League of Legends Yeni Darkin şampiyonu...</div>
                         <div class="blog-excerpt">Zaahen kimdir? Evren ve tasarım detayları...</div>
                     </div>
                     <div class="blog-footer">
@@ -6499,7 +6531,7 @@ document.addEventListener('DOMContentLoaded', () => {
         @media (max-width: 900px) { .trend-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 600px) { .trend-grid { grid-template-columns: 1fr 1fr; gap: 12px; } }
 
-        /* Sosyal Medya İlanları arkaplanı (slider bölümüne benzer) */
+        /* Sosyal Medya lanları arkaplanı (slider bölümüne benzer) */
         .social-media-section { position: relative; z-index: 0; padding: 40px 0; }
         .social-media-section::before { content: ''; position: absolute; left: 50%; transform: translateX(-50%); width: 100vw; height: 100%; top: 0; background-image: url('https://img.freepik.com/free-vector/blue-social-media-background_1017-7008.jpg'); background-size: 600px auto; background-repeat: repeat; background-position: center; opacity: 0.12; z-index: -1; pointer-events: none; filter: blur(4px); }
         .social-media-section .social-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 20px; }
@@ -6637,7 +6669,7 @@ document.addEventListener('DOMContentLoaded', () => {
             border-color: #8b5cf6;
         }
 
-        /* Vitrin / Öne Çıkan: sade kart, animasyonlu şerit */
+        /* Vitrin / öne Çıkan: sade kart, animasyonlu şerit */
         .vitrin-card, .featured-card { background: #1c1c1f; border: 1px solid var(--border-color); }
         .vitrin-card:hover, .featured-card:hover { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(0,0,0,0.4); border-color: #8b5cf6; }
 
@@ -6909,7 +6941,7 @@ document.addEventListener('DOMContentLoaded', () => {
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-        /* Light theme overrides for Vitrin cards inside tabs – align with featured style */
+        /* Light theme overrides for Vitrin cards inside tabs €“ align with featured style */
         [data-theme="light"] .vitrin-card {
             background: #ffffff !important;
             border: 1px solid #e5e7eb !important;
@@ -7269,7 +7301,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="quicknav-container">
                 <a href="/ilanlar" class="quick-item">
                     <span class="quick-icon qi-blue"><i class="fas fa-shopping-cart"></i></span>
-                    <span class="quick-text">İlan Pazarı</span>
+                    <span class="quick-text">lan Pazarı</span>
                 </a>
                 <a href="/magazalar" class="quick-item">
                     <span class="quick-icon qi-green"><i class="fas fa-store"></i></span>
@@ -7724,7 +7756,7 @@ document.addEventListener('DOMContentLoaded', () => {
             font-weight: 600;
         }
 
-        /* Ödeme görseli kaldırıldı */
+        /* ödeme görseli kaldırıldı */
 
         /* Light Theme Overrides */
         [data-theme="light"] .site-footer { --footer-bg: #f5f3ff; --footer-text: #0f172a; }
@@ -8047,10 +8079,6 @@ display:none !important;
             window.addEventListener('resize', enableToggles);
         })();
     </script>
-<!-- Start of LiveChat (www.livechat.com) code -->
-
-
-
     <script>
 
 const mobileLoginForm =
@@ -8416,7 +8444,7 @@ async function messageApi(endpoint, options = {}) {
     }
   });
   const data = await response.json().catch(() => null);
-  if (!response.ok) throw new Error(data?.error || 'İşlem başarısız.');
+  if (!response.ok) throw new Error(data?.error || 'şlem başarısız.');
   return data;
 }
 
@@ -8527,7 +8555,7 @@ function renderChat(userId) {
 
   chatBox.innerHTML = messages.map(message => {
     const isOutgoing = String(message.senderId) === currentUserId;
-    const statusIcon = isOutgoing ? '<span class="message-status">✓✓</span>' : '';
+    const statusIcon = isOutgoing ? '<span class="message-status">œ“œ“</span>' : '';
     return `
       <div class="message-row ${isOutgoing ? 'outgoing' : 'incoming'}">
         <div class="message-bubble">
@@ -8745,15 +8773,16 @@ document.addEventListener('DOMContentLoaded', function () {
     font-size: 16px;
   }
 }
+.epin-card-home { cursor: pointer; }
 </style>
 
 <script>
 (function() {
   const names = [
     'Mehmet***','Ahmet***','Yusuf***','Emre***','Burak***','Can***','Deniz***',
-    'Eren***','Fatih***','Gökhan***','Hakan***','İbrahim***','Kaan***','Levent***',
+    'Eren***','Fatih***','Gökhan***','Hakan***','brahim***','Kaan***','Levent***',
     'Murat***','Onur***','Serkan***','Tolga***','Ufuk***','Volkan***','Berk***',
-    'Cem***','Doğukan***','Furkan***','Hasan***','İsmail***','Kemal***','Mert***',
+    'Cem***','Doğukan***','Furkan***','Hasan***','smail***','Kemal***','Mert***',
     'Oğuz***','Rıza***','Sedat***','Tarık***','Umut***','Yasin***','Zafer***'
   ];
   const products = [
@@ -8837,7 +8866,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function scheduleNext() {
-    var delay = 5000 + Math.random() * 5000; // 5–10 sn
+    var delay = 5000 + Math.random() * 5000; // 5€“10 sn
     setTimeout(function() {
       showLiveSale();
       scheduleNext();
@@ -8856,5 +8885,89 @@ document.addEventListener('DOMContentLoaded', function () {
 })();
 </script>
 
+<!-- CMS Slider Engine -->
+<script>
+(function() {
+  const API_BASE = window.location.origin + '/api/v2';
+  const container = document.getElementById('cms-slider');
+  if (!container) return;
+
+  let sliders = [];
+  let current = 0;
+  let timer = null;
+
+  function render() {
+    if (!sliders.length) { container.style.display = 'none'; return; }
+    container.style.display = 'block';
+
+    const s = sliders[current];
+    const isMobile = window.innerWidth < 768;
+    const img = isMobile && s.mobileImage ? s.mobileImage : (s.desktopImage || '');
+
+    container.innerHTML = `
+      <div class="cms-slide" style="background-image: url('${img}'); ${img ? '' : 'background: linear-gradient(135deg, #0a0c1e, #1a103c);'}">
+        <div class="cms-slide-overlay"></div>
+        <div class="cms-slide-content">
+          <h2 class="cms-slide-title">${escapeHtml(s.title)}</h2>
+          ${s.description ? `<p class="cms-slide-desc">${escapeHtml(s.description)}</p>` : ''}
+          <a href="${escapeHtml(s.buttonLink || '#')}" class="cms-slide-btn" style="background: ${s.accentColor || '#06b6d4'}; box-shadow: 0 4px 20px ${s.glowColor || 'rgba(6,182,212,0.3)'}">
+            ${escapeHtml(s.buttonText || 'Hemen Başla')}
+          </a>
+        </div>
+      </div>
+      <div class="cms-slider-dots">
+        ${sliders.map((_, i) => `<div class="cms-slider-dot ${i === current ? 'active' : ''}" data-index="${i}"></div>`).join('')}
+      </div>
+    `;
+
+    container.querySelectorAll('.cms-slider-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        current = parseInt(dot.dataset.index);
+        render();
+        resetTimer();
+      });
+    });
+  }
+
+  function nextSlide() {
+    current = (current + 1) % sliders.length;
+    render();
+  }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(nextSlide, 6000);
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  async function load() {
+    try {
+      const res = await fetch(API_BASE + '/sliders/public');
+      const data = await res.json();
+      if (data.success && data.data && data.data.sliders) {
+        sliders = data.data.sliders;
+        render();
+        resetTimer();
+      } else {
+        container.style.display = 'none';
+      }
+    } catch (e) {
+      console.error('[CMS Slider] load error:', e);
+      container.style.display = 'none';
+    }
+  }
+
+  load();
+})();
+</script>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js" crossorigin="anonymous"></script>
+<script src="assets/socket-client.js?v=1"></script>
 </body>
 </html>

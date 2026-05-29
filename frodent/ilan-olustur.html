@@ -387,20 +387,9 @@
                     <form id="listingForm">
                         <div class="form-group">
                             <label class="form-label">
-                                <i class="fas fa-image"></i> Ürün Fotoğrafı
+                                <i class="fas fa-image"></i> Ürün Fotoğrafları
                             </label>
-                            <div class="image-preview-container" id="imagePreviewContainer">
-                                <img id="imagePreview" class="image-preview" alt="Ürün görseli">
-                                <button type="button" class="remove-image-btn" id="removeImageBtn">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                            <div class="image-upload-area" id="uploadArea">
-                                <i class="fas fa-cloud-arrow-up upload-icon"></i>
-                                <div class="upload-text">Görseli Sürükle Bırak veya Tıkla</div>
-                                <div class="upload-subtext">Resim URL'si bağlamak için sağ tıkla veya çift tıkla</div>
-                            </div>
-                            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                            <div id="uploadEngine"></div>
                         </div>
 
                         <div class="form-group">
@@ -460,6 +449,7 @@
         </div>
     </div>
 
+    <script src="assets/upload-engine.js?v=2"></script>
     <script>
         // --- Gece Gündüz Teması ---
         const themeToggleBtn = document.getElementById('themeToggleBtn');
@@ -509,11 +499,6 @@
         }
 
         // --- Elementler ---
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const imagePreview = document.getElementById('imagePreview');
-        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-        const removeImageBtn = document.getElementById('removeImageBtn');
         const titleInput = document.getElementById('titleInput');
         const priceInput = document.getElementById('priceInput');
         const descriptionInput = document.getElementById('descriptionInput');
@@ -522,120 +507,22 @@
         const previewTitle = document.getElementById('previewTitle');
         const previewPrice = document.getElementById('previewPrice');
         const previewCategory = document.getElementById('previewCategory');
-        let selectedImageFile = null;
-        let selectedImageURL = null;
+        let uploadedImageUrls = [];
 
-        // --- Resim Yükleme İşlemleri ---
-        uploadArea.addEventListener('click', () => fileInput.click());
-
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('drag-over');
-        });
-
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('drag-over');
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('drag-over');
-            if (e.dataTransfer.files.length > 0) {
-                handleImageFile(e.dataTransfer.files[0]);
-            }
-        });
-
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleImageFile(e.target.files[0]);
-            }
-        });
-
-        function handleImageFile(file) {
-            selectedImageFile = file;
-            selectedImageURL = null;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const imageSrc = e.target.result;
-                displayImage(imageSrc);
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function displayImage(imageSrc) {
-            imagePreview.src = imageSrc;
-            imagePreviewContainer.classList.add('active');
-            uploadArea.style.display = 'none';
-            
+        // --- Upload Engine Init ---
+        const uploader = window.UploadEngine('uploadEngine', {
+          token: localStorage.getItem('token') || '',
+          onChange: (urls) => {
+            uploadedImageUrls = urls;
             const cardImage = previewCard.querySelector('.card-image');
-            cardImage.innerHTML = `<img src="${imageSrc}" alt="Ürün görseli">`;
-            updatePreview();
-        }
-
-        removeImageBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            selectedImageFile = null;
-            selectedImageURL = null;
-            imagePreviewContainer.classList.remove('active');
-            uploadArea.style.display = 'flex';
-            fileInput.value = '';
-            
-            const cardImage = previewCard.querySelector('.card-image');
-            cardImage.innerHTML = '<div class="card-image-placeholder"><i class="fas fa-image"></i></div>';
-            updatePreview();
-        });
-
-        // URL input handler
-        uploadArea.addEventListener('contextmenu', (e) => {
-            if (e.button === 2 || uploadArea.classList.contains('drag-over') === false) {
-                e.preventDefault();
-                promptImageURL();
+            if (urls.length > 0) {
+              cardImage.innerHTML = `<img src="${urls[0]}" alt="Ürün görseli">`;
+            } else {
+              cardImage.innerHTML = '<div class="card-image-placeholder"><i class="fas fa-image"></i></div>';
             }
+            updatePreview();
+          }
         });
-
-        uploadArea.addEventListener('dblclick', () => {
-            promptImageURL();
-        });
-
-        function promptImageURL() {
-            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-            const swalBg = isLight ? '#fff' : '#1e1e24';
-            const swalColor = isLight ? '#1f2937' : '#f4f4f5';
-
-            Swal.fire({
-                title: 'Resim URL\'si',
-                input: 'text',
-                inputPlaceholder: 'https://...',
-                background: swalBg,
-                color: swalColor,
-                confirmButtonColor: '#8b5cf6',
-                showCancelButton: true,
-                cancelButtonText: 'İptal',
-                confirmButtonText: 'Ekle',
-            }).then((result) => {
-                if (result.isConfirmed && result.value) {
-                    const imageUrl = result.value.trim();
-                    if (!imageUrl) return;
-                    
-                    const img = new Image();
-                    img.onload = async () => {
-                        selectedImageFile = null;
-                        selectedImageURL = imageUrl;
-                        fileInput.value = '';
-                        displayImage(imageUrl);
-                    };
-                    img.onerror = () => {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Hata',
-                            text: 'Resim yüklenemedi, URL yi kontrol edin.',
-                            background: swalBg, color: swalColor, confirmButtonColor: '#8b5cf6'
-                        });
-                    };
-                    img.src = imageUrl;
-                }
-            });
-        }
 
         // --- Canlı Önizleme Güncelleyici ---
         function updatePreview() {
@@ -666,7 +553,7 @@
             const title = titleInput.value.trim();
             const price = parseFloat(priceInput.value);
             const description = descriptionInput.value.trim();
-            const hasImage = imagePreviewContainer.classList.contains('active');
+            const hasImage = uploadedImageUrls.length > 0;
             const userRaw = localStorage.getItem('user');
             const token = localStorage.getItem('token');
 
@@ -694,7 +581,7 @@
             if (!title) { Swal.fire({ icon: 'error', title: 'Hata', text: 'Lütfen başlık girin', background: swalBg, color: swalColor, confirmButtonColor: '#8b5cf6' }); return; }
             if (isNaN(price) || price <= 0) { Swal.fire({ icon: 'error', title: 'Hata', text: 'Lütfen geçerli bir fiyat girin', background: swalBg, color: swalColor, confirmButtonColor: '#8b5cf6' }); return; }
             if (!description) { Swal.fire({ icon: 'error', title: 'Hata', text: 'Lütfen açıklama girin', background: swalBg, color: swalColor, confirmButtonColor: '#8b5cf6' }); return; }
-            if (!hasImage) { Swal.fire({ icon: 'error', title: 'Hata', text: 'Lütfen resim yükleyin', background: swalBg, color: swalColor, confirmButtonColor: '#8b5cf6' }); return; }
+            if (!hasImage) { Swal.fire({ icon: 'error', title: 'Hata', text: 'Lütfen en az bir görsel yükleyin', background: swalBg, color: swalColor, confirmButtonColor: '#8b5cf6' }); return; }
 
             const formData = new FormData();
             formData.append('title', title);
@@ -702,10 +589,7 @@
             formData.append('description', description);
             formData.append('sellerId', user.id || user._id || 'unknown');
             formData.append('sellerName', user.username || user.fullName || user.name || 'Kullanıcı');
-
-            if (selectedImageFile) { formData.append('image', selectedImageFile); } 
-            else if (fileInput.files[0]) { formData.append('image', fileInput.files[0]); } 
-            else if (selectedImageURL) { formData.append('imageUrl', selectedImageURL); }
+            formData.append('imageUrl', uploadedImageUrls[0]);
 
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
@@ -734,11 +618,9 @@
                 });
 
                 document.getElementById('listingForm').reset();
-                fileInput.value = '';
-                selectedImageFile = null; selectedImageURL = null;
-                imagePreviewContainer.classList.remove('active');
-                uploadArea.style.display = 'flex';
-                
+                uploadedImageUrls = [];
+                if (uploader) uploader.reset();
+
                 const cardImage = previewCard.querySelector('.card-image');
                 cardImage.innerHTML = '<div class="card-image-placeholder"><i class="fas fa-image"></i></div>';
                 updatePreview();

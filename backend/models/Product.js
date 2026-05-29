@@ -27,6 +27,16 @@ type:String,
 default:'Genel'
 },
 
+categorySlug:{
+type:String,
+default:'genel'
+},
+
+categoryName:{
+type:String,
+default:'Genel'
+},
+
 sellerId:{
 type:String,
 required:true
