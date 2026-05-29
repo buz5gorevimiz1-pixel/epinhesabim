@@ -104,9 +104,9 @@ export default function DashboardPage() {
 const unsubTickets = on<any[]>("support:tickets", (data) => {
   setSupportTickets(data || []);
 });
-    const unsubAdmin = on("admin:online", (count) => {
-      setStats((prev) => prev ? { ...prev, adminOnline: count } : null);
-    });
+    const unsubAdmin = on<number>("admin:online", (count) => {
+  setStats((prev) => prev ? { ...prev, adminOnline: count } : null);
+});
     return () => {
       unsubStats?.();
       unsubVisitors?.();
