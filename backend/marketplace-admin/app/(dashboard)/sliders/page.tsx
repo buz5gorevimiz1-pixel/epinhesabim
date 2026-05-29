@@ -195,13 +195,13 @@ export default function SlidersPage() {
                   style={{ backgroundColor: s.accentColor }}
                   title="Accent"
                 />
-                <Button size="xs" variant="ghost" onClick={() => toggleActive(s)} title={s.active ? "Pasif yap" : "Aktif yap"}>
+                <Button size="sm" variant="ghost" onClick={() => toggleActive(s)} title={s.active ? "Pasif yap" : "Aktif yap"}>
                   {s.active ? <Eye size={14} /> : <EyeOff size={14} />}
                 </Button>
-                <Button size="xs" variant="ghost" onClick={() => openEdit(s)}>
+                <Button size="sm" variant="ghost" onClick={() => openEdit(s)}>
                   <Pencil size={14} />
                 </Button>
-                <Button size="xs" variant="ghost" className="text-danger" onClick={() => remove(s._id)}>
+                <Button size="sm" variant="ghost" className="text-danger" onClick={() => remove(s._id)}>
                   <Trash2 size={14} />
                 </Button>
               </div>
