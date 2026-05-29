@@ -66,10 +66,7 @@ export default function LoginPage() {
         </form>
 
         {/* Demo credentials */}
-        <div className="mt-4 rounded-lg border border-border/50 bg-surface/50 p-3 text-center">
-          <p className="text-xs text-text-muted">Demo giriş:</p>
-          <p className="text-xs text-cyan-400 font-mono mt-1">admin / admin123</p>
-        </div>
+        
 
         {/* Footer */}
         <p className="mt-6 text-center text-xs text-text-muted">
