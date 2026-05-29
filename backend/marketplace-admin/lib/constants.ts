@@ -1,4 +1,5 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api/v2";
+export const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "/api/v2";
 
 export const ACCESS_TOKEN_KEY = "admin_access_token";
 export const REFRESH_TOKEN_KEY = "admin_refresh_token";
