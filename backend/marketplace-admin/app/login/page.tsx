@@ -60,9 +60,9 @@ export default function LoginPage() {
             icon={<Lock size={16} />}
             required
           />
-          <Button type="submit" size="lg" glow="cyan" className="w-full mt-2" isLoading={loading}>
-            Giriş Yap
-          </Button>
+          <Button type="submit" size="lg" className="w-full mt-2" isLoading={loading}>
+  Giriş Yap
+</Button>
         </form>
 
         {/* Demo credentials */}
