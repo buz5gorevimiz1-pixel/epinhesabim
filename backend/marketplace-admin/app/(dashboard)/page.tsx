@@ -97,12 +97,13 @@ export default function DashboardPage() {
     const unsubStats = on<import("@/types").DashboardStats>("dashboard:stats", (data) => {
       setStats((prev) => prev ? { ...prev, ...data } : data);
     });
-    const unsubVisitors = on("visitors:list", (data) => {
-      setVisitors(data || []);
-    });
-    const unsubTickets = on("support:tickets", (data) => {
-      setSupportTickets(data || []);
-    });
+    const unsubVisitors = on<any[]>("visitors:list", (data) => {
+  setVisitors(data || []);
+});
+
+const unsubTickets = on<any[]>("support:tickets", (data) => {
+  setSupportTickets(data || []);
+});
     const unsubAdmin = on("admin:online", (count) => {
       setStats((prev) => prev ? { ...prev, adminOnline: count } : null);
     });
