@@ -5,7 +5,7 @@
 (function() {
   'use strict';
 
-  const SOCKET_URL = window.location.origin; // Same origin as backend (served by Express static)
+  const SOCKET_URL = 'https://epinhesabim.com'; // Production domain
   let socket = null;
   let chatOpen = false;
   let chatAssigned = false;
@@ -401,6 +401,18 @@
     const input = document.getElementById('ls-chat-input');
     const text = input.value.trim();
     if (!text || !socket) return;
+    
+    // Add message immediately to chat
+    const msg = {
+      id: Date.now().toString(),
+      sender: 'visitor',
+      text: text,
+      timestamp: new Date().toISOString()
+    };
+    chatMessages.push(msg);
+    renderMessages();
+    scrollToBottom();
+    
     socket.emit('support:visitor-message', { text });
     input.value = '';
   }
