@@ -814,7 +814,7 @@
     // =====================
     // GLOBAL CONFIG
     // =====================
-    const API_BASE = 'http://localhost:3000/api/admin';
+    const API_BASE = 'http://http://epinhesabim.com/api/admin';
     let USE_MOCK_USERS = false;
     if (typeof window !== 'undefined' && typeof window.__USE_MOCK_USERS !== 'undefined') {
         USE_MOCK_USERS = !!window.__USE_MOCK_USERS;
@@ -1522,7 +1522,7 @@
             return false;
         }
         try {
-            const response = await fetch('http://localhost:3000/api/auth/me', {
+            const response = await fetch('http://http://epinhesabim.com/api/auth/me', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             if (!response.ok) throw new Error('Yetkilendirme hatası');

@@ -5,7 +5,7 @@
 
 // ============ KONFIGÜRASYON ============
 const USE_MOCK = true;  // true = mock veri göster, false = API'den çek
-const API_ENDPOINT = 'http://localhost:3000/api/products';
+const API_ENDPOINT = 'http://http://epinhesabim.com/api/products';
 
 // ============ MOCK VERİLERİ ============
 const MOCK_LISTINGS = [

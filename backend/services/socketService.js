@@ -88,7 +88,7 @@ function initSocketIO(server) {
     cors: {
       origin: function (origin, callback) {
         const allowed = [
-          'http://localhost:3000',
+          'http://http://epinhesabim.com',
           'http://localhost:3001',
           'http://127.0.0.1:3000',
           'http://127.0.0.1:3001',

@@ -142,7 +142,7 @@ Adım 2: MongoDB Kontrol
   ✓ "MongoDB ÇALIŞIYOR" yazısını bak
 
 Adım 3: Test Login
-  1. Browser açıp http://localhost:3000/giris-yap
+  1. Browser açıp http://http://epinhesabim.com/giris-yap
   2. Form doldur
   3. Giriş Yap tıkla
   4. "Giriş başarılı" mesajı ve ana sayfa → ✅ BAŞARILI

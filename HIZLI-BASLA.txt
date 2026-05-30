@@ -33,7 +33,7 @@ Eğer ✗ ÇALIŞMIYOR derse:
 
 Bekle ve gördüğün satırı ara:
   ✓ MongoDB connected
-  ✓ Backend çalışıyor: http://localhost:3000
+  ✓ Backend çalışıyor: http://http://epinhesabim.com
 
 Başarılıysa devam et!
 
@@ -41,18 +41,18 @@ Başarılıysa devam et!
 📋 ADIM 4: Tarayıcıda Testa Başla
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 URL'yi aç:
-  http://localhost:3000
+  http://http://epinhesabim.com
 
 Testler:
 
 ✓ Test 1: Kayıt Ol
-  1. http://localhost:3000/uyelik
+  1. http://http://epinhesabim.com/uyelik
   2. Form doldur (adı, email, telefon, kullanıcı adı, şifre)
   3. "Kayıt Ol" butonuna tıkla
   4. "Kayıt başarılı" mesajını bekle
 
 ✓ Test 2: Giriş Yap
-  1. http://localhost:3000/giris-yap
+  1. http://http://epinhesabim.com/giris-yap
   2. Kayıt ettiğin kullanıcı adı veya email gir
   3. Şifreni gir
   4. "Giriş Yap" butonuna tıkla

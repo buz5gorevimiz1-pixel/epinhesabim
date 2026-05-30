@@ -8,7 +8,7 @@
 const out = document.getElementById('out');
 function log(msg) { out.textContent += msg + '\n'; }
 
-fetch('http://localhost:3000/api/v2/auth/login', {
+fetch('http://http://epinhesabim.com/api/v2/auth/login', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ identifier: 'admin', password: 'admin123' }),

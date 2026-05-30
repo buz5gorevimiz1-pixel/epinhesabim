@@ -43,7 +43,7 @@ ADIM 3 - Backend Başlat
 
    Şu metni aranız:
    ✓ MongoDB connected
-   ✓ Backend çalışıyor: http://localhost:3000
+   ✓ Backend çalışıyor: http://http://epinhesabim.com
 
 ════════════════════════════════════════════════════════════════════════════════
 
@@ -51,7 +51,7 @@ ADIM 3 - Backend Başlat
 
 Test 1: KAYıT YAP
 ───────────────────────────────────────────────────────────────────────────────
-1. http://localhost:3000/uyelik açıp
+1. http://http://epinhesabim.com/uyelik açıp
 2. Form doldur:
    • Ad Soyad: Test Kullanıcı
    • E-posta: test@example.com
@@ -63,7 +63,7 @@ Test 1: KAYıT YAP
 
 Test 2: GİRİŞ YAP (Login)
 ───────────────────────────────────────────────────────────────────────────────
-1. http://localhost:3000/giris-yap açıp
+1. http://http://epinhesabim.com/giris-yap açıp
 2. Form doldur:
    • Kullanıcı Adı veya E-posta: testuser123
    • Şifre: Sifre123!

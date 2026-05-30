@@ -297,5 +297,5 @@ app.listen(PORT, () => {
   console.log(`✓ Login: http://localhost:${PORT}/giris-yap`);
   console.log(`✓ Register: http://localhost:${PORT}/uyelik`);
   console.log(`✓ Status: http://localhost:${PORT}/api/status`);
-  console.log(`\n✓ Şimdi tarayıcıda http://localhost:3000 açabilirsin\n`);
+  console.log(`\n✓ Şimdi tarayıcıda http://http://epinhesabim.com açabilirsin\n`);
 });

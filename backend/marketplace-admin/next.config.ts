@@ -8,11 +8,11 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/v2/:path*",
-        destination: "http://localhost:3000/api/v2/:path*",
+        destination: "http://http://epinhesabim.com/api/v2/:path*",
       },
       {
         source: "/api/dashboard/:path*",
-        destination: "http://localhost:3000/api/dashboard/:path*",
+        destination: "http://http://epinhesabim.com/api/dashboard/:path*",
       },
     ];
   },
