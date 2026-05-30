@@ -109,7 +109,13 @@ export default function LiveSupportPage() {
     emit("support:reopen", { ticketId });
   };
 const deleteTicket = (ticketId: string) => {
+  if (!window.confirm("Bu destek talebini kalıcı olarak silmek istediğinize emin misiniz?")) {
+    return;
+  }
+
   emit("support:delete", { ticketId });
+
+  setTickets((prev) => prev.filter((t) => t.ticketId !== ticketId));
 
   if (selectedTicketId === ticketId) {
     setSelectedTicketId(null);

@@ -21,6 +21,7 @@
     if (socket && socket.connected) return;
 
     socket = io(SOCKET_URL, {
+      path: '/socket.io',
       transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionAttempts: 10,

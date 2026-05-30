@@ -3,8 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { io, Socket } from "socket.io-client";
 
-const SOCKET_URL =
-  process.env.NEXT_PUBLIC_SOCKET_URL || "https://epinhesabim.com";
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || "https://epinhesabim.com";
 
 interface UseSocketOptions {
   type?: "admin" | "support";
@@ -19,11 +18,12 @@ export function useSocket(options: UseSocketOptions = {}) {
 
   useEffect(() => {
     const socket = io(SOCKET_URL, {
+      path: "/socket.io",
       query: { type: options.type || "admin" },
       transports: ["websocket", "polling"],
       reconnection: true,
       reconnectionDelay: 1000,
-      reconnectionAttempts: 5,
+      reconnectionAttempts: 10,
     });
 
     socketRef.current = socket;

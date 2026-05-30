@@ -88,10 +88,8 @@ function initSocketIO(server) {
     cors: {
       origin: function (origin, callback) {
         const allowed = [
-          'http://http://epinhesabim.com',
-          'http://localhost:3001',
-          'http://127.0.0.1:3000',
-          'http://127.0.0.1:3001',
+          'https://epinhesabim.com',
+          'https://www.epinhesabim.com',
         ];
         if (!origin || allowed.includes(origin)) {
           callback(null, true);
@@ -113,8 +111,10 @@ function initSocketIO(server) {
 
     // ── ADMIN CONNECTION ──
     if (isAdmin) {
+      socket.adminId = socket.handshake.query?.adminId || socket.id;
       adminSockets.set(socket.id, {
         socketId: socket.id,
+        adminId: socket.adminId,
         connectedAt: new Date(),
       });
 
