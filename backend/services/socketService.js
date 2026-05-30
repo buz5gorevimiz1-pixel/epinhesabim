@@ -85,6 +85,7 @@ async function broadcastTicketUpdate(ticketId) {
 
 function initSocketIO(server) {
   io = new Server(server, {
+    path: '/socket.io',
     cors: {
       origin: function (origin, callback) {
         const allowed = [
@@ -101,6 +102,8 @@ function initSocketIO(server) {
       credentials: true,
     },
   });
+
+  console.log('[Socket.IO] Server initialized with path: /socket.io');
 
   io.on('connection', (socket) => {
     const { userAgent, referer } = socket.handshake.headers;
@@ -278,10 +281,6 @@ socket.on('support:delete', async ({ ticketId }) => {
     // ── VISITOR MESSAGING (persistent) ──
     socket.on('support:visitor-message', async ({ text }) => {
       try {
-        if (!systemState.liveSupportEnabled) {
-          socket.emit('support:disabled');
-          return;
-        }
         if (!text || typeof text !== 'string') return;
 
         console.log('[SUPPORT] Visitor message from', socket.id, ':', text.substring(0, 50));
