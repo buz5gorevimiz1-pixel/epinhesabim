@@ -5,8 +5,9 @@
     <a href="login.html"></a>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ana Sayfa - Epin Hesabım </title>
-            <meta name="description" content="Epin Hesabım, oyunlar, dijital ürünler ve epin alışverişinde güvenilir adresiniz. Uygun fiyat, hızlı teslimat ve güvenli ödeme seçenekleriyle hemen keşfedin.">
+        <title>İlan Pazarı - Tüm Aktif İlanlar | Epin Hesabım</title>
+            <link rel="canonical" href="/ilan-pazari">
+            <meta name="description" content="İlan Pazarı: sisteme yüklenmiş tüm aktif ilanlar tek listede, kategori ayrımı olmadan. Canlı olarak güncellenir.">
             <meta name="keywords" content="Epin Hesabım, oyunlar, dijital ürünler ve epin alışverişinde güvenilir adresiniz. Uygun fiyat, hızlı teslimat ve güvenli ödeme seçenekleriyle hemen keşfedin.">
             <link rel="icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
     <link rel="shortcut icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
@@ -5421,83 +5422,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <!-- Main Content Area -->
     <main style="min-height: 100vh; background: var(--bg); padding-top:0px;">
-        
-        <!-- Banner Area 30/70 Layout: Left popular, Right slider -->
-                <section class="banner-split">
-            <div class="banner-grid">
-                <!-- Left: Popular products (30%) -->
-                <div class="popular-column">
-                                                                                                    <a href="" class="popular-card popular-banner-card">
-                                <img src="assets/img/sliders/69d2c9ad110c0_1775421869.png" alt="PUBG MOBLE">
-                                                                <div class="popular-overlay">
-                                                                        <div class="popular-title">Pubg Mobile Ürünleri</div>
-                                                                                                            <div class="popular-meta">
-                                        <span class="server">PUBG MOBLE</span>
-                                    </div>
-                                                                    </div>
-                                                            </a>
-                                                                                <a href="#" class="popular-card popular-banner-card">
-                                <img src="assets/img/sliders/698ba356dfb2c_1770758998.png" alt="Valorant Ürünleri">
-                                                                <div class="popular-overlay">
-                                                                        <div class="popular-title">Valorant Ürünleri</div>
-                                                                                                            <div class="popular-meta">
-                                        <span class="server">VALORANT</span>
-                                    </div>
-                                                                    </div>
-                                                            </a>
-                                                            </div>
-
-                <!-- Right: Slider (70%) -->
-                <div class="slider-column">
-                    <div class="banner-carousel">
-                        <div class="carousel-container">
-                                                        <div class="carousel-slide active ">
-                                
-                                                                    <img src="assets/img/sliders/698ba413de555_1770759187.png" alt="Pubg Mobile" onerror="this.style.display='none'; var content=this.parentElement.querySelector('.slider-content'); if(content){content.style.display='flex';}">
-                                                                <div class="slider-content" style="display: none;">
-                                    <div class="slider-text">
-                                        <h2 class="slider-title">Pubg Mobile</h2>
-                                                                                    <p class="slider-description">Pubg Mobile</p>
-                                                                                                                    </div>
-                                </div>
-                            </div>
-                                                        <div class="carousel-slide  ">
-                                
-                                                                    <img src="assets/img/sliders/68c8564e612fc_1757959758.webp" alt="Skin Pazarı" onerror="this.style.display='none'; var content=this.parentElement.querySelector('.slider-content'); if(content){content.style.display='flex';}">
-                                                                <div class="slider-content" style="display: none;">
-                                    <div class="slider-text">
-                                        <h2 class="slider-title">Skin Pazarı</h2>
-                                                                                                                    </div>
-                                </div>
-                            </div>
-                            
-                                                        <div class="carousel-timer" aria-live="polite">
-                                <span class="carousel-timer-value">5</span>
-                                <span class="carousel-timer-label">sn</span>
-                                <span class="carousel-timer-progress"><span class="carousel-timer-progress-bar"></span></span>
-                            </div>
-                            <div class="carousel-nav">
-                                <button class="carousel-btn prev" onclick="changeSlide(-1)">®</button>
-                                <button class="carousel-btn next" onclick="changeSlide(1)">¯</button>
-                            </div>
-                                                    </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        
-<!-- Listings (Homepage) -->
-<section class="tabs-section" id="butun-ilanlar">
+<!-- Listings (İlan Pazarı - tüm aktif ilanlar) -->
+<section class="tabs-section" id="ilan-pazari">
   <div class="container">
     <div class="tabs-header" style="gap:12px; align-items:center;">
       <div class="tabs-left">
         <button class="tab-btn active" type="button" style="pointer-events:none;">
-          <span class="tab-icon"><i class="fas fa-list"></i></span>
-          <span>Bütün İlanlar</span>
+          <span class="tab-icon"><i class="fas fa-store"></i></span>
+          <span>İlan Pazarı <span id="ipCount"></span></span>
         </button>
       </div>
-      <a href="/ilan-pazari" class="tabs-all-btn"><i class="fas fa-store"></i>&nbsp;İlan Pazarı</a>
+      <a href="/" class="tabs-all-btn"><i class="fas fa-list"></i>&nbsp;Bütün İlanlar</a>
     </div>
 
     <!-- INLINE CSS (theme-proof) -->
@@ -5727,6 +5662,23 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 window._allProducts = [];
 
+// SEO uyumlu slug üret (Türkçe karakterleri normalize eder)
+function slugify(str){
+    var trMap = {'ç':'c','ğ':'g','ı':'i','ö':'o','ş':'s','ü':'u','Ç':'c','Ğ':'g','İ':'i','Ö':'o','Ş':'s','Ü':'u'};
+    return (str || '')
+        .replace(/[çğıöşüÇĞİÖŞÜ]/g, function(c){ return trMap[c] || c; })
+        .toLowerCase().trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '') || 'ilan';
+}
+
+function updateCount(n) {
+    const el = document.getElementById('ipCount');
+    if (el) el.textContent = '(' + n + ' ilan)';
+}
+
 function renderProducts(products, containerId) {
     const container = document.getElementById(containerId || 'ilanlar-kutusu');
     if (!container) return;
@@ -5734,8 +5686,11 @@ function renderProducts(products, containerId) {
         container.innerHTML = '<p style="color: #fff; padding: 40px; text-align:center; font-size:15px;">Aramanızla eşleşen ilan bulunamadı.</p>';
         return;
     }
-    container.innerHTML = products.map(product => `
-        <a class="ipcard" href="/ilan/${product.id}">
+    container.innerHTML = products.map(product => {
+        const id = product.id || product._id || '';
+        const href = '/ilan-pazari/' + slugify(product.title) + '-' + id;
+        return `
+        <a class="ipcard" href="${href}">
             <div class="ipthumb">
                 <img src="${product.image || 'assets/img/placeholder.jpg'}" alt="${product.title}">
                 <div class="ipprice">${product.price.toLocaleString('tr-TR', {minimumFractionDigits: 2})} TL</div>
@@ -5754,43 +5709,49 @@ function renderProducts(products, containerId) {
                     <span class="ipname">${product.sellerName || 'Anonim'}</span>
                 </div>
             </div>
-        </a>
-    `).join('');
+        </a>`;
+    }).join('');
 }
 
-// Anasayfa "Bütün İlanlar" her zaman en güncel 12 ilanı gösterir (12'yi geçmez)
-const HOME_MAX_PRODUCTS = 12;
-
+// İlan Pazarı: TÜM aktif ilanlar tek listede gösterilir (sınır yok)
 function filterProducts(query) {
     const q = (query || '').toLowerCase().trim();
     if (!q) {
-        renderProducts(window._allProducts.slice(0, HOME_MAX_PRODUCTS));
+        renderProducts(window._allProducts);
+        updateCount(window._allProducts.length);
         return;
     }
     const filtered = window._allProducts.filter(p => {
         const text = ((p.title || '') + ' ' + (p.category || '') + ' ' + (p.sellerName || '')).toLowerCase();
         return text.includes(q);
     });
-    renderProducts(filtered.slice(0, HOME_MAX_PRODUCTS));
+    renderProducts(filtered);
+    updateCount(filtered.length);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('ilanlar-kutusu');
 
-    function loadHomeProducts(isRefresh) {
-        fetch('/api/products')
+    function loadProducts(isRefresh) {
+        fetch('/api/products', { cache: 'no-store' })
             .then(response => response.json())
             .then(products => {
                 if (!Array.isArray(products)) return;
                 if (products.length === 0) {
                     if (!isRefresh) container.innerHTML = '<p style="color: #fff; padding: 20px;">Henüz aktif ilan bulunmamaktadır.</p>';
+                    updateCount(0);
                     return;
                 }
                 window._allProducts = products;
                 // Arama yapılıyorsa otomatik yenileme listeyi bozmasın
                 const searchInput = document.querySelector('.header-search-input');
                 const hasSearch = searchInput && searchInput.value.trim().length > 0;
-                if (!hasSearch) renderProducts(products.slice(0, HOME_MAX_PRODUCTS));
+                if (hasSearch) {
+                    filterProducts(searchInput.value);
+                } else {
+                    renderProducts(products);
+                    updateCount(products.length);
+                }
             })
             .catch(error => {
                 console.error('İlanlar yüklenirken bir hata oluştu:', error);
@@ -5798,444 +5759,18 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    loadHomeProducts(false);
-    // Yeni ilanlar eklendikçe otomatik güncellensin (canlı)
-    setInterval(() => loadHomeProducts(true), 30000);
+    loadProducts(false);
+    // Yeni ilanlar eklendikçe otomatik görünür (canlı)
+    setInterval(() => loadProducts(true), 20000);
 });
 </script>
 
   </div>
 </section>
-                <section class="epin-tabs-section" style="--epin-banner: url(/uploads/servers/epinfypubg1-min56374-1769604580.png);">
-            <div class="container">
-                <div class="epin-tabs-header" id="epinTabsHeader">
-                    <div class="epin-tabs-left">
-                                                <button class="epin-tab-btn active" data-epin-tab="epin-tab-8" data-banner="/uploads/servers/epinfypubg1-min56374-1769604580.png">
-                            <div class="epin-tab-thumb">
-                                                                <img src="assets/uploads/servers/epinfypubg1-min56374-1769604580.png" alt="Pubg Mobile">
-                                                            </div>
-                        </button>
-                                                <button class="epin-tab-btn " data-epin-tab="epin-tab-19" data-banner="https://epinfy.comassets/img/category/epinfyvalo-1-250292.png">
-                            <div class="epin-tab-thumb">
-                                                                <img src="assets/uploads/servers/epinfyvalo-1-250292.png" alt="Valorant">
-                                                            </div>
-                        </button>
-                                            </div>
-                    
-                </div>
-
-                                <div id="epin-tab-8" class="epin-tab-panel active">
-                    <div class="epin-grid-home">
-                                                <a href="pubg-uc.html" class="epin-card-home" title="Pubg Mobile 1800 UC">
-                            <div class="epin-img">
-                                                                <img src="assets/uploads/epin/505x505-resize-1800uc-yrdnkn7uox-1769638636.webp" alt="Pubg Mobile 1800 UC">
-                                                            </div>
-                            <div class="epin-body">
-                                <div class="epin-title-text">Pubg Mobile 1800 UC</div>
-                                <div class="epin-rating-mini">
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <span class="cnt">(0)</span>
-                                </div>
-                                <div class="epin-bottom">
-                                    <div class="epin-price-mini">970.00 ₺</div>
-                                                                        <span class="epin-stock-badge in">Stok Var</span>
-                                                                    </div>
-                            </div>
-                        </a>
-                                                <a href="pubg-uc.html" class="epin-card-home" title="Pubg Mobile 325 UC">
-                            <div class="epin-img">
-                                                                <img src="assets/uploads/epin/325uc-thycsanapn-1769638442.webp" alt="Pubg Mobile 325 UC">
-                                                            </div>
-                            <div class="epin-body">
-                                <div class="epin-title-text">Pubg Mobile 325 UC</div>
-                                <div class="epin-rating-mini">
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <span class="cnt">(1)</span>
-                                </div>
-                                <div class="epin-bottom">
-                                    <div class="epin-price-mini">196.99 ₺</div>
-                                                                        <span class="epin-stock-badge in">Stok Var</span>
-                                                                    </div>
-                            </div>
-                        </a>
-                                                <a href="pubg-uc.html" class="epin-card-home" title="Pubg Mobile 3850 UC">
-                            <div class="epin-img">
-                                                                <img src="assets/uploads/epin/ekran-goruntusu-2026-01-29-3850-1769638817.png" alt="Pubg Mobile 3850 UC">
-                                                            </div>
-                            <div class="epin-body">
-                                <div class="epin-title-text">Pubg Mobile 3850 UC</div>
-                                <div class="epin-rating-mini">
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <span class="cnt">(1)</span>
-                                </div>
-                                <div class="epin-bottom">
-                                    <div class="epin-price-mini">1,900.00 ₺</div>
-                                                                        <span class="epin-stock-badge in">Stok Var</span>
-                                                                    </div>
-                            </div>
-                        </a>
-                                                <a href="pubg-uc.html" class="epin-card-home" title="Pubg Mobile 60 UC">
-                            <div class="epin-img">
-                                                                <img src="assets/uploads/epin/60uc-3dsfsq8qlq-1769638398.webp" alt="Pubg Mobile 60 UC">
-                                                            </div>
-                            <div class="epin-body">
-                                <div class="epin-title-text">Pubg Mobile 60 UC</div>
-                                <div class="epin-rating-mini">
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <span class="cnt">(2)</span>
-                                </div>
-                                <div class="epin-bottom">
-                                    <div class="epin-price-mini">45.00 ₺</div>
-                                                                        <span class="epin-stock-badge in">Stok Var</span>
-                                                                    </div>
-                            </div>
-                        </a>
-                                                <a href="pubg-uc.html" class="epin-card-home" title="Pubg Mobile 660 UC">
-                            <div class="epin-img">
-                                                                <img src="assets/uploads/epin/660uc-pgk4hqomla-1769638549.webp" alt="Pubg Mobile 660 UC">
-                                                            </div>
-                            <div class="epin-body">
-                                <div class="epin-title-text">Pubg Mobile 660 UC</div>
-                                <div class="epin-rating-mini">
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <span class="cnt">(1)</span>
-                                </div>
-                                <div class="epin-bottom">
-                                    <div class="epin-price-mini">390.00 ₺</div>
-                                                                        <span class="epin-stock-badge in">Stok Var</span>
-                                                                    </div>
-                            </div>
-                        </a>
-                                                <a href="pubg-uc.html" class="epin-card-home" title="Pubg Mobile 8100 UC">
-                            <div class="epin-img">
-                                                                <img src="assets/uploads/epin/ekran-goruntusu-2026-01-29-012226-1769638966.png" alt="Pubg Mobile 8100 UC">
-                                                            </div>
-                            <div class="epin-body">
-                                <div class="epin-title-text">Pubg Mobile 8100 UC</div>
-                                <div class="epin-rating-mini">
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <span class="cnt">(1)</span>
-                                </div>
-                                <div class="epin-bottom">
-                                    <div class="epin-price-mini">3,800.00 ₺</div>
-                                                                        <span class="epin-stock-badge in">Stok Var</span>
-                                                                    </div>
-                            </div>
-                        </a>
-                                            </div>
-                </div>
-                                <div id="epin-tab-19" class="epin-tab-panel ">
-                    <div class="epin-grid-home">
-                                                <a href="valo-epin.html" class="epin-card-home" title="Valorant 1700 VP">
-                            <div class="epin-img">
-                                                                <img src="assets/uploads/epin/d1700-de98b1ddbb2756c43c7aa4ad633f34db-1769639347.webp" alt="Valorant 1700 VP">
-                                                            </div>
-                            <div class="epin-body">
-                                <div class="epin-title-text">Valorant 1700 VP</div>
-                                <div class="epin-rating-mini">
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <span class="cnt">(0)</span>
-                                </div>
-                                <div class="epin-bottom">
-                                    <div class="epin-price-mini">475.00 ₺</div>
-                                                                        <span class="epin-stock-badge in">Stok Var</span>
-                                                                    </div>
-                            </div>
-                        </a>
-                                                <a href="valo-epin.html" class="epin-card-home" title="Valorant 2925 VP">
-                            <div class="epin-img">
-                                                                <img src="assets/uploads/epin/d2925-9257d952cc7ae0aec30b74033b1738a1-1769639394.webp" alt="Valorant 2925 VP">
-                                                            </div>
-                            <div class="epin-body">
-                                <div class="epin-title-text">Valorant 2925 VP</div>
-                                <div class="epin-rating-mini">
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <span class="cnt">(0)</span>
-                                </div>
-                                <div class="epin-bottom">
-                                    <div class="epin-price-mini">803.49 ₺</div>
-                                                                        <span class="epin-stock-badge in">Stok Var</span>
-                                                                    </div>
-                            </div>
-                        </a>
-                                                <a href="valo-epin.html" class="epin-card-home" title="Valorant 375 VP">
-                            <div class="epin-img">
-                                                                <img src="assets/uploads/epin/d375-7253e2f15a6f647db717c8e147cc1002-1769639209.webp" alt="Valorant 375 VP">
-                                                            </div>
-                            <div class="epin-body">
-                                <div class="epin-title-text">Valorant 375 VP</div>
-                                <div class="epin-rating-mini">
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <span class="cnt">(0)</span>
-                                </div>
-                                <div class="epin-bottom">
-                                    <div class="epin-price-mini">113.99 ₺</div>
-                                                                        <span class="epin-stock-badge in">Stok Var</span>
-                                                                    </div>
-                            </div>
-                        </a>
-                                                <a href="valo-epin.html" class="epin-card-home" title="Valorant 4325 VP">
-                            <div class="epin-img">
-                                                                <img src="assets/uploads/epin/d4325-bee3cd2112bdef0555778f4a2322f786-1769639448.webp" alt="Valorant 4325 VP">
-                                                            </div>
-                            <div class="epin-body">
-                                <div class="epin-title-text">Valorant 4325 VP</div>
-                                <div class="epin-rating-mini">
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <span class="cnt">(0)</span>
-                                </div>
-                                <div class="epin-bottom">
-                                    <div class="epin-price-mini">1,164.49 ₺</div>
-                                                                        <span class="epin-stock-badge in">Stok Var</span>
-                                                                    </div>
-                            </div>
-                        </a>
-                                                <a href="valo-epin.html" class="epin-card-home" title="Valorant 825 VP">
-                            <div class="epin-img">
-                                                                <img src="assets/uploads/epin/d825-6b2f170947dcd3724916c1d4f4ee0423-1769639251.webp" alt="Valorant 825 VP">
-                                                            </div>
-                            <div class="epin-body">
-                                <div class="epin-title-text">Valorant 825 VP</div>
-                                <div class="epin-rating-mini">
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <span class="cnt">(0)</span>
-                                </div>
-                                <div class="epin-bottom">
-                                    <div class="epin-price-mini">237.00 ₺</div>
-                                                                        <span class="epin-stock-badge in">Stok Var</span>
-                                                                    </div>
-                            </div>
-                        </a>
-                                                <a href="valo-epin.html" class="epin-card-home" title="Valorant Battle Pass">
-                            <div class="epin-img">
-                                                                <img src="assets/uploads/epin/dbattle-1b8946f3a9a4080e28bcdebe94a89b8e-1769639141.webp" alt="Valorant Battle Pass">
-                                                            </div>
-                            <div class="epin-body">
-                                <div class="epin-title-text">Valorant Battle Pass</div>
-                                <div class="epin-rating-mini">
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="fas fa-star"></i>
-                                                                        <i class="far fa-star"></i>
-                                                                        <span class="cnt">(0)</span>
-                                </div>
-                                <div class="epin-bottom">
-                                    <div class="epin-price-mini">353.99 ₺</div>
-                                                                        <span class="epin-stock-badge in">Stok Var</span>
-                                                                    </div>
-                            </div>
-                        </a>
-                                            </div>
-                </div>
-                            </div>
-        </section>
-        
-                <!-- Trend Kategoriler (Tabs dışı bağımsız bölüm) -->
-        <section class="listings-section">
-            <div class="container">
-                <h2 class="section-title">Trend Kategoriler</h2>
-                <p class="section-subtitle">En çok ilgi gören kategorileri keşfet.</p>
-                <div class="trend-grid">
-                                        <a class="trend-item" href="#" title="1">
-                        <div class="trend-image">
-                            <img src="assets/img/trends/trend_68c947e45e9fd_1758021604.jpg" alt="1">
-                        </div>
-                    </a>
-                                        <a class="trend-item" href="#" title="a">
-                        <div class="trend-image">
-                            <img src="assets/img/trends/trend_68c947ec963f4_1758021612.jpg" alt="a">
-                        </div>
-                    </a>
-                                        <a class="trend-item" href="#" title="ss">
-                        <div class="trend-image">
-                            <img src="assets/img/trends/trend_68c947fe4b98f_1758021630.jpg" alt="ss">
-                        </div>
-                    </a>
-                                        <a class="trend-item" href="#" title="sss">
-                        <div class="trend-image">
-                            <img src="assets/img/trends/trend_68c948062a3dc_1758021638.jpg" alt="sss">
-                        </div>
-                    </a>
-                                    </div>
-            </div>
-        </section>
-        
-        <!-- Sosyal Medya lanları -->
-        <section class="social-media-section">
-            <div class="container">
-                <h2 class="section-title">Sosyal Medya Hizmetleri</h2>
-                <p class="section-subtitle">Sosyal Medya kategorilerinde sürpriz ilanlar seni bekliyor!</p>
-                <div class="social-grid">
-                    <a class="social-card brand-discord" href="#" title="Discord Hizmetleri">
-                        <div class="social-icon"><i class="fab fa-discord"></i></div>
-                        <div class="social-title">DISCORD</div>
-                        <div class="social-sub">Hizmetleri</div>
-                    </a>
-                    <a class="social-card brand-instagram" href="#" title="Instagram Hizmetleri">
-                        <div class="social-icon"><i class="fab fa-instagram"></i></div>
-                        <div class="social-title">INSTAGRAM</div>
-                        <div class="social-sub">Hizmetleri</div>
-                    </a>
-                    <a class="social-card brand-tiktok" href="#" title="Tiktok Hizmetleri">
-                        <div class="social-icon"><i class="fab fa-tiktok"></i></div>
-                        <div class="social-title">TIKTOK</div>
-                        <div class="social-sub">Hizmetleri</div>
-                    </a>
-                    <a class="social-card brand-youtube" href="#" title="YouTube Hizmetleri">
-                        <div class="social-icon"><i class="fab fa-youtube"></i></div>
-                        <div class="social-title">YOUTUBE</div>
-                        <div class="social-sub">Hizmetleri</div>
-                    </a>
-                    <a class="social-card brand-x" href="#" title="X Hizmetleri">
-                        <div class="social-icon"><i class="fab fa-twitter"></i></div>
-                        <div class="social-title">X</div>
-                        <div class="social-sub">Hizmetleri</div>
-                    </a>
-                    <a class="social-card brand-facebook" href="#" title="Facebook Hizmetleri">
-                        <div class="social-icon"><i class="fab fa-facebook-f"></i></div>
-                        <div class="social-title">FACEBOOK</div>
-                        <div class="social-sub">Hizmetleri</div>
-                    </a>
-                    <a class="social-card brand-telegram" href="#" title="Telegram Hizmetleri">
-                        <div class="social-icon"><i class="fab fa-telegram"></i></div>
-                        <div class="social-title">TELEGRAM</div>
-                        <div class="social-sub">Hizmetleri</div>
-                    </a>
-                    <a class="social-card brand-spotify" href="#" title="Spotify Hizmetleri">
-                        <div class="social-icon"><i class="fab fa-spotify"></i></div>
-                        <div class="social-title">SPOTIFY</div>
-                        <div class="social-sub">Hizmetleri</div>
-                    </a>
-                </div>
-            </div>
-        </section>
 
     </main>
 
-    <!-- Blog/News Section -->
-        <section class="blog-section">
-        <div class="blog-container">
-            <div class="blog-header">
-                <div class="blog-title-wrap"><div class="blog-icon-box"><i class="far fa-newspaper"></i></div><h3>Haberler</h3></div>
-            </div>
-            <div class="blog-grid">
-                                <a href="#" class="blog-card" title="League of Legends Yeni Darkin şampiyonu...">
-                    <div class="blog-thumb"><img src="https://cdn.itemsatis.com/uploads/news/74f51c428995f68868cae8d77834f561-9536.png?height=160" alt="League of Legends Yeni Darkin şampiyonu..."></div>
-                    <div class="blog-body">
-                        <div class="blog-item-title">League of Legends Yeni Darkin şampiyonu...</div>
-                        <div class="blog-excerpt">Zaahen kimdir? Evren ve tasarım detayları...</div>
-                    </div>
-                    <div class="blog-footer">
-                        <div class="blog-meta"><i class="far fa-clock"></i> 2 gün önce</div>
-                        <div class="blog-more">Devamını gör</div>
-                    </div>
-                </a>
-                                <a href="#" class="blog-card" title="Roblox 2025 Yaş Tahmini ve Güvenlik...">
-                    <div class="blog-thumb"><img src="https://cdn.itemsatis.com/uploads/news/e551c4189c1d6d30bd9197fa74abcb8d-9484.png?height=160" alt="Roblox 2025 Yaş Tahmini ve Güvenlik..."></div>
-                    <div class="blog-body">
-                        <div class="blog-item-title">Roblox 2025 Yaş Tahmini ve Güvenlik...</div>
-                        <div class="blog-excerpt">Yaş tahmini teknolojisi ve güvenlik adımları...</div>
-                    </div>
-                    <div class="blog-footer">
-                        <div class="blog-meta"><i class="far fa-clock"></i> 4 gün önce</div>
-                        <div class="blog-more">Devamını gör</div>
-                    </div>
-                </a>
-                                <a href="#" class="blog-card" title="Injustice 3 Sızdırıldı: Sanatçılar konuştu">
-                    <div class="blog-thumb"><img src="https://cdn.itemsatis.com/uploads/news/4ba02f37d048577b4f78e47b09972415-4825.png?height=160" alt="Injustice 3 Sızdırıldı: Sanatçılar konuştu"></div>
-                    <div class="blog-body">
-                        <div class="blog-item-title">Injustice 3 Sızdırıldı: Sanatçılar konuştu</div>
-                        <div class="blog-excerpt">Yeni karakterler ve hikaye ipuçları...</div>
-                    </div>
-                    <div class="blog-footer">
-                        <div class="blog-meta"><i class="far fa-clock"></i> 4 gün önce</div>
-                        <div class="blog-more">Devamını gör</div>
-                    </div>
-                </a>
-                                <a href="#" class="blog-card" title="Football Manager 26 Yenilikleri">
-                    <div class="blog-thumb"><img src="https://cdn.itemsatis.com/uploads/news/df9b520d2e3b26ff6460df2eb64d38a0-3021.png?height=160" alt="Football Manager 26 Yenilikleri"></div>
-                    <div class="blog-body">
-                        <div class="blog-item-title">Football Manager 26 Yenilikleri</div>
-                        <div class="blog-excerpt">Yeni grafik motoru ve atmosfer...</div>
-                    </div>
-                    <div class="blog-footer">
-                        <div class="blog-meta"><i class="far fa-clock"></i> 5 gün önce</div>
-                        <div class="blog-more">Devamını gör</div>
-                    </div>
-                </a>
-                                <a href="#" class="blog-card" title="First Light: James Bond Dönüyor">
-                    <div class="blog-thumb"><img src="https://cdn.itemsatis.com/uploads/news/af6274f2f6b09a505143803cd80c6987-1793.png?height=160" alt="First Light: James Bond Dönüyor"></div>
-                    <div class="blog-body">
-                        <div class="blog-item-title">First Light: James Bond Dönüyor</div>
-                        <div class="blog-excerpt">Klasik Bond dokunuşları modern mekaniklerle...</div>
-                    </div>
-                    <div class="blog-footer">
-                        <div class="blog-meta"><i class="far fa-clock"></i> 5 gün önce</div>
-                        <div class="blog-more">Devamını gör</div>
-                    </div>
-                </a>
-                            </div>
-        </div>
-    </section>
 
-    <!-- SEO Description Section -->
-    <section class="seo-section">
-        <div class="seo-container">
-            <div class="seo-card">
-                <h3 class="seo-title">Hesap Satın Al</h3>
-                <div class="seo-content">
-                    <p>Tüm dünyada popüler olan oyunlar için aradığınız hesap, epin, oyun içi para birimi ve hizmetleri hızlıca bulabileceğiniz güvenli pazar yerindesiniz. Onaylı satıcılarımızdan güvenle alışveriş yapın, avantajlı fiyatlarla en sevdiğiniz oyunlarda daha iyi bir deneyim yaşayın.</p>
-                    <p>Metin2, PUBG Mobile, Valorant, Mobile Legends ve daha birçok oyun için özenle hazırlanan ürünleri anında teslimat, güvenli ödeme yöntemleri ve 7/24 destek ayrıcalıklarıyla satın alabilirsiniz. Kullanıcı dostu arayüzümüz ve modern altyapımız sayesinde mobil ve masaüstü cihazlardan kesintisiz alışveriş mümkündür.</p>
-                    <p>Güncel kampanyalar, trend kategoriler ve vitrindeki öne çıkan ilanlarla fırsatları kaçırmayın. Hesabınızın güvenliği için KYC, 2FA ve gelişmiş koruma özellikleri aktif olarak kullanılır. Hızlı, güvenli ve keyifli bir oyun alışverişi için bizi takip etmeye devam edin.</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <style>
         /* Banner Split 30/70 */
