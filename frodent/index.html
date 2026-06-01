@@ -5758,35 +5758,49 @@ function renderProducts(products, containerId) {
     `).join('');
 }
 
+// Anasayfa "Bütün İlanlar" her zaman en güncel 12 ilanı gösterir (12'yi geçmez)
+const HOME_MAX_PRODUCTS = 12;
+
 function filterProducts(query) {
     const q = (query || '').toLowerCase().trim();
     if (!q) {
-        renderProducts(window._allProducts);
+        renderProducts(window._allProducts.slice(0, HOME_MAX_PRODUCTS));
         return;
     }
     const filtered = window._allProducts.filter(p => {
         const text = ((p.title || '') + ' ' + (p.category || '') + ' ' + (p.sellerName || '')).toLowerCase();
         return text.includes(q);
     });
-    renderProducts(filtered);
+    renderProducts(filtered.slice(0, HOME_MAX_PRODUCTS));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('ilanlar-kutusu');
-    fetch('/api/products')
-        .then(response => response.json())
-        .then(products => {
-            if (!products || products.length === 0) {
-                container.innerHTML = '<p style="color: #fff; padding: 20px;">Henüz aktif ilan bulunmamaktadır.</p>';
-                return;
-            }
-            window._allProducts = products;
-            renderProducts(products);
-        })
-        .catch(error => {
-            console.error('İlanlar yüklenirken bir hata oluştu:', error);
-            if (container) container.innerHTML = '<p style="color: #ff4d4d; padding: 20px;">İlanlar yüklenemedi, lütfen sunucu bağlantınızı kontrol edin.</p>';
-        });
+
+    function loadHomeProducts(isRefresh) {
+        fetch('/api/products')
+            .then(response => response.json())
+            .then(products => {
+                if (!Array.isArray(products)) return;
+                if (products.length === 0) {
+                    if (!isRefresh) container.innerHTML = '<p style="color: #fff; padding: 20px;">Henüz aktif ilan bulunmamaktadır.</p>';
+                    return;
+                }
+                window._allProducts = products;
+                // Arama yapılıyorsa otomatik yenileme listeyi bozmasın
+                const searchInput = document.querySelector('.header-search-input');
+                const hasSearch = searchInput && searchInput.value.trim().length > 0;
+                if (!hasSearch) renderProducts(products.slice(0, HOME_MAX_PRODUCTS));
+            })
+            .catch(error => {
+                console.error('İlanlar yüklenirken bir hata oluştu:', error);
+                if (!isRefresh && container) container.innerHTML = '<p style="color: #ff4d4d; padding: 20px;">İlanlar yüklenemedi, lütfen sunucu bağlantınızı kontrol edin.</p>';
+            });
+    }
+
+    loadHomeProducts(false);
+    // Yeni ilanlar eklendikçe otomatik güncellensin (canlı)
+    setInterval(() => loadHomeProducts(true), 30000);
 });
 </script>
 

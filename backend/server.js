@@ -1261,6 +1261,20 @@ app.get('/ilan/:id', (req, res) => {
   );
 });
 
+// İLAN PAZARI - tüm aktif ilanların tek listede gösterildiği SEO uyumlu sayfa
+app.get('/ilan-pazari', (req, res) => {
+  res.sendFile(
+    path.join(__dirname, '../frodent/ilan-pazari.html')
+  );
+});
+
+// İlan Pazarı detay - /ilan-pazari/[slug] (slug sonundaki id ile çözülür)
+app.get('/ilan-pazari/:slug', (req, res) => {
+  res.sendFile(
+    path.join(__dirname, '../frodent/ilan-detay.html')
+  );
+});
+
 app.get('/', (req, res) => {
 
 res.sendFile(

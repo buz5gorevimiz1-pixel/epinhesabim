@@ -703,7 +703,10 @@
     const productIdFromQuery = urlParams.get('id');
     const rawPath = window.location.pathname.replace(/\/$/, '');
     const productIdFromPath = rawPath.split('/').pop();
-    const productId = productIdFromQuery || (productIdFromPath === 'ilan-detay.html' ? '' : productIdFromPath);
+    // SEO slug yapısı (/ilan-pazari/[slug]-[id]) için slug sonundaki ObjectId'yi çöz
+    const objectIdMatch = (productIdFromPath || '').match(/[a-f0-9]{24}$/i);
+    const resolvedPathId = objectIdMatch ? objectIdMatch[0] : productIdFromPath;
+    const productId = productIdFromQuery || (productIdFromPath === 'ilan-detay.html' ? '' : resolvedPathId);
     let currentProduct = null;
 
     function createBanner(message, type = 'error') {
