@@ -30,18 +30,20 @@ router.get('/', authenticate, requireAdmin, catchAsync(async (req, res) => {
 
 // GET /api/v2/listings/stats
 router.get('/stats', authenticate, requireAdmin, catchAsync(async (req, res) => {
-  const [pending, approved, rejected, featured] = await Promise.all([
+  const [pending, active, rejected, hidden, removed, featured] = await Promise.all([
     Product.countDocuments({ status: 'pending' }),
-    Product.countDocuments({ status: 'approved' }),
+    Product.countDocuments({ status: 'active' }),
     Product.countDocuments({ status: 'rejected' }),
+    Product.countDocuments({ status: 'hidden' }),
+    Product.countDocuments({ status: 'removed' }),
     Product.countDocuments({ featured: true })
   ]);
-  sendResponse(res, 200, { pending, approved, rejected, featured });
+  sendResponse(res, 200, { pending, active, rejected, hidden, removed, featured });
 }));
 
 // PATCH /api/v2/listings/:id/approve
 router.patch('/:id/approve', authenticate, requireAdmin, auditLog('LISTING_APPROVE', { targetType: 'listing' }), catchAsync(async (req, res) => {
-  const listing = await Product.findByIdAndUpdate(req.params.id, { status: 'approved', moderatedAt: new Date() }, { new: true });
+  const listing = await Product.findByIdAndUpdate(req.params.id, { status: 'active', moderatedAt: new Date() }, { new: true });
   if (!listing) throw new AppError('İlan bulunamadı.', 404);
   sendResponse(res, 200, { listing: { ...listing.toObject(), id: listing._id } }, 'İlan onaylandı.');
 }));
@@ -60,6 +62,35 @@ router.patch('/:id/feature', authenticate, requireAdmin, auditLog('LISTING_FEATU
   const listing = await Product.findByIdAndUpdate(req.params.id, { featured: !!featured }, { new: true });
   if (!listing) throw new AppError('İlan bulunamadı.', 404);
   sendResponse(res, 200, { listing: { ...listing.toObject(), id: listing._id } }, featured ? 'İlan öne çıkarıldı.' : 'Öne çıkarma kaldırıldı.');
+}));
+
+// PATCH /api/v2/listings/:id/activate
+router.patch('/:id/activate', authenticate, requireAdmin, auditLog('LISTING_ACTIVATE', { targetType: 'listing' }), catchAsync(async (req, res) => {
+  const listing = await Product.findByIdAndUpdate(req.params.id, { status: 'active', moderatedAt: new Date() }, { new: true });
+  if (!listing) throw new AppError('İlan bulunamadı.', 404);
+  sendResponse(res, 200, { listing: { ...listing.toObject(), id: listing._id } }, 'İlan aktif edildi.');
+}));
+
+// PATCH /api/v2/listings/:id/hide
+router.patch('/:id/hide', authenticate, requireAdmin, auditLog('LISTING_HIDE', { targetType: 'listing' }), catchAsync(async (req, res) => {
+  const listing = await Product.findByIdAndUpdate(req.params.id, { status: 'hidden', moderatedAt: new Date() }, { new: true });
+  if (!listing) throw new AppError('İlan bulunamadı.', 404);
+  sendResponse(res, 200, { listing: { ...listing.toObject(), id: listing._id } }, 'İlan gizlendi.');
+}));
+
+// PATCH /api/v2/listings/:id/remove
+router.patch('/:id/remove', authenticate, requireAdmin, auditLog('LISTING_REMOVE', { targetType: 'listing' }), catchAsync(async (req, res) => {
+  const { reason } = req.body;
+  const listing = await Product.findByIdAndUpdate(req.params.id, { status: 'removed', removeReason: reason, moderatedAt: new Date() }, { new: true });
+  if (!listing) throw new AppError('İlan bulunamadı.', 404);
+  sendResponse(res, 200, { listing: { ...listing.toObject(), id: listing._id } }, 'İlan kaldırıldı.');
+}));
+
+// DELETE /api/v2/listings/:id
+router.delete('/:id', authenticate, requireAdmin, auditLog('LISTING_DELETE', { targetType: 'listing' }), catchAsync(async (req, res) => {
+  const listing = await Product.findByIdAndDelete(req.params.id);
+  if (!listing) throw new AppError('İlan bulunamadı.', 404);
+  sendResponse(res, 200, {}, 'İlan kalıcı olarak silindi.');
 }));
 
 module.exports = router;

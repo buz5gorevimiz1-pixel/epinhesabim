@@ -55,7 +55,7 @@ router.get('/stats', authenticate, requireAdmin, catchAsync(async (req, res) => 
     Order.countDocuments({ createdAt: { $gte: today } }),
     Transaction.aggregate([{ $match: { status: 'completed' } }, { $group: { _id: null, total: { $sum: '$amount' } } }]),
     Transaction.aggregate([{ $match: { status: 'completed', createdAt: { $gte: today } } }, { $group: { _id: null, total: { $sum: '$amount' } } }]),
-    Product.countDocuments({ status: 'approved', saleStatus: 'available' }),
+    Product.countDocuments({ status: 'active', saleStatus: 'available' }),
     Product.countDocuments({ status: 'pending' }),
     Transaction.countDocuments({ status: 'flagged' }),
     Withdrawal.countDocuments({ status: 'pending' }),

@@ -201,10 +201,14 @@ export const usersApi = {
 
 export const listingsApi = {
   list: (params?: Record<string, string>) => api.get<{ listings: any[]; pagination: any }>("/listings" + (params ? "?" + new URLSearchParams(params).toString() : "")),
-  stats: () => api.get<{ pending: number; approved: number; rejected: number; featured: number }>("/listings/stats"),
+  stats: () => api.get<{ pending: number; approved: number; rejected: number; active: number; hidden: number; removed: number; featured: number }>("/listings/stats"),
   approve: (id: string) => api.patch(`/listings/${id}/approve`, {}),
   reject: (id: string, reason?: string) => api.patch(`/listings/${id}/reject`, { reason }),
   feature: (id: string, featured: boolean) => api.patch(`/listings/${id}/feature`, { featured }),
+  activate: (id: string) => api.patch(`/listings/${id}/activate`, {}),
+  hide: (id: string) => api.patch(`/listings/${id}/hide`, {}),
+  remove: (id: string, reason?: string) => api.patch(`/listings/${id}/remove`, { reason }),
+  delete: (id: string) => api.delete(`/listings/${id}`),
 };
 
 export const financeApi = {

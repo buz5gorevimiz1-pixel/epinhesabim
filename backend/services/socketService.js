@@ -91,6 +91,7 @@ function initSocketIO(server) {
         const allowed = [
           'https://epinhesabim.com',
           'https://www.epinhesabim.com',
+          'https://www.admin.epinhesabim.com',
         ];
         if (!origin || allowed.includes(origin)) {
           callback(null, true);

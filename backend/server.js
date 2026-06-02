@@ -743,7 +743,7 @@ req.params.id,
 
 {
 
-status:'approved',
+status:'active',
 saleStatus:'available'
 
 },
@@ -793,7 +793,7 @@ app.put('/api/admin/product-status/:id', verifyAdmin, async (req, res) => {
     const update = {};
 
     if (typeof status !== 'undefined') {
-      const allowedStatuses = ['pending', 'approved', 'rejected'];
+      const allowedStatuses = ['pending', 'active', 'rejected', 'hidden', 'removed'];
       if (!allowedStatuses.includes(status)) {
         return res.status(400).json({ error: 'Geçersiz ilan onay durumu.' });
       }
@@ -942,7 +942,7 @@ app.get('/api/admin/dashboard-summary', verifyAdmin, async (req, res) => {
   try {
     const usersCount = await User.countDocuments();
     const pendingProductsCount = await Product.countDocuments({ status: 'pending' });
-    const approvedProductsCount = await Product.countDocuments({ status: 'approved' });
+    const activeProductsCount = await Product.countDocuments({ status: 'active' });
     const totalOrders = await Order.countDocuments();
     const pendingOrders = await Order.countDocuments({ status: 'pending' });
     const unreadNotifications = await Notification.countDocuments({ read: false });
@@ -961,7 +961,7 @@ app.get('/api/admin/dashboard-summary', verifyAdmin, async (req, res) => {
     res.json({
       usersCount,
       pendingProductsCount,
-      approvedProductsCount,
+      activeProductsCount,
       totalOrders,
       pendingOrders,
       unreadNotifications,
@@ -1056,7 +1056,7 @@ app.put('/api/admin/settings', verifyAdmin, async (req, res) => {
 app.get('/api/products', async (req, res) => {
   try {
     if (mongoConnected) {
-      const products = await Product.find({ status: 'approved' }).sort({ createdAt: -1 }).lean();
+      const products = await Product.find({ status: 'active' }).sort({ createdAt: -1 }).limit(12).lean();
       const mappedProducts = products.map((product) => ({
         ...product,
         id: product._id
@@ -1074,7 +1074,7 @@ app.get('/api/products', async (req, res) => {
 app.get('/api/listings', async (req, res) => {
   try {
     const { category, sort = 'createdAt', order = 'desc', page = 1, limit = 20 } = req.query;
-    const query = { status: 'approved' };
+    const query = { status: 'active' };
     if (category) {
       query.categorySlug = normalizeCategorySlug(category);
     }
@@ -1084,17 +1084,19 @@ app.get('/api/listings', async (req, res) => {
     sortObj[sort] = order === 'asc' ? 1 : -1;
 
     if (mongoConnected) {
+      // When category is specified, show all listings without limit (for category pages)
+      const finalLimit = category ? 0 : parseInt(limit);
       const [products, total] = await Promise.all([
-        Product.find(query).sort(sortObj).skip(skip).limit(parseInt(limit)).lean(),
+        Product.find(query).sort(sortObj).skip(skip).limit(finalLimit).lean(),
         Product.countDocuments(query)
       ]);
       return res.json({
         listings: products.map(p => ({ ...p, id: p._id })),
-        pagination: { page: parseInt(page), limit: parseInt(limit), total, totalPages: Math.ceil(total / parseInt(limit)) }
+        pagination: { page: parseInt(page), limit: finalLimit || total, total, totalPages: finalLimit ? Math.ceil(total / parseInt(limit)) : 1 }
       });
     }
 
-    let filtered = inMemoryStorage.products.filter(p => p.status === 'approved');
+    let filtered = inMemoryStorage.products.filter(p => p.status === 'active');
     if (category) filtered = filtered.filter(p => p.categorySlug === normalizeCategorySlug(category));
     return res.json({ listings: filtered, pagination: { page: 1, limit: filtered.length, total: filtered.length, totalPages: 1 } });
   } catch (err) {
@@ -1680,7 +1682,7 @@ app.post('/api/orders/create', verifyToken, async (req, res) => {
     }
 
     const saleStatus = product.saleStatus || 'available';
-    if (product.status !== 'approved') {
+    if (product.status !== 'active') {
       return res.status(400).json({ error: 'Bu ilan satışa açık değil.' });
     }
 

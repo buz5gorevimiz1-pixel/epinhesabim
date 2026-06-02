@@ -52,7 +52,10 @@ type:String,
 enum:[
 'pending',
 'approved',
-'rejected'
+'rejected',
+'active',
+'hidden',
+'removed'
 ],
 default:'pending'
 },

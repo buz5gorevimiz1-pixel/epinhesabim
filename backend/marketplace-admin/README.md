@@ -14,7 +14,7 @@ pnpm dev
 bun dev
 ```
 
-Open [http://http://epinhesabim.com](http://http://epinhesabim.com) with your browser to see the result.
+Open [http://epinhesabim.com](http://epinhesabim.com) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
