@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
 
     <style>
         :root {
@@ -495,7 +496,101 @@
         }
         .toggle-switch input {
             opacity: 0;
-            width: 0;
+            width: 0; height: 0; }
+
+        /* Live Support Styles */
+        .filter-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        .filter-count {
+            margin-left: 4px;
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .ticket-item {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .ticket-item:hover, .ticket-item.active {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: var(--primary);
+        }
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .ticket-id {
+            font-size: 11px;
+            font-family: monospace;
+            color: var(--text-muted);
+        }
+        .ticket-subject {
+            font-size: 14px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .ticket-meta {
+            display: flex;
+            gap: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .chat-message {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        .chat-message.admin {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid var(--primary);
+            color: #fff;
+            align-self: flex-start;
+        }
+        .chat-message.visitor {
+            background: rgba(236, 72, 153, 0.2);
+            border: 1px solid var(--secondary);
+            color: #fff;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .chat-message.system {
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 11px;
+            text-align: center;
+            margin: 8px auto;
+        }
+        .chat-message-time {
+            font-size: 10px;
+            opacity: 0.6;
+            margin-top: 4px;
+        }
+
             height: 0;
         }
         .toggle-slider {
@@ -564,6 +659,9 @@
             <button class="menu-item" data-section="security"><i class="fas fa-shield-alt"></i> <span>Güvenlik</span></button>
             <button class="menu-item" data-section="settings"><i class="fas fa-cog"></i> <span>Ayarlar</span></button>
             <button class="menu-item" data-section="adminManagement" id="adminMenuItem" style="display:none;"><i class="fas fa-user-shield"></i> <span>Admin Yönetimi</span></button>
+
+            <div class="menu-title">Destek</div>
+            <button class="menu-item" data-section="liveSupport"><i class="fas fa-headset"></i> <span>Canlı Destek</span> <span class="pending-badge" id="supportBadge" style="display:none">0</span></button>
 
             <div style="margin-top: 40px;"></div>
             <button class="menu-item" onclick="logoutAdmin()" style="color: var(--danger);"><i class="fas fa-sign-out-alt"></i> <span>Çıkış Yap</span></button>
@@ -680,6 +778,54 @@
                         <span class="panel-title">Tüm Kullanıcılar (Rol Yönetimi)</span>
                     </div>
                     <div id="adminUserRolesContent"><div class="loading-state"><div class="spinner"></div><p>Yükleniyor...</p></div></div>
+                </div>
+            </div>
+
+            <!-- LIVE SUPPORT SECTION -->
+            <div class="section" id="liveSupportSection">
+                <h1 class="page-title">Canlı Destek</h1>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                    <p style="color: var(--text-muted); font-size: 14px;">Database tabanlı persistent support sistemi</p>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span id="connectionStatus" class="status-pill">Bağlantı Yok</span>
+                    </div>
+                </div>
+
+                <!-- Filter tabs -->
+                <div style="display: flex; gap: 8px; margin-bottom: 20px;">
+                    <button class="filter-btn active" data-filter="all" onclick="setSupportFilter('all')">Tümü <span class="filter-count" id="filterCountAll">0</span></button>
+                    <button class="filter-btn" data-filter="waiting" onclick="setSupportFilter('waiting')">Bekleyen <span class="filter-count" id="filterCountWaiting">0</span></button>
+                    <button class="filter-btn" data-filter="active" onclick="setSupportFilter('active')">Aktif <span class="filter-count" id="filterCountActive">0</span></button>
+                    <button class="filter-btn" data-filter="closed" onclick="setSupportFilter('closed')">Kapalı <span class="filter-count" id="filterCountClosed">0</span></button>
+                </div>
+
+                <div style="display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                    <!-- Ticket list -->
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <span class="panel-title">Destek Talepleri</span>
+                        </div>
+                        <div id="ticketsList" style="max-height: 500px; overflow-y: auto;">
+                            <div class="empty-state"><i class="fas fa-inbox"></i><p>Ticket bulunmuyor</p></div>
+                        </div>
+                    </div>
+
+                    <!-- Chat panel -->
+                    <div class="panel-card" style="display: flex; flex-direction: column;">
+                        <div class="panel-header">
+                            <span class="panel-title" id="chatTitle">Sohbet</span>
+                            <div id="chatActions" style="display: none; gap: 8px;">
+                                <button class="btn btn-danger btn-sm" onclick="closeTicket()"><i class="fas fa-times"></i> Kapat</button>
+                            </div>
+                        </div>
+                        <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 16px; min-height: 300px; max-height: 400px; display: flex; flex-direction: column; gap: 8px;">
+                            <div class="empty-state" style="padding: 20px;"><i class="fas fa-comments"></i><p>Bir ticket seçin</p></div>
+                        </div>
+                        <div id="chatInputArea" style="padding: 16px; border-top: 1px solid var(--border-color); display: flex; gap: 8px;">
+                            <input type="text" id="chatInput" class="form-control" placeholder="Mesaj yazın..." disabled>
+                            <button class="btn btn-primary" onclick="sendMessage()" id="sendBtn" disabled><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -814,7 +960,7 @@
     // =====================
     // GLOBAL CONFIG
     // =====================
-    const API_BASE = 'http://http://epinhesabim.com/api/admin';
+    const API_BASE = '/api/admin';
     let USE_MOCK_USERS = false;
     if (typeof window !== 'undefined' && typeof window.__USE_MOCK_USERS !== 'undefined') {
         USE_MOCK_USERS = !!window.__USE_MOCK_USERS;
@@ -862,7 +1008,6 @@
             active: { text: 'Aktif', className: 'status-success' },
             pending: { text: 'Beklemede', className: 'status-pending' },
             banned: { text: 'Banlı', className: 'status-danger' },
-            approved: { text: 'Onaylandı', className: 'status-success' },
             rejected: { text: 'Reddedildi', className: 'status-danger' },
             available: { text: 'Aktif', className: 'status-success' },
             reserved: { text: 'Pasif', className: 'status-pending' },
@@ -946,7 +1091,7 @@
                 if (approveMatch && options.method === 'PUT') {
                     const id = approveMatch[1];
                     const p = MOCK_PRODUCTS.find(x => x._id === id);
-                    if (p) { p.status = 'approved'; p.saleStatus = 'available'; return { success: true }; }
+                    if (p) { p.status = 'active'; p.saleStatus = 'available'; return { success: true }; }
                     throw new Error('Product not found');
                 }
                 const rejectMatch = endpoint.match(/^\/reject-product\/(.+)$/);
@@ -1013,7 +1158,16 @@
         systemSection: loadSystemSection,
         securitySection: loadSecuritySection,
         settingsSection: loadSettingsSection,
-        adminManagementSection: loadAdminManagement
+        adminManagementSection: loadAdminManagement,
+        liveSupportSection: function() {
+            // Socket zaten DOMContentLoaded'da başlatıldı
+            // Sadece ticket listesini güncelle
+            if (supportSocket && supportSocket.connected) {
+                // Ticket listesi zaten socket'ten gelecek
+            } else {
+                initSupportSocket();
+            }
+        }
     };
 
     function showSection(sectionId) {
@@ -1151,9 +1305,9 @@
                         '<p><strong>Satış:</strong> <span class="status-pill ' + saleSt.className + '">' + saleSt.text + '</span></p>' +
                     '</div>' +
                     '<div class="pending-actions">' +
-                        (product.status !== 'approved' ? '<button class="btn btn-success btn-sm" onclick="approveProduct(' + jsString(product._id) + ', ' + jsString(product.title) + ')"><i class="fas fa-check"></i> Onayla</button>' : '') +
-                        (product.status === 'approved' && product.saleStatus !== 'available' ? '<button class="btn btn-success btn-sm" onclick="setProductActive(' + jsString(product._id) + ', ' + jsString(product.title) + ')"><i class="fas fa-play"></i> Aktif Et</button>' : '') +
-                        (product.status === 'approved' && product.saleStatus === 'available' ? '<button class="btn btn-warning btn-sm" onclick="setProductPassive(' + jsString(product._id) + ', ' + jsString(product.title) + ')"><i class="fas fa-pause"></i> Pasif Et</button>' : '') +
+                        (product.status !== 'active' ? '<button class="btn btn-success btn-sm" onclick="approveProduct(' + jsString(product._id) + ', ' + jsString(product.title) + ')"><i class="fas fa-check"></i> Onayla</button>' : '') +
+                        (product.status === 'active' && product.saleStatus !== 'available' ? '<button class="btn btn-success btn-sm" onclick="setProductActive(' + jsString(product._id) + ', ' + jsString(product.title) + ')"><i class="fas fa-play"></i> Aktif Et</button>' : '') +
+                        (product.status === 'active' && product.saleStatus === 'available' ? '<button class="btn btn-warning btn-sm" onclick="setProductPassive(' + jsString(product._id) + ', ' + jsString(product.title) + ')"><i class="fas fa-pause"></i> Pasif Et</button>' : '') +
                         (product.status !== 'rejected' ? '<button class="btn btn-danger btn-sm" onclick="rejectProduct(' + jsString(product._id) + ', ' + jsString(product.title) + ')"><i class="fas fa-times"></i> Reddet</button>' : '') +
                         '<button class="btn btn-secondary btn-sm" onclick="openProductModal(' + jsString(product._id) + ')"><i class="fas fa-eye"></i> Detay</button>' +
                     '</div>' +
@@ -1443,7 +1597,7 @@
 
     async function setProductActive(id, title) {
         try {
-            await apiCall('/product-status/' + id, { method: 'PUT', body: JSON.stringify({ status: 'approved', saleStatus: 'available' }) });
+            await apiCall('/product-status/' + id, { method: 'PUT', body: JSON.stringify({ status: 'active', saleStatus: 'available' }) });
             addNotification('Başarılı', title + ' aktif edildi', 'fa-play-circle', 'success');
             loadPendingProducts();
             closeModal('productModal');
@@ -1452,7 +1606,7 @@
 
     async function setProductPassive(id, title) {
         try {
-            await apiCall('/product-status/' + id, { method: 'PUT', body: JSON.stringify({ status: 'approved', saleStatus: 'reserved' }) });
+            await apiCall('/product-status/' + id, { method: 'PUT', body: JSON.stringify({ status: 'active', saleStatus: 'reserved' }) });
             addNotification('Başarılı', title + ' pasif edildi', 'fa-pause-circle', 'success');
             loadPendingProducts();
             closeModal('productModal');
@@ -1485,9 +1639,9 @@
                     '</div>' +
                 '</div>' +
                 '<div class="modal-footer" style="margin-top:20px;">' +
-                    (product.status !== 'approved' ? '<button class="btn btn-success" onclick="approveProduct(' + jsString(id) + ', ' + jsString(product.title) + ')"><i class="fas fa-check"></i> Onayla</button>' : '') +
-                    (product.status === 'approved' && product.saleStatus !== 'available' ? '<button class="btn btn-success" onclick="setProductActive(' + jsString(id) + ', ' + jsString(product.title) + ')"><i class="fas fa-play"></i> Aktif Et</button>' : '') +
-                    (product.status === 'approved' && product.saleStatus === 'available' ? '<button class="btn btn-warning" onclick="setProductPassive(' + jsString(id) + ', ' + jsString(product.title) + ')"><i class="fas fa-pause"></i> Pasif Et</button>' : '') +
+                    (product.status !== 'active' ? '<button class="btn btn-success" onclick="approveProduct(' + jsString(id) + ', ' + jsString(product.title) + ')"><i class="fas fa-check"></i> Onayla</button>' : '') +
+                    (product.status === 'active' && product.saleStatus !== 'available' ? '<button class="btn btn-success" onclick="setProductActive(' + jsString(id) + ', ' + jsString(product.title) + ')"><i class="fas fa-play"></i> Aktif Et</button>' : '') +
+                    (product.status === 'active' && product.saleStatus === 'available' ? '<button class="btn btn-warning" onclick="setProductPassive(' + jsString(id) + ', ' + jsString(product.title) + ')"><i class="fas fa-pause"></i> Pasif Et</button>' : '') +
                     (product.status !== 'rejected' ? '<button class="btn btn-danger" onclick="rejectProduct(' + jsString(id) + ', ' + jsString(product.title) + ')"><i class="fas fa-times"></i> Reddet</button>' : '') +
                     '<button class="btn btn-secondary" onclick="closeModal(\'productModal\')"><i class="fas fa-times"></i> Kapat</button>' +
                 '</div>';
@@ -1522,7 +1676,7 @@
             return false;
         }
         try {
-            const response = await fetch('http://http://epinhesabim.com/api/auth/me', {
+            const response = await fetch('/api/auth/me', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             if (!response.ok) throw new Error('Yetkilendirme hatası');
@@ -1552,6 +1706,265 @@
             return false;
         }
     }
+
+    // =====================
+    // LIVE SUPPORT - SOCKET
+    // =====================
+    let supportSocket = null;
+    let tickets = [];
+    let selectedTicketId = null;
+    let messages = [];
+    let currentFilter = 'all';
+
+    function initSupportSocket() {
+        if (typeof io === 'undefined') {
+            console.error('[Support] Socket.io not loaded');
+            return;
+        }
+
+        supportSocket = io('https://epinhesabim.com', {
+            path: '/socket.io',
+            query: { type: 'admin' },
+            transports: ['websocket', 'polling'],
+            reconnection: true,
+            reconnectionDelay: 1000,
+            reconnectionAttempts: 10
+        });
+
+        supportSocket.on('connect', () => {
+            console.log('[Support] Connected:', supportSocket.id);
+            updateConnectionStatus(true);
+        });
+
+        supportSocket.on('disconnect', () => {
+            console.log('[Support] Disconnected');
+            updateConnectionStatus(false);
+        });
+
+        supportSocket.on('connect_error', () => {
+            updateConnectionStatus(false);
+        });
+
+        // Ticket listesi al
+        supportSocket.on('support:tickets', (data) => {
+            tickets = data || [];
+            renderTickets();
+            updateFilterCounts();
+        });
+
+        // Ticket güncellemesi
+        supportSocket.on('support:ticket-update', (ticket) => {
+            const index = tickets.findIndex(t => t.ticketId === ticket.ticketId);
+            if (index >= 0) {
+                tickets[index] = ticket;
+            } else {
+                tickets.push(ticket);
+            }
+            renderTickets();
+            updateFilterCounts();
+        });
+
+        // Mesaj geçmişi
+        supportSocket.on('support:history', (data) => {
+            if (data.ticketId === selectedTicketId) {
+                messages = (data.messages || []).map(m => ({
+                    id: m._id || String(Date.now()),
+                    sender: m.sender === 'admin' ? 'admin' : 'visitor',
+                    text: m.text,
+                    timestamp: m.createdAt
+                }));
+                renderMessages();
+                scrollToChatBottom();
+            }
+        });
+
+        // Yeni mesaj
+        supportSocket.on('support:message', (msg) => {
+            messages.push(msg);
+            renderMessages();
+            scrollToChatBottom();
+        });
+    }
+
+    function updateConnectionStatus(connected) {
+        const status = document.getElementById('connectionStatus');
+        if (status) {
+            status.textContent = connected ? 'Bağlı' : 'Bağlantı Yok';
+            status.className = 'status-pill ' + (connected ? 'status-success' : 'status-danger');
+        }
+    }
+
+    function setSupportFilter(filter) {
+        currentFilter = filter;
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.filter === filter);
+        });
+        renderTickets();
+    }
+
+    function updateFilterCounts() {
+        document.getElementById('filterCountAll').textContent = tickets.length;
+        document.getElementById('filterCountWaiting').textContent = tickets.filter(t => t.status === 'waiting').length;
+        document.getElementById('filterCountActive').textContent = tickets.filter(t => t.status === 'active').length;
+        document.getElementById('filterCountClosed').textContent = tickets.filter(t => t.status === 'closed').length;
+    }
+
+    function getFilteredTickets() {
+        if (currentFilter === 'all') return tickets;
+        return tickets.filter(t => t.status === currentFilter);
+    }
+
+    function getStatusBadge(status) {
+        switch (status) {
+            case 'waiting': return '<span class="status-pill status-pending">Bekliyor</span>';
+            case 'active': return '<span class="status-pill status-success">Aktif</span>';
+            case 'closed': return '<span class="status-pill status-danger">Kapalı</span>';
+            default: return '<span class="status-pill">' + status + '</span>';
+        }
+    }
+
+    function renderTickets() {
+        const container = document.getElementById('ticketsList');
+        const filtered = getFilteredTickets();
+
+        if (!filtered || filtered.length === 0) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>Ticket bulunmuyor</p></div>';
+            return;
+        }
+
+        container.innerHTML = filtered.map(t => `
+            <div class="ticket-item ${selectedTicketId === t.ticketId ? 'active' : ''}" onclick="selectTicket('${t.ticketId}')">
+                <div class="ticket-header">
+                    <span class="ticket-id">${t.ticketId}</span>
+                    ${getStatusBadge(t.status)}
+                </div>
+                <div class="ticket-subject">${t.lastMessagePreview || t.subject}</div>
+                <div class="ticket-meta">
+                    <span>${t.visitorIp}</span>
+                    <span>·</span>
+                    <span>${t.visitorBrowser}</span>
+                    <span>·</span>
+                    <span>${t.messageCount} mesaj</span>
+                </div>
+                ${t.unreadByAdmin ? '<span class="status-pill status-danger" style="margin-top:8px;display:inline-block;font-size:11px;">Yeni mesaj</span>' : ''}
+                ${t.status === 'waiting' ? '<button class="btn btn-primary btn-sm" style="margin-top:8px;width:100%;" onclick="event.stopPropagation(); takeTicket(\'' + t.ticketId + '\')"><i class="fas fa-hand-paper"></i> Al</button>' : ''}
+                ${t.status === 'closed' ? `
+                    <div style="margin-top:8px;display:flex;gap:8px;">
+                        <button class="btn btn-success btn-sm" style="flex:1;" onclick="event.stopPropagation(); reopenTicket('${t.ticketId}')"><i class="fas fa-redo"></i> Yeniden Aç</button>
+                        <button class="btn btn-danger btn-sm" style="flex:1;" onclick="event.stopPropagation(); deleteTicket('${t.ticketId}')"><i class="fas fa-trash"></i> Sil</button>
+                    </div>
+                ` : ''}
+            </div>
+        `).join('');
+
+        // Badge güncelle
+        const badge = document.getElementById('supportBadge');
+        if (badge) {
+            const waitingCount = tickets.filter(t => t.status === 'waiting').length;
+            badge.textContent = waitingCount;
+            badge.style.display = waitingCount > 0 ? 'inline-block' : 'none';
+        }
+    }
+
+    function selectTicket(ticketId) {
+        selectedTicketId = ticketId;
+        messages = [];
+        renderTickets();
+        document.getElementById('chatTitle').textContent = 'Sohbet - ' + ticketId;
+        document.getElementById('chatActions').style.display = 'flex';
+        document.getElementById('chatInput').disabled = false;
+        document.getElementById('sendBtn').disabled = false;
+        document.getElementById('chatMessages').innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Yükleniyor...</p></div>';
+
+        if (supportSocket && supportSocket.connected) {
+            supportSocket.emit('support:load-history', { ticketId });
+        }
+    }
+
+    function takeTicket(ticketId) {
+        if (supportSocket && supportSocket.connected) {
+            supportSocket.emit('support:take', { ticketId });
+            selectTicket(ticketId);
+        }
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text || !selectedTicketId || !supportSocket || !supportSocket.connected) return;
+
+        supportSocket.emit('support:admin-message', { ticketId: selectedTicketId, text });
+        messages.push({
+            id: Date.now().toString(),
+            sender: 'admin',
+            text,
+            timestamp: new Date().toISOString()
+        });
+        renderMessages();
+        scrollToChatBottom();
+        input.value = '';
+    }
+
+    function closeTicket() {
+        if (!selectedTicketId || !supportSocket || !supportSocket.connected) return;
+        if (!confirm('Bu ticket\'ı kapatmak istediğinize emin misiniz?')) return;
+
+        supportSocket.emit('support:end', { ticketId: selectedTicketId });
+        selectedTicketId = null;
+        messages = [];
+        renderTickets();
+        document.getElementById('chatTitle').textContent = 'Sohbet';
+        document.getElementById('chatActions').style.display = 'none';
+        document.getElementById('chatInput').disabled = true;
+        document.getElementById('sendBtn').disabled = true;
+        document.getElementById('chatMessages').innerHTML = '<div class="empty-state" style="padding:20px;"><i class="fas fa-comments"></i><p>Bir ticket seçin</p></div>';
+    }
+
+    function reopenTicket(ticketId) {
+        if (!supportSocket || !supportSocket.connected) return;
+        supportSocket.emit('support:reopen', { ticketId });
+    }
+
+    function deleteTicket(ticketId) {
+        if (!supportSocket || !supportSocket.connected) return;
+        if (!confirm('Bu ticket\'ı kalıcı olarak silmek istediğinize emin misiniz?')) return;
+
+        supportSocket.emit('support:delete', { ticketId });
+        tickets = tickets.filter(t => t.ticketId !== ticketId);
+        if (selectedTicketId === ticketId) {
+            selectedTicketId = null;
+            messages = [];
+            document.getElementById('chatTitle').textContent = 'Sohbet';
+            document.getElementById('chatActions').style.display = 'none';
+            document.getElementById('chatInput').disabled = true;
+            document.getElementById('sendBtn').disabled = true;
+            document.getElementById('chatMessages').innerHTML = '<div class="empty-state" style="padding:20px;"><i class="fas fa-comments"></i><p>Bir ticket seçin</p></div>';
+        }
+        renderTickets();
+    }
+
+    function renderMessages() {
+        const container = document.getElementById('chatMessages');
+        if (!container || messages.length === 0) {
+            container.innerHTML = '<div class="empty-state" style="padding:20px;"><i class="fas fa-comments"></i><p>Henüz mesaj yok</p></div>';
+            return;
+        }
+
+        container.innerHTML = messages.map(m => `
+            <div class="chat-message ${m.sender}">
+                <div style="margin-bottom:4px;">${escapeHtml(m.text)}</div>
+                <div class="chat-message-time">${new Date(m.timestamp).toLocaleString('tr-TR')}</div>
+            </div>
+        `).join('');
+    }
+
+    function scrollToChatBottom() {
+        const container = document.getElementById('chatMessages');
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
+    }
+
 
     // =====================
     // ADMIN MANAGEMENT
@@ -1713,7 +2126,19 @@
     // =====================
     document.addEventListener('DOMContentLoaded', async function() {
         const isAdmin = await checkAdminAuth();
-        if (isAdmin) loadDashboard();
+        if (isAdmin) {
+            loadDashboard();
+            initSupportSocket();
+
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+            }
+        }
     });
     </script>
 </body>

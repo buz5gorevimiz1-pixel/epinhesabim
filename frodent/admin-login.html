@@ -278,7 +278,7 @@
         (function checkExistingAuth() {
             const adminToken = localStorage.getItem('adminToken');
             if (adminToken) {
-                fetch('http://http://epinhesabim.com/api/auth/me', {
+                fetch('/api/auth/me', {
                     headers: { 'Authorization': 'Bearer ' + adminToken }
                 })
                 .then(r => r.json())
@@ -325,7 +325,7 @@
             btnText.innerHTML = '<div class="spinner"></div>';
 
             try {
-                const response = await fetch('http://http://epinhesabim.com/api/admin/login', {
+                const response = await fetch('/api/admin/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ identifier, password })

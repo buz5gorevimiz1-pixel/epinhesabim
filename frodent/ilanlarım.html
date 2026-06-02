@@ -762,8 +762,8 @@
 
         function updateStats() {
             document.getElementById('totalItemsCount').textContent = listings.length;
-            document.getElementById('activeItemsCount').textContent = listings.filter(item => item.status === 'approved' && item.saleStatus === 'available').length;
-            document.getElementById('passiveItemsCount').textContent = listings.filter(item => item.status !== 'approved' || item.saleStatus !== 'available').length;
+            document.getElementById('activeItemsCount').textContent = listings.filter(item => item.status === 'active' && item.saleStatus === 'available').length;
+            document.getElementById('passiveItemsCount').textContent = listings.filter(item => item.status !== 'active' || item.saleStatus !== 'available').length;
         }
 
         function renderTable() {
@@ -796,7 +796,7 @@
                 let statusClass = 'status-passive';
                 let statusText = 'Beklemede';
                 
-                if (dbStatus === 'approved') {
+                if (dbStatus === 'active') {
                     if (saleStatus === 'available') {
                         statusClass = 'status-active';
                         statusText = 'Aktif';

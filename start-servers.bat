@@ -8,7 +8,7 @@ echo Frontend sunucusu başlatılıyor (Port 5500)...
 start cmd /k "cd frodent && node server.js"
 
 echo.
-echo Backend: http://http://epinhesabim.com
+echo Backend: http://epinhesabim.com
 echo Frontend: http://localhost:5500
 echo.
 pause
