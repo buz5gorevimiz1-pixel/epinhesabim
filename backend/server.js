@@ -1073,9 +1073,16 @@ app.get('/api/products', async (req, res) => {
 
 app.get('/api/listings', async (req, res) => {
   try {
-    const { category, sort = 'createdAt', order = 'desc', page = 1, limit = 20 } = req.query;
+    const { category, game, sort = 'createdAt', order = 'desc', page = 1, limit = 20 } = req.query;
     const query = { status: 'active' };
-    if (category) {
+    if (game === 'pubg') {
+      query.$or = [
+        { categorySlug: { $regex: 'pubg', $options: 'i' } },
+        { category: { $regex: 'pubg', $options: 'i' } },
+        { title: { $regex: 'pubg', $options: 'i' } },
+        { description: { $regex: 'pubg', $options: 'i' } }
+      ];
+    } else if (category) {
       query.categorySlug = normalizeCategorySlug(category);
     }
 
@@ -1084,20 +1091,36 @@ app.get('/api/listings', async (req, res) => {
     sortObj[sort] = order === 'asc' ? 1 : -1;
 
     if (mongoConnected) {
-      // When category is specified, show all listings without limit (for category pages)
-      const finalLimit = category ? 0 : parseInt(limit);
+      const unlimited = Boolean(category || game === 'pubg');
+      let findQuery = Product.find(query).sort(sortObj).skip(skip);
+      if (!unlimited) {
+        findQuery = findQuery.limit(parseInt(limit) || 20);
+      }
       const [products, total] = await Promise.all([
-        Product.find(query).sort(sortObj).skip(skip).limit(finalLimit).lean(),
+        findQuery.lean(),
         Product.countDocuments(query)
       ]);
+      const parsedLimit = parseInt(limit) || 20;
       return res.json({
         listings: products.map(p => ({ ...p, id: p._id })),
-        pagination: { page: parseInt(page), limit: finalLimit || total, total, totalPages: finalLimit ? Math.ceil(total / parseInt(limit)) : 1 }
+        pagination: {
+          page: parseInt(page),
+          limit: unlimited ? total : parsedLimit,
+          total,
+          totalPages: unlimited ? 1 : Math.ceil(total / parsedLimit)
+        }
       });
     }
 
     let filtered = inMemoryStorage.products.filter(p => p.status === 'active');
-    if (category) filtered = filtered.filter(p => p.categorySlug === normalizeCategorySlug(category));
+    if (game === 'pubg') {
+      filtered = filtered.filter((p) => {
+        const blob = ((p.categorySlug || '') + ' ' + (p.category || '') + ' ' + (p.title || '') + ' ' + (p.description || '')).toLowerCase();
+        return blob.includes('pubg');
+      });
+    } else if (category) {
+      filtered = filtered.filter(p => p.categorySlug === normalizeCategorySlug(category));
+    }
     return res.json({ listings: filtered, pagination: { page: 1, limit: filtered.length, total: filtered.length, totalPages: 1 } });
   } catch (err) {
     console.error('Listings error:', err);
@@ -1255,6 +1278,12 @@ res.sendFile(
 path.join(__dirname,'../frodent/ilan-olustur.html')
 );
 
+});
+
+app.get('/pubg-portali', (req, res) => {
+  res.sendFile(
+    path.join(__dirname, '../frodent/pubg-portali.html')
+  );
 });
 
 app.get('/ilan/:id', (req, res) => {

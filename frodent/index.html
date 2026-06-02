@@ -17,6 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/game-portals.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
         
@@ -1571,25 +1572,29 @@
         @media (max-width: 768px) {
             .header-content {
                 display: grid;
-                grid-template-columns: 40px minmax(0, 1fr) auto;
+                grid-template-columns: auto 1fr auto;
                 align-items: center;
-                column-gap: 10px;
+                column-gap: 8px;
             }
 
             .logo-section {
                 justify-self: center;
                 min-width: 0;
+                width: 100%;
+                display: flex;
+                justify-content: center;
             }
 
             .logo-section a {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                width: 100%;
             }
 
             .logo-section img {
-                height: 32px !important;
-                max-width: 150px !important;
+                height: 40px !important;
+                max-width: 200px !important;
                 object-fit: contain;
             }
 
@@ -1605,11 +1610,11 @@
                 justify-self: end;
                 display: flex;
                 align-items: center;
-                gap: 6px;
+                gap: 4px;
             }
 
             .header-top {
-                padding: 8px 16px;
+                padding: 6px 10px;
             }
 
             .header-nav {
@@ -5485,6 +5490,62 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
         </section>
+
+        <!-- OYUN PORTALLARI -->
+        <section class="game-portals-section" aria-labelledby="game-portals-title">
+            <div class="container">
+                <div class="game-portals-header">
+                    <div class="game-portals-heading">
+                        <span class="game-portals-icon" aria-hidden="true"><i class="ri-sparkling-2-fill"></i></span>
+                        <h2 class="game-portals-title" id="game-portals-title">OYUN PORTALLARI</h2>
+                    </div>
+                    <a href="katagoriler2.html" class="game-portals-all">
+                        <span>Tümünü Gör</span>
+                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="game-portals-track">
+                    <a href="kategori-detay.html?slug=PUBG" class="game-portal-card game-portal-card--pubg" title="PUBG Portalı">
+                        <img class="game-portal-bg" src="assets/img/sliders/69d2c9ad110c0_1775421869.png" alt="" loading="lazy" decoding="async">
+                        <div class="game-portal-content">
+                            <div>
+                                <span class="game-portal-name">PUBG</span>
+                                <span class="game-portal-label">PORTALI</span>
+                            </div>
+                            <span class="game-portal-action" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
+                        </div>
+                    </a>
+                    <a href="kategori-detay.html?slug=valorant" class="game-portal-card game-portal-card--valorant" title="Valorant Portalı">
+                        <img class="game-portal-bg" src="assets/img/sliders/698ba356dfb2c_1770758998.png" alt="" loading="lazy" decoding="async">
+                        <div class="game-portal-content">
+                            <div>
+                                <span class="game-portal-name">VALORANT</span>
+                                <span class="game-portal-label">PORTALI</span>
+                            </div>
+                            <span class="game-portal-action" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
+                        </div>
+                    </a>
+                    <a href="kategori-detay.html?slug=metin2" class="game-portal-card game-portal-card--metin2 game-portal-card--gradient" title="Metin2 Portalı">
+                        <div class="game-portal-content">
+                            <div>
+                                <span class="game-portal-name">METIN2</span>
+                                <span class="game-portal-label">PORTALI</span>
+                            </div>
+                            <span class="game-portal-action" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
+                        </div>
+                    </a>
+                    <a href="kategori-detay.html?slug=knight-online" class="game-portal-card game-portal-card--knight game-portal-card--gradient" title="Knight Portalı">
+                        <div class="game-portal-content">
+                            <div>
+                                <span class="game-portal-name">KNIGHT</span>
+                                <span class="game-portal-label">PORTALI</span>
+                            </div>
+                            <span class="game-portal-action" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
         
         
 <!-- Listings (Homepage) -->
@@ -5492,12 +5553,12 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="container">
     <div class="tabs-header" style="gap:12px; align-items:center;">
       <div class="tabs-left">
-        <button class="tab-btn active" type="button" style="pointer-events:none;">
+        <button class="tab-btn active" type="button" data-listings-tab="home" aria-pressed="true">
           <span class="tab-icon"><i class="fas fa-list"></i></span>
           <span>Bütün İlanlar</span>
         </button>
       </div>
-      <a href="/ilan-pazari" class="tabs-all-btn"><i class="fas fa-store"></i>&nbsp;İlan Pazarı</a>
+      <button type="button" class="tabs-all-btn" data-listings-tab="market" aria-pressed="false"><i class="fas fa-store"></i>&nbsp;İlan Pazarı</button>
     </div>
 
     <!-- INLINE CSS (theme-proof) -->
@@ -5636,6 +5697,17 @@ document.addEventListener('DOMContentLoaded', function() {
         align-items:center !important;
         justify-content:center !important;
         margin-top:0 !important;
+        cursor:pointer;
+        font:inherit;
+        font-weight:600;
+      }
+      .tabs-section .tabs-all-btn.active{
+        color:#a78bfa !important;
+        border-color:#8b5cf6 !important;
+        background:rgba(139,92,246,0.12) !important;
+      }
+      [data-theme="light"] .tabs-section .tabs-all-btn.active{
+        color:#6d28d9 !important;
       }
       @media(max-width:520px){
         .tabs-section .tabs-header{
@@ -5726,6 +5798,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 window._allProducts = [];
+window._listingsTab = 'home';
+const LISTINGS_HOME_LIMIT = 12;
+
+function normalizeListingProduct(p) {
+    return {
+        ...p,
+        id: p.id || p._id,
+        sellerName: p.sellerName || 'Anonim'
+    };
+}
+
+function getListingsForCurrentTab(products) {
+    const list = products || window._allProducts;
+    if (window._listingsTab === 'market') return list;
+    return list.slice(0, LISTINGS_HOME_LIMIT);
+}
 
 function renderProducts(products, containerId) {
     const container = document.getElementById(containerId || 'ilanlar-kutusu');
@@ -5758,30 +5846,56 @@ function renderProducts(products, containerId) {
     `).join('');
 }
 
-function filterProducts(query) {
+function applyListingsView(query) {
     const q = (query || '').toLowerCase().trim();
-    if (!q) {
-        renderProducts(window._allProducts);
-        return;
+    let source = window._allProducts;
+    if (q) {
+        source = source.filter(p => {
+            const text = ((p.title || '') + ' ' + (p.category || '') + ' ' + (p.sellerName || '')).toLowerCase();
+            return text.includes(q);
+        });
     }
-    const filtered = window._allProducts.filter(p => {
-        const text = ((p.title || '') + ' ' + (p.category || '') + ' ' + (p.sellerName || '')).toLowerCase();
-        return text.includes(q);
+    renderProducts(getListingsForCurrentTab(source));
+}
+
+function filterProducts(query) {
+    applyListingsView(query);
+}
+
+function setListingsTab(tab) {
+    window._listingsTab = tab;
+    document.querySelectorAll('[data-listings-tab]').forEach(function(btn) {
+        const isActive = btn.getAttribute('data-listings-tab') === tab;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
-    renderProducts(filtered);
+    const searchInput = document.querySelector('.header-search-input');
+    applyListingsView(searchInput ? searchInput.value.trim() : '');
+}
+
+function initListingsTabs() {
+    document.querySelectorAll('[data-listings-tab]').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            setListingsTab(btn.getAttribute('data-listings-tab'));
+        });
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('ilanlar-kutusu');
-    fetch('/api/products')
+    initListingsTabs();
+    fetch('/api/listings?limit=500&page=1')
         .then(response => response.json())
-        .then(products => {
-            if (!products || products.length === 0) {
-                container.innerHTML = '<p style="color: #fff; padding: 20px;">Henüz aktif ilan bulunmamaktadır.</p>';
+        .then(data => {
+            const raw = Array.isArray(data) ? data : (data.listings || []);
+            const products = raw.map(normalizeListingProduct);
+            if (!products.length) {
+                if (container) container.innerHTML = '<p style="color: #fff; padding: 20px;">Henüz aktif ilan bulunmamaktadır.</p>';
                 return;
             }
             window._allProducts = products;
-            renderProducts(products);
+            setListingsTab('home');
         })
         .catch(error => {
             console.error('İlanlar yüklenirken bir hata oluştu:', error);
@@ -6506,8 +6620,10 @@ document.addEventListener('DOMContentLoaded', () => {
         .tab-btn:hover { background: rgba(255,255,255,0.06); color: #ffffff; }
         /* Active: only text, icon, and icon background turn purple; no button bg/border */
         .tab-btn.active { background: transparent; color: #a78bfa; }
-        .tabs-all-btn { background: rgba(255,255,255,0.06); color: #e5e7eb; padding: 8px 14px; text-decoration: none; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.25); transition: all 0.2s ease; }
-        .tabs-all-btn:hover, .tabs-all-btn:focus, .tabs-all-btn:active { color: #fff; border-color: #8b5cf6; background: rgba(139,92,246,0.12); text-decoration: none !important; }
+        .tabs-all-btn { background: rgba(255,255,255,0.06); color: #e5e7eb; padding: 8px 14px; text-decoration: none; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.25); transition: all 0.2s ease; cursor: pointer; font: inherit; font-weight: 600; }
+        .tabs-all-btn:hover, .tabs-all-btn:focus { color: #fff; border-color: #8b5cf6; background: rgba(139,92,246,0.12); text-decoration: none !important; }
+        .tabs-all-btn.active { color: #a78bfa; border-color: #8b5cf6; background: rgba(139,92,246,0.12); }
+        [data-theme="light"] .tabs-all-btn.active { color: #6d28d9; }
         .tab-panel { display: none; }
         .tab-panel.active { display: block; }
 
@@ -8632,258 +8748,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <!-- Canlı Satışlar Bildirim Sistemi -->
 <style>
-.live-sales-container {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 10px;
-  z-index: 9999;
-  pointer-events: none;
-}
-.live-sales-container > * { pointer-events: auto; }
-
-.live-sale-toast {
-  background: rgba(18, 18, 36, 0.92);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(139, 92, 246, 0.30);
-  border-left: 3px solid #8b5cf6;
-  border-radius: 14px;
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 290px;
-  max-width: 350px;
-  box-shadow: 0 10px 35px rgba(0,0,0,0.50), 0 0 18px rgba(139,92,246,0.22);
-  transform: translateX(130%);
-  opacity: 0;
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  cursor: default;
-}
-
-.live-sale-toast::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(139,92,246,0.07) 0%, rgba(236,72,153,0.04) 100%);
-  pointer-events: none;
-  border-radius: 14px;
-}
-
-.live-sale-toast.visible {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-.live-sale-toast .live-sale-icon {
-  font-size: 22px;
-  flex-shrink: 0;
-  filter: drop-shadow(0 0 5px rgba(139,92,246,0.45));
-  z-index: 1;
-}
-
-.live-sale-toast .live-sale-content {
-  flex: 1;
-  min-width: 0;
-  z-index: 1;
-}
-
-.live-sale-toast .live-sale-text {
-  color: #e5e7eb;
-  font-size: 13px;
-  line-height: 1.45;
-  font-weight: 500;
-}
-
-.live-sale-toast .live-sale-text strong {
-  color: #ddd6fe;
-  font-weight: 700;
-}
-
-.live-sale-toast .live-sale-time {
-  color: #9ca3af;
-  font-size: 11.5px;
-  margin-top: 5px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-weight: 500;
-}
-
-.live-sale-toast .live-sale-close {
-  background: rgba(255,255,255,0.07);
-  border: none;
-  color: #a1a1aa;
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
-  transition: all 0.2s ease;
-  padding: 0;
-  flex-shrink: 0;
-  z-index: 1;
-}
-
-.live-sale-toast .live-sale-close:hover {
-  background: rgba(239,68,68,0.18);
-  color: #f87171;
-}
-
-.live-sale-toast:hover {
-  border-color: rgba(139, 92, 246, 0.65);
-  box-shadow: 0 10px 35px rgba(0,0,0,0.55), 0 0 28px rgba(139,92,246,0.35);
-}
-
-@media (max-width: 520px) {
-  .live-sales-container {
-    right: 10px;
-    bottom: 88px;
-    left: auto;
-    align-items: flex-end;
-  }
-  .live-sale-toast {
-    max-width: 92vw;
-    min-width: 0;
-    padding: 10px 12px;
-    border-radius: 12px;
-  }
-  .live-sale-toast .live-sale-text {
-    font-size: 12px;
-  }
-  .live-sale-toast .live-sale-time {
-    font-size: 11px;
-    margin-top: 3px;
-  }
-  .live-sale-toast .live-sale-icon {
-    font-size: 18px;
-  }
-  .live-sale-toast .live-sale-close {
-    width: 22px;
-    height: 22px;
-    font-size: 16px;
-  }
-}
 .epin-card-home { cursor: pointer; }
 </style>
 
-<script>
-(function() {
-  const names = [
-    'Mehmet***','Ahmet***','Yusuf***','Emre***','Burak***','Can***','Deniz***',
-    'Eren***','Fatih***','Gökhan***','Hakan***','brahim***','Kaan***','Levent***',
-    'Murat***','Onur***','Serkan***','Tolga***','Ufuk***','Volkan***','Berk***',
-    'Cem***','Doğukan***','Furkan***','Hasan***','smail***','Kemal***','Mert***',
-    'Oğuz***','Rıza***','Sedat***','Tarık***','Umut***','Yasin***','Zafer***'
-  ];
-  const products = [
-    'Valorant 2400 VP','Valorant 5400 VP','PUBG 3800 UC','Steam Random Key',
-    'CS2 Prime','Brawl Stars Hesap','Mobile Legends Elmas'
-  ];
-
-  const container = document.createElement('div');
-  container.className = 'live-sales-container';
-  document.body.appendChild(container);
-
-  const activeToasts = [];
-  let toastIdCounter = 0;
-
-  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-  function removeToast(toast) {
-    if (!toast || !toast.parentNode) return;
-    const idx = activeToasts.indexOf(toast);
-    if (idx > -1) activeToasts.splice(idx, 1);
-    if (toast._hideTimer) { clearTimeout(toast._hideTimer); toast._hideTimer = null; }
-
-    toast.style.transform = 'translateX(130%)';
-    toast.style.opacity = '0';
-    setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 600);
-  }
-
-  function showLiveSale() {
-    var maxToasts = window.innerWidth <= 520 ? 1 : 3;
-    if (activeToasts.length >= maxToasts) {
-      removeToast(activeToasts[0]);
-    }
-
-    const id = ++toastIdCounter;
-    const name = pick(names);
-    const product = pick(products);
-    const seconds = Math.floor(Math.random() * 40) + 8; // 8-48 sn arası
-
-    const toast = document.createElement('div');
-    toast.className = 'live-sale-toast';
-    toast.dataset.id = id;
-    toast.innerHTML =
-      '<div class="live-sale-icon">🛒</div>' +
-      '<div class="live-sale-content">' +
-        '<div class="live-sale-text"><strong>' + name + '</strong> az önce <strong>' + product + '</strong> satın aldı</div>' +
-        '<div class="live-sale-time">⏱️ ' + seconds + ' saniye önce</div>' +
-      '</div>' +
-      '<button class="live-sale-close" aria-label="Kapat">&times;</button>';
-
-    const closeBtn = toast.querySelector('.live-sale-close');
-    closeBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      removeToast(toast);
-    });
-
-    let hideTimer = null;
-
-    toast.addEventListener('mouseenter', function() {
-      if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-      toast.style.transitionDuration = '0s';
-    });
-
-    toast.addEventListener('mouseleave', function() {
-      toast.style.transitionDuration = '';
-      hideTimer = setTimeout(function() { removeToast(toast); }, 2200);
-      toast._hideTimer = hideTimer;
-    });
-
-    container.appendChild(toast);
-    toast.offsetHeight; // reflow
-
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() {
-        toast.classList.add('visible');
-      });
-    });
-
-    hideTimer = setTimeout(function() { removeToast(toast); }, 4500);
-    toast._hideTimer = hideTimer;
-    activeToasts.push(toast);
-  }
-
-  function scheduleNext() {
-    var delay = 5000 + Math.random() * 5000; // 5€“10 sn
-    setTimeout(function() {
-      showLiveSale();
-      scheduleNext();
-    }, delay);
-  }
-
-  function init() {
-    setTimeout(scheduleNext, 2500);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-})();
-</script>
 
 <!-- CMS Slider Engine -->
 <script>

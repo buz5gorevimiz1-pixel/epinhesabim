@@ -1577,25 +1577,29 @@
         @media (max-width: 768px) {
             .header-content {
                 display: grid;
-                grid-template-columns: 40px minmax(0, 1fr) auto;
+                grid-template-columns: auto 1fr auto;
                 align-items: center;
-                column-gap: 10px;
+                column-gap: 8px;
             }
 
             .logo-section {
                 justify-self: center;
                 min-width: 0;
+                width: 100%;
+                display: flex;
+                justify-content: center;
             }
 
             .logo-section a {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                width: 100%;
             }
 
             .logo-section img {
-                height: 32px !important;
-                max-width: 150px !important;
+                height: 40px !important;
+                max-width: 200px !important;
                 object-fit: contain;
             }
 
@@ -1611,11 +1615,11 @@
                 justify-self: end;
                 display: flex;
                 align-items: center;
-                gap: 6px;
+                gap: 4px;
             }
 
             .header-top {
-                padding: 8px 16px;
+                padding: 6px 10px;
             }
 
             .header-nav {
