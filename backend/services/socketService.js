@@ -7,7 +7,7 @@ const SupportMessage = require('../models/SupportMessage');
 const visitors = new Map();      // socketId -> visitor info
 const adminSockets = new Map();  // socketId -> admin info
 const activeChats = new Map();   // visitorSocketId -> { adminSocketId, ticketId }
-const visitorTicketMap = new Map(); // visitorSocketId -> ticketId
+const visitorIdToTicketMap = new Map(); // visitorId (persistent) -> ticketId
 
 // Admin controls
 const systemState = {
@@ -39,6 +39,7 @@ function getDeviceInfo(userAgent) {
 /* ─── DB HELPERS ─── */
 async function createTicket(visitor) {
   const ticket = new SupportTicket({
+    visitorId: visitor.visitorId,
     visitorSocketId: visitor.id,
     visitorIp: visitor.ip,
     visitorBrowser: visitor.browser,
@@ -259,8 +260,10 @@ socket.on('support:delete', async ({ ticketId }) => {
     }
 
     // ── VISITOR CONNECTION ──
+    const visitorId = socket.handshake.query?.visitorId || 'unknown_' + socket.id;
     const visitor = {
       id: socket.id,
+      visitorId: visitorId, // Persistent identifier
       ip: String(ip).split(',')[0]?.trim(),
       device,
       browser,
@@ -284,17 +287,17 @@ socket.on('support:delete', async ({ ticketId }) => {
       try {
         if (!text || typeof text !== 'string') return;
 
-        console.log('[SUPPORT] Visitor message from', socket.id, ':', text.substring(0, 50));
+        console.log('[SUPPORT] Visitor message from', visitorId, ':', text.substring(0, 50));
 
-        let ticketId = visitorTicketMap.get(socket.id);
+        let ticketId = visitorIdToTicketMap.get(visitorId);
         let ticket;
 
         // Create ticket if not exists
         if (!ticketId) {
-          console.log('[SUPPORT] Creating new ticket for visitor', socket.id);
+          console.log('[SUPPORT] Creating new ticket for visitor', visitorId);
           ticket = await createTicket(visitor);
           ticketId = ticket.ticketId;
-          visitorTicketMap.set(socket.id, ticketId);
+          visitorIdToTicketMap.set(visitorId, ticketId);
           console.log('[SUPPORT] Ticket created:', ticketId);
           await broadcastTicketList();
           socket.emit('support:ticket-created', { ticketId });
@@ -340,7 +343,7 @@ socket.on('support:delete', async ({ ticketId }) => {
 
     // Visitor loads their own history
     socket.on('support:load-my-history', async () => {
-      const ticketId = visitorTicketMap.get(socket.id);
+      const ticketId = visitorIdToTicketMap.get(visitorId);
       if (!ticketId) return;
       const msgs = await getTicketMessages(ticketId);
       socket.emit('support:history', { ticketId, messages: msgs });
@@ -348,12 +351,9 @@ socket.on('support:delete', async ({ ticketId }) => {
 
     socket.on('disconnect', async () => {
       visitors.delete(socket.id);
-      const ticketId = visitorTicketMap.get(socket.id);
-      if (ticketId) {
-        await SupportTicket.updateOne({ ticketId }, { $set: { status: 'waiting' } });
-        visitorTicketMap.delete(socket.id);
-      }
       activeChats.delete(socket.id);
+      // NOTE: Don't delete ticket or remove from visitorIdToTicketMap
+      // Ticket should remain in DB for persistence
       broadcastToAdmins('visitors:list', Array.from(visitors.values()));
       await broadcastTicketList();
     });

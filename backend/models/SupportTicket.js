@@ -9,7 +9,8 @@ const supportTicketSchema = new mongoose.Schema({
       return 'TKT-' + Date.now().toString(36).toUpperCase();
     },
   },
-  visitorSocketId: { type: String },
+  visitorId: { type: String, index: true }, // Persistent identifier from browser
+  visitorSocketId: { type: String }, // Current socket ID (for realtime delivery)
   visitorIp: { type: String },
   visitorBrowser: { type: String },
   visitorDevice: { type: String },

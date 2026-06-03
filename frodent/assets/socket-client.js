@@ -6,11 +6,71 @@
   'use strict';
 
   const SOCKET_URL = 'https://epinhesabim.com'; // Production domain
+  const STORAGE_KEY_VISITOR_ID = 'ls_visitor_id';
+  const STORAGE_KEY_TICKET_ID = 'ls_ticket_id';
+  const STORAGE_KEY_MESSAGES = 'ls_messages';
+
   let socket = null;
   let chatOpen = false;
   let chatAssigned = false;
   let chatMessages = [];
   let myTicketId = null;
+  let myVisitorId = null;
+
+  // ─── STORAGE HELPERS ───
+  function generateVisitorId() {
+    // Browser fingerprint: UA + language + timezone
+    const ua = navigator.userAgent;
+    const lang = navigator.language;
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const fingerprint = btoa(ua + '|' + lang + '|' + tz).substring(0, 32);
+    return 'vis_' + fingerprint + '_' + Date.now();
+  }
+
+  function getStoredVisitorId() {
+    let id = localStorage.getItem(STORAGE_KEY_VISITOR_ID);
+    if (!id) {
+      id = generateVisitorId();
+      localStorage.setItem(STORAGE_KEY_VISITOR_ID, id);
+    }
+    return id;
+  }
+
+  function getStoredTicketId() {
+    return localStorage.getItem(STORAGE_KEY_TICKET_ID);
+  }
+
+  function saveTicketId(ticketId) {
+    if (ticketId) {
+      localStorage.setItem(STORAGE_KEY_TICKET_ID, ticketId);
+    }
+  }
+
+  function clearStoredTicketId() {
+    localStorage.removeItem(STORAGE_KEY_TICKET_ID);
+  }
+
+  function getStoredMessages() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY_MESSAGES);
+      return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+      console.warn('[Socket] Failed to parse stored messages:', e);
+      return [];
+    }
+  }
+
+  function saveMessages(messages) {
+    try {
+      localStorage.setItem(STORAGE_KEY_MESSAGES, JSON.stringify(messages.slice(-100))); // Keep last 100
+    } catch (e) {
+      console.warn('[Socket] Failed to save messages to localStorage:', e);
+    }
+  }
+
+  function clearStoredMessages() {
+    localStorage.removeItem(STORAGE_KEY_MESSAGES);
+  }
 
   // ─── 1. SOCKET CONNECTION ───
   function initSocket() {
@@ -20,11 +80,19 @@
     }
     if (socket && socket.connected) return;
 
+    myVisitorId = getStoredVisitorId();
+    myTicketId = getStoredTicketId(); // Load from storage
+
+    if (myTicketId) {
+      console.log('[Socket] Restored ticketId from storage:', myTicketId);
+    }
+
     socket = io(SOCKET_URL, {
       path: '/socket.io',
       transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionAttempts: 10,
+      query: { visitorId: myVisitorId }, // Send visitor ID to backend
     });
 
     socket.on('connect', () => {
@@ -61,6 +129,7 @@
   // ─── SUPPORT CHAT ───
     socket.on('support:ticket-created', ({ ticketId }) => {
       myTicketId = ticketId;
+      saveTicketId(ticketId);
       addSystemMessage('Destek talebiniz oluşturuldu: ' + ticketId);
       updateChatUI();
     });
@@ -84,11 +153,13 @@
         text: m.text,
         timestamp: m.createdAt || m.timestamp,
       }));
+      saveMessages(chatMessages); // Save to localStorage
       renderMessages();
     });
 
     socket.on('support:message', (msg) => {
       chatMessages.push(msg);
+      saveMessages(chatMessages); // Save new message
       renderMessages();
       scrollToBottom();
       if (!chatOpen) showUnreadBadge();
@@ -96,6 +167,7 @@
 
     socket.on('support:ended', () => {
       chatAssigned = false;
+      clearStoredTicketId(); // Clear ticket on close
       myTicketId = null;
       addSystemMessage('Destek görüşmesi sona erdi. Yeni mesaj yazarak yeniden başlatabilirsiniz.');
       updateChatUI();
@@ -387,10 +459,23 @@
     panel.style.display = chatOpen ? 'flex' : 'none';
     if (chatOpen) {
       clearUnreadBadge();
+
+      // Load messages from localStorage if available
+      if (chatMessages.length === 0) {
+        const stored = getStoredMessages();
+        if (stored.length > 0) {
+          chatMessages = stored;
+          renderMessages();
+        }
+      }
+
       scrollToBottom();
+
+      // Load full history from server
       if (socket && myTicketId) {
         socket.emit('support:load-my-history');
       }
+
       if (chatMessages.length === 0 && !myTicketId) {
         addSystemMessage('Merhaba! Size nasıl yardımcı olabilirim? Mesaj yazarak destek talebi oluşturabilirsiniz.');
       }
@@ -497,6 +582,14 @@
 
   // ─── 5. INIT ───
   function init() {
+    // Load stored data
+    myVisitorId = getStoredVisitorId();
+    myTicketId = getStoredTicketId();
+    const stored = getStoredMessages();
+    if (stored.length > 0) {
+      chatMessages = stored;
+    }
+
     initSocket();
     createWidget();
     // If already loaded after DOM ready
