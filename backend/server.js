@@ -1064,6 +1064,30 @@ app.put('/api/admin/settings', verifyAdmin, async (req, res) => {
   }
 });
 
+// Fix broken images in existing products
+app.post('/api/admin/fix-images', verifyAdmin, async (req, res) => {
+  try {
+    const placeholderUrl = req.body.placeholderUrl || 'https://placehold.co/400x300/1e293b/94a3b8?text=Gorsel+Yok';
+    const products = await Product.find({}).lean();
+    let fixed = 0;
+    for (const p of products) {
+      const img = p.image || '';
+      const isBroken = !img ||
+        img.startsWith('data:') ||
+        img.startsWith('blob:') ||
+        (!img.startsWith('http') && !img.startsWith('/'));
+      if (isBroken) {
+        await Product.updateOne({ _id: p._id }, { $set: { image: placeholderUrl } });
+        fixed++;
+      }
+    }
+    res.json({ success: true, fixed, total: products.length });
+  } catch (err) {
+    console.error('Fix images error:', err);
+    res.status(500).json({ error: 'Görseller düzeltilemedi.' });
+  }
+});
+
 // PRODUCTS
 app.get('/api/products', async (req, res) => {
   try {
