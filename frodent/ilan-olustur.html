@@ -1,642 +1,1266 @@
-<!DOCTYPE html>
-<html lang="tr">
+﻿<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İlan Oluştur - Premium Marketplace</title>
+    <title>İlan Ekle - epinhesabım</title>
+    <meta name="description" content="epinhesabım'da hemen ilan oluştur, ürünlerini milyonlarca oyuncuya ulaştır. Güvenli ve hızlı satışın adresi.">
+    <link rel="icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Global CSS Variables -->
     <style>
-        /* --- Gelişmiş Premium Tema Değişkenleri --- */
         :root {
-            --primary: #8b5cf6;          
-            --primary-hover: #a78bfa;   
-            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
-            --secondary: #10b981;        
-            --bg-color: #030306;         
-            --card-bg: rgba(18, 18, 26, 0.65);          
-            --input-bg: rgba(0, 0, 0, 0.35);         
-            --text-main: #ffffff;        
-            --text-muted: #94a3b8;       
-            --border: rgba(255, 255, 255, 0.05);           
-            --danger: #f43f5e;           
-            --navbar-bg: rgba(10, 10, 14, 0.8);
-            --action-btn-bg: rgba(255, 255, 255, 0.03);
-            --shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            --accent-glow: rgba(168, 85, 247, 0.3);
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --surface: rgba(24, 27, 51, 0.92);
+            --bg: #0f1115;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-color: #e8e8f0;
+            --text-muted: #9ca3af;
         }
 
         [data-theme="light"] {
-            --bg-color: #f1f5f9;         
-            --card-bg: rgba(255, 255, 255, 0.8);          
-            --input-bg: rgba(255, 255, 255, 0.6);         
-            --text-main: #0f172a;        
-            --text-muted: #64748b;       
-            --border: rgba(0, 0, 0, 0.08);           
-            --navbar-bg: rgba(255, 255, 255, 0.85);
-            --action-btn-bg: rgba(0, 0, 0, 0.02);
-            --shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
-            --primary: #6d28d9;
-            --primary-hover: #7c3aed;
-            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            --accent-glow: rgba(109, 40, 217, 0.15);
+            --surface: #ffffff;
+            --bg: #f3f4f6;
+            --border-color: #e5e7eb;
+            --text-color: #111827;
+            --text-muted: #4b5563;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        h1, h2, h3, .upload-text, .submit-btn, .btn-back-home {
-            font-family: 'Outfit', sans-serif;
-        }
-
-        html, body {
-            width: 100%;
+        * { font-family: 'Poppins', sans-serif; box-sizing: border-box; }
+        
+        body {
+            overflow-x: hidden !important;
             min-height: 100vh;
-            overflow-x: hidden;
-            background-color: var(--bg-color);
+            margin: 0;
+            color: var(--text-color);
+            background-color: var(--bg);
+            background-image:
+                linear-gradient(180deg, rgba(8, 12, 26, 0.18), rgba(8, 12, 26, 0.22)),
+                url('assets/arkaplan.png');
+            background-repeat: no-repeat, repeat;
+            background-size: cover, 900px auto;
+            background-attachment: fixed, fixed;
+            background-position: center center, center center;
+            background-blend-mode: normal !important;
         }
 
-        /* 3D Hareketli Akışkan Arka Plan Efekti */
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: 
-                radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 45%),
-                radial-gradient(circle at 85% 75%, rgba(236, 72, 153, 0.06) 0%, transparent 45%);
-            z-index: -1;
-            animation: backgroundFlow 35s linear infinite;
+        /* Glassmorphism Wrappers - ARKA TON DÜZELTİLDİ (KOYU GRİ) */
+        .page-wrapper {
+            background: transparent !important;
+            padding-top: 20px;
+            padding-bottom: 60px;
         }
 
-        @keyframes backgroundFlow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .page-container > .container,
+        .page-wrapper > .container {
+            background: rgba(16, 18, 26, 0.92) !important; /* Açık gri sorunu giderildi, daha koyu bir ton */
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.04);
+            padding: 24px; /* Boyutlar küçültüldü */
+            box-shadow: 0 14px 40px rgba(0,0,0,0.5);
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        /* --- ÜST BAR (NAVBAR) --- */
-        .top-navbar {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 75px;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 5%;
-            background: var(--navbar-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            z-index: 1000;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+        .card {
+            background: rgba(22, 25, 36, 0.85); /* Kartlar için daha koyu ve tok bir arka plan */
+            border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 14px;
+            padding: 20px; /* Padding küçültüldü */
         }
 
-        .btn-back-home {
-            display: flex; align-items: center; gap: 10px;
-            text-decoration: none; color: #fff;
-            font-weight: 600; font-size: 14px;
-            padding: 10px 20px; border-radius: 14px;
-            border: 1px solid var(--border); background: var(--action-btn-bg);
+        /* ====== HEADER STYLES ====== */
+        .frontend-header {
+            position: relative;
+            background: linear-gradient(90deg, #0a0f22 0%, #1b0d3b 35%, rgba(147, 51, 234, 0.65) 52%, #17093a 75%, #0a0f22 100%) !important;
+            z-index: 1100;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.35) !important;
         }
 
-        .btn-back-home i {
-            color: var(--primary);
+        .frontend-header .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            width: 100%;
+            position: relative;
+        }
+
+        .frontend-header .header-top::after {
+            content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+            background: linear-gradient(90deg, rgba(140,100,255,0), rgba(140,100,255,0.75), rgba(140,100,255,0));
+            pointer-events: none;
+        }
+
+        .header-content {
+            display: flex; align-items: center; justify-content: space-between;
+            max-width: 1400px; margin: 0 auto; width: 100%;
+        }
+
+        .logo-section img { height: 40px; max-width: 200px; object-fit: contain; }
+
+        .header-search-container { display: flex; align-items: center; flex: 1; max-width: 400px; margin: 0 15px; }
+        .header-search-box {
+            width: 100%; display: flex; align-items: center;
+            background: linear-gradient(135deg, rgba(24, 12, 50, 0.95), rgba(147, 51, 234, 0.55));
+            border: 1px solid rgba(147, 51, 234, 0.5); border-radius: 6px; padding: 0 16px; gap: 12px; height: 48px;
+        }
+        .header-search-input { flex: 1; background: none; border: none; outline: none; color: #ffe2e2; font-size: 15px; }
+        .header-search-btn { background: #8b5cf6; border: none; color: white; cursor: pointer; padding: 8px 12px; border-radius: 4px; height: 36px; display: flex; align-items: center; justify-content: center; }
+
+        .header-actions { display: flex; align-items: center; gap: 8px; }
+        .theme-toggle-btn, .mobile-account-btn {
+            width: 40px; height: 40px; border-radius: 50%; background: #374151; border: 1px solid #4b5563; color: #d1d5db;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;
+        }
+
+        /* Desktop Premium Profile Dropdown */
+        .user-dropdown {
+            position: relative;
+            display: none;
+        }
+
+        .user-dropdown.active {
+            display: block;
+        }
+
+        .user-dropdown-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 6px 12px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown-trigger:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+
+        .user-avatar-small {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 2px solid rgba(139, 92, 246, 0.5);
+            object-fit: cover;
+        }
+
+        .user-info-small {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .username-small {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e8e8f0;
+        }
+
+        .balance-small {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .dropdown-arrow-small {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
             transition: transform 0.3s ease;
         }
 
-        .btn-back-home:hover {
-            background: var(--primary-gradient);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 4px 15px var(--accent-glow);
+        .user-dropdown.active .dropdown-arrow-small {
+            transform: rotate(180deg);
         }
 
-        .btn-back-home:hover i {
-            transform: translateX(-4px);
-            color: #fff;
+        /* Desktop Profile Dropdown Menu */
+        .user-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            width: 320px;
+            max-width: 90vw;
+            background: linear-gradient(180deg,
+                rgba(10, 15, 34, 0.98) 0%,
+                rgba(27, 13, 59, 0.95) 35%,
+                rgba(147, 51, 234, 0.5) 52%,
+                rgba(23, 9, 58, 0.95) 70%,
+                rgba(10, 15, 34, 0.98) 100%
+            );
+            border: 1px solid rgba(147, 51, 234, 0.4);
+            border-radius: 16px;
+            padding: 16px;
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4),
+                        0 0 32px rgba(147, 51, 234, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
-        .theme-toggle-btn {
-            background: var(--action-btn-bg); border: 1px solid var(--border);
-            color: var(--text-main); width: 44px; height: 44px;
-            border-radius: 14px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; font-size: 16px;
+        .user-dropdown.active .user-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
         }
 
-        .theme-toggle-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: scale(1.05);
-            box-shadow: 0 0 15px var(--accent-glow);
+        /* Profile Header in Dropdown */
+        .dropdown-profile-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(147, 51, 234, 0.2);
         }
 
-        /* --- ANA İÇERİK YAPISI --- */
-        .container-wrapper {
-            padding: 120px 5% 60px 5%;
-            display: flex; align-items: center; justify-content: center;
+        .dropdown-avatar-wrapper {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
         }
 
-        .main-container {
-            width: 100%; max-width: 1300px;
+        .dropdown-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            border: 2px solid rgba(147, 51, 234, 0.6);
+            object-fit: cover;
+            box-shadow: 0 0 16px rgba(147, 51, 234, 0.4),
+                        inset 0 0 16px rgba(147, 51, 234, 0.15);
         }
 
-        .header {
-            text-align: center; margin-bottom: 50px; animation: fadeInDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        .dropdown-online-indicator {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 14px;
+            height: 14px;
+            background: #10b981;
+            border: 2px solid rgba(10, 15, 34, 0.95);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
         }
 
-        .header h1 {
-            font-size: 3rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px;
-            background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        .dropdown-user-info {
+            flex: 1;
         }
 
-        .header p { color: var(--text-muted); font-size: 1.05rem; font-weight: 400; }
-
-        .content-wrapper {
-            display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; margin-bottom: 50px;
+        .dropdown-username {
+            font-size: 14px;
+            font-weight: 700;
+            color: #e8e8f0;
+            margin-bottom: 4px;
         }
 
-        /* --- BÜYÜLEYİCİ GLASSMORPHISM PANELLER --- */
-        .form-section, .preview-section {
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 28px; padding: 45px; box-shadow: var(--shadow);
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1); position: relative;
+        .dropdown-user-status {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        .preview-section { 
-            animation-delay: 0.1s; display: flex; flex-direction: column;
-            background: linear-gradient(145deg, var(--card-bg), rgba(255,255,255,0.01));
+        .status-dot-small {
+            width: 6px;
+            height: 6px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
         }
 
-        .form-group {
-            margin-bottom: 28px; position: relative; animation: slideInLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        /* Balance Card in Dropdown */
+        .dropdown-balance-card {
+            background: linear-gradient(135deg, rgba(147,51,234,0.25) 0%, rgba(236,72,153,0.15) 100%);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .form-group:nth-child(1) { animation-delay: 0.1s; }
-        .form-group:nth-child(2) { animation-delay: 0.2s; }
-        .form-group:nth-child(3) { animation-delay: 0.3s; }
-        .form-group:nth-child(4) { animation-delay: 0.4s; }
-
-        .form-label {
-            display: flex; align-items: center; gap: 10px; font-size: 0.9rem;
-            font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; color: var(--text-muted);
+        .balance-label-small {
+            font-size: 10px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 1px;
         }
 
-        .form-label i { color: var(--primary); font-size: 1.1rem; }
-
-        /* Dosya Yükleme Alanı */
-        .image-upload-area {
-            position: relative; border: 2px dashed rgba(139, 92, 246, 0.3); border-radius: 18px;
-            padding: 40px 20px; text-align: center; cursor: pointer;
-            background: var(--input-bg); min-height: 190px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+        .balance-amount-small {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 2px;
         }
 
-        .image-upload-area:hover, .image-upload-area.drag-over {
-            border-color: var(--primary); background: rgba(139, 92, 246, 0.04);
-            box-shadow: 0 0 25px rgba(139, 92, 246, 0.15);
+        .balance-currency-small {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
         }
 
-        .upload-icon { font-size: 3.2rem; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: float 4s ease-in-out infinite; }
-        .upload-text { color: var(--text-main); font-size: 1.1rem; font-weight: 700; }
-        .upload-subtext { color: var(--text-muted); font-size: 0.85rem; }
-
-        .image-preview-container { display: none; position: relative; margin-bottom: 18px; }
-        .image-preview-container.active { display: block; animation: zoomIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-
-        .image-preview {
-            width: 100%; height: 220px; border-radius: 16px; object-fit: cover;
-            border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        /* Dropdown Menu Items */
+        .user-dropdown-menu-items {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        .remove-image-btn {
-            position: absolute; top: 12px; right: 12px; width: 40px; height: 40px;
-            background: rgba(244, 63, 94, 0.85); border: none; border-radius: 12px;
-            color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-            box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3);
-        }
-        .remove-image-btn:hover { background: var(--danger); transform: scale(1.1) rotate(90deg); }
-
-        /* Girdi Alanları */
-        input[type="file"] { display: none; } /* STANDART DOSYA SEÇ BUTONUNU GİZLER */
-
-        input[type="text"], input[type="number"], textarea {
-            width: 100%; padding: 16px 18px; border: 1px solid var(--border);
-            border-radius: 14px; background: var(--input-bg); color: var(--text-main);
-            font-size: 1rem; outline: none; font-weight: 500;
+        .dropdown-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            font-weight: 500;
+            border-left: 2px solid transparent;
         }
 
-        input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
-            border-color: var(--primary); box-shadow: 0 0 20px var(--accent-glow);
-            background: rgba(0, 0, 0, 0.5);
-        }
-        [data-theme="light"] input[type="text"]:focus, [data-theme="light"] input[type="number"]:focus, [data-theme="light"] textarea:focus {
-            background: #fff;
-        }
-
-        input::placeholder, textarea::placeholder { color: var(--text-muted); font-weight: 400; }
-        textarea { resize: vertical; min-height: 140px; }
-
-        .preview-header {
-            display: flex; align-items: center; gap: 10px; margin-bottom: 30px;
-            padding-bottom: 18px; border-bottom: 1px solid var(--border);
-        }
-        .preview-header i { color: var(--primary); font-size: 1.3rem; }
-        .preview-header h3 { font-size: 1.3rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; }
-
-        /* --- FÜTURİSTİK HUD ÖNİZLEME KARTI --- */
-        .product-card {
-            background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border);
-            border-radius: 20px; overflow: hidden; box-shadow: var(--shadow);
-            flex: 1; display: flex; flex-direction: column; position: relative;
-            transform: perspective(1000px) rotateY(-2deg) rotateX(2deg);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        .dropdown-menu-item i {
+            width: 18px;
+            font-size: 16px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            flex-shrink: 0;
         }
 
-        [data-theme="light"] .product-card {
-            background: rgba(255, 255, 255, 0.5);
+        .dropdown-menu-item:hover {
+            background: rgba(147, 51, 234, 0.2);
+            border-left-color: #d4af37;
+            color: #d4af37;
+            padding-left: 16px;
         }
 
-        .product-card:hover {
-            transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(-5px);
-            border-color: rgba(139, 92, 246, 0.3);
-            box-shadow: 0 30px 60px rgba(139, 92, 246, 0.15);
+        .dropdown-menu-item:hover i {
+            text-shadow: 0 0 10px rgba(147, 51, 234, 0.6);
         }
 
-        .card-image {
-            width: 100%; height: 230px; background: rgba(0,0,0,0.4);
-            display: flex; align-items: center; justify-content: center;
-            border-bottom: 1px solid var(--border); position: relative; overflow: hidden;
+        .logout-menu-item {
+            color: #ef4444;
         }
-        .card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-        .product-card:hover .card-image img { transform: scale(1.05); }
-        .card-image-placeholder { color: var(--text-muted); font-size: 3.5rem; opacity: 0.3; animation: pulse 2s infinite; }
 
-        .card-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; gap: 14px; }
+        .logout-menu-item:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-left-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .logout-menu-item:hover i {
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+        }
+
+        [data-theme="light"] .dropdown-menu-item {
+            color: #333;
+        }
+
+        [data-theme="light"] .dropdown-menu-item:hover {
+            background: rgba(100, 50, 200, 0.1);
+            color: #1976d2;
+        }
+
+        [data-theme="light"] .user-dropdown-menu {
+            background: linear-gradient(180deg,
+                rgba(248, 249, 250, 0.98) 0%,
+                rgba(240, 236, 248, 0.95) 50%,
+                rgba(248, 249, 250, 0.98) 100%
+            );
+            border-color: rgba(100, 50, 200, 0.2);
+        }
         
-        .card-category {
-            font-size: 0.75rem; color: #fff; font-weight: 700;
-            display: inline-flex; align-items: center; gap: 6px;
-            background: var(--primary-gradient); padding: 5px 12px; border-radius: 99px;
-            width: fit-content; box-shadow: 0 4px 10px var(--accent-glow);
+        .auth-buttons { display: flex; gap: 8px; }
+        .btn-register, .btn-login {
+            color: white; padding: 12px 20px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; gap: 10px; font-size: 15px; height: 48px;
         }
+        .btn-register { background: linear-gradient(135deg, #1e40af, #3b82f6); }
+        .btn-login { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
 
-        .card-title {
-            font-size: 1.25rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.3px;
-            line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical; overflow: hidden; min-height: 56px;
+        .header-nav { display: flex; align-items: center; justify-content: flex-start; padding: 16px 32px; gap: 32px; max-width: 1400px; margin: 0 auto; }
+        .nav-item { display: flex; align-items: center; gap: 8px; color: #e8e8f0; text-decoration: none; font-size: 15px; font-weight: 500; }
+        .nav-item:hover { color: #d4af37; }
+
+        /* Mobile Adjustments */
+        .mobile-menu-toggle { display: none; background: none; border: none; color: #e8e8f0; font-size: 20px; padding: 8px; }
+        .mobile-account-btn { display: none; background: #8b5cf6; color: white; border: none; }
+        .mobile-bottom-menu { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10, 12, 28, 0.95); backdrop-filter: blur(16px); border-top: 1px solid rgba(255,255,255,0.08); z-index: 1000; justify-content: space-around; padding: 8px 0; }
+        .bottom-menu-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #9ca3af; text-decoration: none; font-size: 10px; }
+        .bottom-menu-item.active { color: #8b5cf6; }
+
+        @media (max-width: 992px) {
+            .header-nav, .header-search-container, .auth-buttons, .user-dropdown, .user-dropdown-trigger { display: none; }
+            .mobile-menu-toggle, .mobile-account-btn, .mobile-bottom-menu { display: flex; }
+            .user-info-small { display: none; }
+            .dropdown-arrow-small { display: none; }
         }
-
-        .card-price {
-            font-size: 1.7rem; font-weight: 800; color: #10b981; font-family: 'Outfit', sans-serif;
-        }
-        .card-price.empty { color: var(--text-muted); font-size: 1.1rem; font-weight: 500; font-family: 'Poppins', sans-serif; }
-
-        .card-meta {
-            display: flex; justify-content: space-between; color: var(--text-muted);
-            font-size: 0.85rem; margin-top: auto; border-top: 1px solid var(--border);
-            padding-top: 1.2rem; font-weight: 500;
-        }
-        .card-meta span { display: flex; align-items: center; gap: 6px; }
-        .card-meta i { color: var(--primary); }
-
-        /* --- PREMIUM GÖNDERME BUTONU --- */
-        .submit-section { text-align: center; animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both; }
-
-        .submit-btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 12px;
-            padding: 18px 54px; background: var(--primary-gradient); border: none;
-            border-radius: 16px; color: white; font-size: 1.2rem; font-weight: 700;
-            cursor: pointer; box-shadow: 0 10px 30px var(--accent-glow); width: 100%; max-width: 450px;
-            position: relative; overflow: hidden;
-        }
-
-        .submit-btn::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent);
-            transform: skewX(-25deg); transition: left 0.6s ease;
-        }
-
-        .submit-btn:hover:not(:disabled)::before { left: 200%; }
-
-        .submit-btn:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(168, 85, 247, 0.5);
-        }
-
-        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .submit-btn.loading { pointer-events: none; }
-        
-        .spinner {
-            width: 22px; height: 22px; border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite;
-        }
-
-        /* Animasyon Tanımlamaları */
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
-        @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes zoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
-        /* Mobil Ekran Optimizasyonları */
-        @media (max-width: 1024px) {
-            .content-wrapper { grid-template-columns: 1fr; gap: 30px; }
-            .preview-section { order: -1; }
-            .product-card { transform: none; }
-            .product-card:hover { transform: translateY(-5px); }
-        }
-
         @media (max-width: 768px) {
-            .header h1 { font-size: 2.2rem; }
-            .form-section, .preview-section { padding: 25px; border-radius: 20px; }
-            .top-navbar { padding: 0 20px; }
-            .desktop-only { display: none; }
+            .header-content { display: grid; grid-template-columns: auto 1fr auto; column-gap: 8px; }
+            .logo-section { justify-self: center; }
+            .page-wrapper > .container { padding: 15px; border-radius: 0; border: none; background: rgba(16, 18, 26, 0.95) !important; }
+            .page-wrapper { padding-top: 0; }
+        }
+
+        /* ====== PAGE SPECIFIC STYLES ====== */
+        
+        /* Banner - Boyutlar küçültüldü */
+        .add-listing-banner {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .add-listing-banner::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(139,92,246,0.05) 0%, transparent 50%);
+            animation: rotateGlow 10s linear infinite; pointer-events: none;
+        }
+        
+        @keyframes rotateGlow { 100% { transform: rotate(360deg); } }
+
+        .banner-text h1 { margin: 0 0 4px 0; font-size: 20px; font-weight: 700; color: #fff; }
+        .banner-text p { margin: 0; color: var(--text-muted); font-size: 13px; }
+        .banner-icon { font-size: 36px; color: #8b5cf6; opacity: 0.8; filter: drop-shadow(0 0 10px rgba(139,92,246,0.4)); }
+
+        /* Grid Layout */
+        .listing-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px; /* 30px'den 20px'e düşürüldü */
+        }
+
+        /* Form Styles - Küçültüldü ve Daha Kompakt */
+        .form-group { margin-bottom: 16px; } /* 24px'den düşürüldü */
+        .form-group label { display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px; color: #d1d5db; }
+        .form-group label span.required { color: #ef4444; margin-left: 4px; }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 14px; /* Küçültüldü */
+            background: rgba(10, 12, 18, 0.6); /* Input iç arka planı daha koyu */
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 13px; /* Küçültüldü */
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .form-control:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.15);
+            background: rgba(10, 12, 18, 0.8);
+        }
+        
+        .form-control option { background: #1a1625; color: #fff; }
+
+        .input-group { position: relative; }
+        .input-group-text {
+            position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); font-weight: 600; font-size: 13px; pointer-events: none;
+        }
+
+        /* File Upload Zone - Tıklama ve Galeri Uyumlu */
+        .upload-zone {
+            border: 1.5px dashed rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 24px 16px; /* Küçültüldü */
+            text-align: center;
+            background: rgba(139, 92, 246, 0.02);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.06);
+        }
+
+        .upload-icon { font-size: 32px; color: #8b5cf6; margin-bottom: 8px; display: block; }
+        .upload-title { font-weight: 600; color: #fff; font-size: 14px; margin-bottom: 4px; }
+        .upload-desc { color: var(--text-muted); font-size: 12px; margin: 0; }
+        .upload-limit { display: inline-block; margin-top: 8px; background: rgba(236, 72, 153, 0.1); color: #ec4899; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; border: 1px solid rgba(236, 72, 153, 0.2); }
+
+        .image-preview-container {
+            display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px;
+        }
+        
+        .image-preview {
+            width: 70px; height: 70px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.4); position: relative; overflow: hidden;
+        }
+        
+        .image-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .image-preview .remove-img {
+            position: absolute; top: 4px; right: 4px; background: rgba(239, 68, 68, 0.9); color: white;
+            border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 9px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+
+        /* Publish Button */
+        .btn-publish {
+            width: 100%;
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            border: none;
+            padding: 14px; /* Küçültüldü */
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .btn-publish:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+            background: linear-gradient(135deg, #7c3aed, #9333ea);
+        }
+
+        /* Right Sidebar Info Cards - Boyutlar Düşürüldü */
+        .info-sidebar { display: flex; flex-direction: column; gap: 12px; }
+        
+        .info-card {
+            background: rgba(26, 29, 41, 0.7); /* Koyu Arka Plan */
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 16px; /* Küçültüldü */
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .info-card-icon {
+            width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-size: 18px;
+        }
+        
+        .icon-shield { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+        .icon-rocket { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .icon-support { background: rgba(236, 72, 153, 0.1); color: #ec4899; }
+        
+        .info-card-content h4 { margin: 0 0 4px 0; font-size: 14px; color: #fff; font-weight: 600; }
+        .info-card-content p { margin: 0; font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+
+        @media (max-width: 992px) {
+            .listing-grid { grid-template-columns: 1fr; }
+            .info-sidebar { flex-direction: row; overflow-x: auto; padding-bottom: 10px; }
+            .info-card { min-width: 260px; }
+        }
+        @media (max-width: 768px) {
+            .add-listing-banner { flex-direction: column; text-align: center; gap: 8px; padding: 16px; }
+            .banner-icon { display: none; }
+            .info-sidebar { flex-direction: column; }
+            .info-card { min-width: 100%; }
         }
     </style>
 </head>
 <body>
-    
-    <nav class="top-navbar">
-        <a href="/" class="btn-back-home">
-            <i class="fa-solid fa-arrow-left"></i> <span class="desktop-only">Anasayfaya Dön</span>
-        </a>
-        <button class="theme-toggle-btn" id="themeToggleBtn" title="Tema Değiştir">
-            <i class="fa-solid fa-sun" id="themeIcon"></i>
-        </button>
-    </nav>
 
-    <div class="container-wrapper">
-        <div class="main-container">
-            <div class="header">
-                <h1><i class="fas fa-rocket" style="margin-right: 10px;"></i>İlan Oluştur</h1>
-                <p>Epin Hesabım oyun pazarında ürünlerini anında listele, dünya genelindeki oyuncularla buluştur.</p>
+    <header class="frontend-header">
+        <div class="header-top">
+            <div class="header-content">
+                <button class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="logo-section">
+                    <a href="/" style="text-decoration: none; color: inherit;">
+                        <img src="assets/uploads/servers/logod1ef6502-ec0d-.png" alt="epinhesabım">
+                    </a>
+                </div>
+                
+                <div class="header-search-container">
+                    <div class="header-search-box">
+                        <input type="text" class="header-search-input" placeholder="Ürün, hesap veya yang ara...">
+                        <button class="header-search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="theme-toggle-btn" title="Tema Değiştir">
+                        <i class="fas fa-sun" id="theme-icon"></i>
+                    </button>
+                    <button class="mobile-account-btn">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <div class="auth-buttons" id="authButtons"></div>
+
+                    <!-- Desktop Premium Profile Dropdown -->
+                    <div class="user-dropdown" id="desktopUserDropdown">
+                        <div class="user-dropdown-trigger" id="desktopDropdownTrigger">
+                            <img src="assets/img/avatar-1.png" alt="Profil" class="user-avatar-small" id="desktopUserAvatar">
+                            <div class="user-info-small">
+                                <span class="username-small" id="desktopUsername">Kullanıcı</span>
+                                <span class="balance-small" id="desktopBalance">₺0.00</span>
+                            </div>
+                            <i class="fas fa-chevron-down dropdown-arrow-small"></i>
+                        </div>
+
+                        <div class="user-dropdown-menu" id="desktopDropdownMenu">
+                            <!-- Profile Header -->
+                            <div class="dropdown-profile-header">
+                                <div class="dropdown-avatar-wrapper">
+                                    <img src="assets/img/avatar-1.png" alt="Profil" class="dropdown-avatar" id="desktopProfileAvatar">
+                                    <div class="dropdown-online-indicator"></div>
+                                </div>
+                                <div class="dropdown-user-info">
+                                    <div class="dropdown-username" id="desktopDropdownUsername">Kullanıcı Adı</div>
+                                    <div class="dropdown-user-status">
+                                        <span class="status-dot-small"></span>
+                                        <span>Çevrimiçi</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Balance Card -->
+                            <div class="dropdown-balance-card">
+                                <div class="balance-label-small">BAKIYE</div>
+                                <div style="display: flex; align-items: baseline; gap: 4px;">
+                                    <div class="balance-amount-small" id="desktopDropdownBalance">₺0.00</div>
+                                    <div class="balance-currency-small">TRY</div>
+                                </div>
+                            </div>
+
+                            <!-- Menu Items -->
+                            <div class="user-dropdown-menu-items">
+                                <a href="profilim2.html" class="dropdown-menu-item">
+                                    <i class="fas fa-user"></i>
+                                    <span>Profilim</span>
+                                </a>
+                                <a href="javascript:void(0)" class="dropdown-menu-item" onclick="openMessages()">
+    <i class="fas fa-envelope"></i>
+    <span>Mesajlarım</span>
+</a>
+                                <a href="ilanlarım.html" class="dropdown-menu-item">
+                                    <i class="fas fa-list"></i>
+                                    <span>İlanlarım</span>
+                                </a>
+                                <a href="siparişlerim.html" class="dropdown-menu-item">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span>Siparişlerim</span>
+                                </a>
+                                <a href="/ilan-olustur" class="dropdown-menu-item">
+    <i class="fas fa-plus-circle"></i>
+    <span>İlan Ekle</span>
+</a>
+                                <a href="bakiye-ekle.html" class="dropdown-menu-item">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span>Bakiye Yükle</span>
+                                </a>
+                                <a href="para-çek.html" class="dropdown-menu-item">
+                                    <i class="fas fa-wallet"></i>
+                                    <span>Para Çek</span>
+                                </a>
+                                <a href="ayarlar.html" class="dropdown-menu-item">
+                                    <i class="fas fa-cog"></i>
+                                    <span>Ayarlar</span>
+                                </a>
+                              <a href="#"
+class="dropdown-menu-item logout-menu-item"
+id="desktopLogoutBtn"
+onclick="confirmLogout()">
+
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Çıkış Yap</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="header-nav">
+            <div style="display: flex; align-items: center; justify-content: flex-start; gap: 20px; width: 100%;">
+                <a href="katagoriler2.html" class="nav-item">
+                    <i class="ri-apps-line"></i><span>Kategoriler</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <img src="assets/uploads/menu/menu_1757943468_8ca80874.webp" style="width:24px; border-radius:4px;">
+                    <span>Sosyal Medya</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <img src="assets/uploads/menu/menu_1757953822_0ea66b60.png" style="width:24px; border-radius:4px;">
+                    <span>PUBG</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <img src="assets/uploads/menu/menu_1757953634_0cd71794.png" style="width:24px; border-radius:4px;">
+                    <span>Valorant</span>
+                </a>
+                <div style="flex: 1 1 auto;"></div>
+                <a href="javascript:void(0)" class="nav-item" style="color: #a855f7; pointer-events: none; cursor: default;">
+                    <i class="ti ti-download"></i><span>İlan Ekle</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="page-wrapper">
+        <div class="container">
+            
+            <div class="add-listing-banner">
+                <div class="banner-text">
+                    <h1>İlan Ekle</h1>
+                    <p>Oyun hesaplarını, eşyalarını veya e-pinlerini saniyeler içinde binlerce alıcıya ulaştır.</p>
+                </div>
+                <i class="fas fa-rocket banner-icon"></i>
             </div>
 
-            <div class="content-wrapper">
-                
-                <div class="form-section">
-                    <form id="listingForm">
+            <div class="listing-grid">
+                <!-- Sol Form -->
+                <div class="card form-card">
+                    <form id="addListingForm">
+                        
                         <div class="form-group">
-                            <label class="form-label">
-                                <i class="fas fa-image"></i> Ürün Fotoğrafları
-                            </label>
-                            <div id="uploadEngine"></div>
+                            <label>İlan Başlığı <span class="required">*</span></label>
+                            <input type="text" class="form-control" placeholder="Örn: 100 Seviye Full Destansı Pubg Mobile Hesabı" required>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
+                            <div class="form-group">
+                                <label>Kategori <span class="required">*</span></label>
+                                <select class="form-control" required>
+                                    <option value="" disabled selected>Kategori Seçin</option>
+                                    <option value="pubg">PUBG Mobile</option>
+                                    <option value="valorant">Valorant</option>
+                                    <option value="cs2">Counter-Strike 2</option>
+                                    <option value="lol">League of Legends</option>
+                                    <option value="social">Sosyal Medya Hizmetleri</option>
+                                    <option value="other">Diğer</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Teslimat Süresi <span class="required">*</span></label>
+                                <select class="form-control" required>
+                                    <option value="auto">Otomatik Teslimat (E-pin)</option>
+                                    <option value="1h">1 Saat İçinde</option>
+                                    <option value="12h">12 Saat İçinde</option>
+                                    <option value="24h">24 Saat İçinde</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">
-                                <i class="fas fa-heading"></i> İlan Başlığı
-                            </label>
-                            <input type="text" id="titleInput" placeholder="Örn: Valorant Radyant Hesap - Bıçaklı Full Skin" maxlength="100">
+                            <label>Fiyat (TL) <span class="required">*</span></label>
+                            <div class="input-group">
+                                <input type="number" step="0.01" class="form-control" placeholder="0.00" required>
+                                <span class="input-group-text">₺</span>
+                            </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">
-                                <i class="fas fa-coins"></i> Satış Fiyatı (₺)
-                            </label>
-                            <input type="number" id="priceInput" placeholder="Örn: 1500" step="0.01" min="0">
+                            <label>İlan Açıklaması <span class="required">*</span></label>
+                            <textarea class="form-control" rows="5" placeholder="Hesabın/Ürünün tüm detaylarını şeffaf bir şekilde belirtin." required></textarea>
                         </div>
 
+                        <!-- Mobil Uyumlu Image Upload -->
                         <div class="form-group">
-                            <label class="form-label">
-                                <i class="fas fa-align-left"></i> Ürün Açıklaması
-                            </label>
-                            <textarea id="descriptionInput" placeholder="Potansiyel alıcılar için ürün içeriğini, teslimat koşullarını detaylıca yazın..."></textarea>
+                            <label>Görseller</label>
+                            <div class="upload-zone" id="dropZone">
+                                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                <div class="upload-title">Tıklayıp Seç veya Sürükle Bırak</div>
+                                <p class="upload-desc">Desteklenen formatlar: JPG, PNG, WEBP</p>
+                                <div class="upload-limit"><i class="fas fa-weight-hanging"></i> 50 MB'a kadar yükleyebilirsiniz</div>
+                            </div>
+                            <!-- Gizli input: accept="image/*" mobilde kamera/galeri açılmasını sağlar -->
+                            <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+                            
+                            <div class="image-preview-container" id="imagePreviewContainer"></div>
                         </div>
+
+                        <button type="submit" class="btn-publish">
+                            <i class="fas fa-check-circle"></i> İlanı Yayınla
+                        </button>
                     </form>
                 </div>
 
-                <div class="preview-section">
-                    <div class="preview-header">
-                        <i class="fas fa-eye"></i>
-                        <h3>Canlı Kart Önizlemesi</h3>
+                <!-- Sağ Bilgi Kartları -->
+                <div class="info-sidebar">
+                    <div class="info-card">
+                        <div class="info-card-icon icon-shield">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="info-card-content">
+                            <h4>%100 Güvenli Ticaret</h4>
+                            <p>epinhesabım güvencesiyle paranız havuz sisteminde tutulur. Teslimat tamamlanana kadar güvendesiniz.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-card-icon icon-rocket">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="info-card-content">
+                            <h4>Anında Satış Mümkün</h4>
+                            <p>Otomatik teslimat (e-pin) ekleyerek gece gündüz demeden uyurken bile satış yapabilirsiniz.</p>
+                        </div>
                     </div>
 
-                    <div class="product-card" id="previewCard">
-                        <div class="card-image">
-                            <div class="card-image-placeholder">
-                                <i class="fas fa-image"></i>
-                            </div>
+                    <div class="info-card">
+                        <div class="info-card-icon icon-support">
+                            <i class="fas fa-headset"></i>
                         </div>
-                        <div class="card-content">
-                            <span class="card-category" id="previewCategory"><i class="fas fa-tag"></i> Kategori</span>
-                            <h3 class="card-title" id="previewTitle">İlan başlığı burada görünecek...</h3>
-                            <div class="card-price empty" id="previewPrice">Fiyat girin</div>
-                            <div class="card-meta">
-                                <span><i class="fa-solid fa-user"></i> <span id="previewSeller">Siz</span></span>
-                                <span><i class="fa-solid fa-bolt"></i> Yeni</span>
-                            </div>
+                        <div class="info-card-content">
+                            <h4>7/24 Canlı Destek</h4>
+                            <p>Alıcı ve satıcı arasındaki problemlerde moderatörlerimiz 7/24 saniyeler içinde müdahale eder.</p>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="submit-section">
-                <button type="button" id="submitBtn" class="submit-btn">
-                    <i class="fas fa-check"></i>
-                    <span>İlanı Yayına Al</span>
-                </button>
-            </div>
+            
         </div>
     </div>
 
-    <script src="assets/upload-engine.js?v=2"></script>
-    <script>
-        // --- Gece Gündüz Teması ---
-        const themeToggleBtn = document.getElementById('themeToggleBtn');
-        const themeIcon = document.getElementById('themeIcon');
-        
-        const currentTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        themeIcon.className = currentTheme === 'light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+    <!-- MOBILE BOTTOM MENU -->
+    <div class="mobile-bottom-menu">
+        <a href="/" class="bottom-menu-item">
+            <i class="fas fa-home"></i><span>Ana Sayfa</span>
+        </a>
+        <a href="katagoriler2.html" class="bottom-menu-item">
+            <i class="fas fa-th-large"></i><span>Kategoriler</span>
+        </a>
+        <a href="#" class="bottom-menu-item">
+            <i class="fas fa-envelope"></i><span>Mesajlarım</span>
+        </a>
+        <a href="/ilan-olustur" class="bottom-menu-item active">
+            <i class="fas fa-plus"></i><span>İlan Ekle</span>
+        </a>
+        <a href="javascript:void(0)" class="bottom-menu-item" id="mobileAuthMenuItem">
+            <i class="fas fa-sign-in-alt"></i><span>Giriş Yap</span>
+        </a>
+    </div>
 
-        themeToggleBtn.addEventListener('click', () => {
-            let theme = document.documentElement.getAttribute('data-theme');
-            let newTheme = theme === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            themeIcon.className = newTheme === 'light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+    <script>
+        // File Upload Logic
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+
+        // Mobil Galeri açılması için Dropzone'a tıklama olayı
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
         });
 
-        // --- Kategori Tespiti ---
-        const categories = {
-            'valorant': ['valorant', 'val', 'elo', 'radiant', 'immortal', 'vp'],
-            'cs2': ['cs2', 'counter strike', 'csgo', 'cs go', 'rank', 'mm rank'],
-            'pubg': ['pubg', 'playerunknown', 'battleground', 'bp', 'uc'],
-            'steam': ['steam', 'dota', 'dota2', 'team fortress', 'tf2', 'csgo'],
-            'lol': ['lol', 'league of legends', 'riot', 'rp'],
-        };
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
 
-        function detectCategory(text) {
-            const lowerText = text.toLowerCase().trim();
-            for (const [category, keywords] of Object.entries(categories)) {
-                if (keywords.some(keyword => lowerText.includes(keyword))) {
-                    return category.charAt(0).toUpperCase() + category.slice(1);
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+            handleFiles(files);
+        });
+
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+        });
+
+        function handleFiles(files) {
+            [...files].forEach(file => {
+                if(file.size > MAX_FILE_SIZE) {
+                    alert(`${file.name} 50 MB'tan büyük olamaz!`);
+                    return;
+                }
+                previewFile(file);
+            });
+        }
+
+        function previewFile(file) {
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = function() {
+                let div = document.createElement('div');
+                div.className = 'image-preview';
+                
+                let img = document.createElement('img');
+                img.src = reader.result;
+                
+                let removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-img';
+                removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                removeBtn.onclick = function(e) {
+                    e.preventDefault();
+                    div.remove();
+                };
+
+                div.appendChild(img);
+                div.appendChild(removeBtn);
+                previewContainer.appendChild(div);
+            }
+        }
+
+        // Dropdown menüsü işlevleri
+        document.addEventListener('DOMContentLoaded', function() {
+            const desktopDropdown = document.getElementById('desktopUserDropdown');
+            const desktopTrigger = document.getElementById('desktopDropdownTrigger');
+            const desktopMenu = document.getElementById('desktopDropdownMenu');
+            const desktopLogoutBtn = document.getElementById('desktopLogoutBtn');
+            const desktopMenuItems = desktopMenu.querySelectorAll('a:not(.logout-menu-item)');
+
+            if (!desktopDropdown || !desktopTrigger) return;
+
+            // Toggle dropdown on trigger click
+            desktopTrigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                desktopDropdown.classList.toggle('active');
+            });
+
+            // Close when clicking menu item
+            desktopMenuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Allow default link behavior, then close dropdown
+                    setTimeout(() => {
+                        if (!item.classList.contains('logout-menu-item')) {
+                            desktopDropdown.classList.remove('active');
+                        }
+                    }, 100);
+                });
+            });
+
+            // Logout button handler
+            if (desktopLogoutBtn) {
+                desktopLogoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    desktopDropdown.classList.remove('active');
+                    confirmLogout();
+                });
+            }
+
+            // Close when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!desktopDropdown.contains(e.target)) {
+                    desktopDropdown.classList.remove('active');
+                }
+            });
+
+            // Prevent menu from closing when clicking inside it
+            desktopMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // Hide dropdown when pressing Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    desktopDropdown.classList.remove('active');
+                }
+            });
+        });
+
+        // Auth Status Management for Desktop Dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            const desktopDropdown = document.getElementById('desktopUserDropdown');
+            const authButtons = document.getElementById('authButtons');
+            const mobileAuthMenuItem = document.getElementById('mobileAuthMenuItem');
+
+            function updateAuthDisplay() {
+                const user = localStorage.getItem('user');
+                const token = localStorage.getItem('token');
+
+                if (user && token) {
+                    try {
+                        const userData = JSON.parse(user);
+
+                        // Show desktop dropdown, hide auth buttons
+                        desktopDropdown.style.display = 'flex';
+                        authButtons.innerHTML = '';
+
+                        // Update user info
+                        const username = userData.username || 'Kullanıcı';
+                        const balance = userData.balance || '0.00';
+                        const avatar = userData.avatar || 'assets/img/avatar-1.png';
+
+                        document.getElementById('desktopUsername').textContent = username;
+                        document.getElementById('desktopBalance').textContent = '₺' + parseFloat(balance).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        document.getElementById('desktopUserAvatar').src = avatar;
+                        document.getElementById('desktopProfileAvatar').src = avatar;
+                        document.getElementById('desktopDropdownUsername').textContent = username;
+                        document.getElementById('desktopDropdownBalance').textContent = '₺' + parseFloat(balance).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                        // Update mobile auth menu item - show logout
+                        if (mobileAuthMenuItem) {
+                            mobileAuthMenuItem.innerHTML = `
+                                <i class="fas fa-sign-out-alt"></i><span>Çıkış Yap</span>
+                            `;
+                            mobileAuthMenuItem.onclick = function() {
+                                confirmLogout();
+                            };
+                        }
+
+                    } catch (e) {
+                        console.error('Error parsing user data:', e);
+                    }
+                } else {
+                    // Show auth buttons, hide desktop dropdown
+                    desktopDropdown.style.display = 'none';
+                    if (authButtons) {
+                        authButtons.innerHTML = `
+                            <button class="btn-login" onclick="window.location.href='login.html'">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span>Giriş Yap</span>
+                            </button>
+                            <button class="btn-register" onclick="window.location.href='register.html'">
+                                <i class="fas fa-user-plus"></i>
+                                <span>Kayıt Ol</span>
+                            </button>
+                        `;
+                    }
+
+                    // Reset mobile auth menu item - show login
+                    if (mobileAuthMenuItem) {
+                        mobileAuthMenuItem.innerHTML = `
+                            <i class="fas fa-sign-in-alt"></i><span>Giriş Yap</span>
+                        `;
+                        mobileAuthMenuItem.onclick = function() {
+                            window.location.href = 'login.html';
+                        };
+                    }
                 }
             }
-            return 'Genel';
-        }
 
-        function getCategoryIcon(category) {
-            const icons = {
-                'Valorant': 'fas fa-shield',
-                'Cs2': 'fas fa-crosshairs',
-                'Pubg': 'fas fa-map',
-                'Steam': 'fas fa-gamepad',
-                'Lol': 'fas fa-bolt',
-                'Genel': 'fas fa-tag'
-            };
-            return icons[category] || 'fas fa-tag';
-        }
+            updateAuthDisplay();
 
-        // --- Elementler ---
-        const titleInput = document.getElementById('titleInput');
-        const priceInput = document.getElementById('priceInput');
-        const descriptionInput = document.getElementById('descriptionInput');
-        const submitBtn = document.getElementById('submitBtn');
-        const previewCard = document.getElementById('previewCard');
-        const previewTitle = document.getElementById('previewTitle');
-        const previewPrice = document.getElementById('previewPrice');
-        const previewCategory = document.getElementById('previewCategory');
-        let uploadedImageUrls = [];
-
-        // --- Upload Engine Init ---
-        const uploader = window.UploadEngine('uploadEngine', {
-          token: localStorage.getItem('token') || '',
-          onChange: (urls) => {
-            uploadedImageUrls = urls;
-            const cardImage = previewCard.querySelector('.card-image');
-            if (urls.length > 0) {
-              cardImage.innerHTML = `<img src="${urls[0]}" alt="Ürün görseli">`;
-            } else {
-              cardImage.innerHTML = '<div class="card-image-placeholder"><i class="fas fa-image"></i></div>';
-            }
-            updatePreview();
-          }
+            // Listen for storage changes (for multi-tab support)
+            window.addEventListener('storage', updateAuthDisplay);
         });
 
-        // --- Canlı Önizleme Güncelleyici ---
-        function updatePreview() {
-            const title = titleInput.value.trim() || 'İlan başlığı burada görünecek...';
-            previewTitle.textContent = title;
-
-            const price = parseFloat(priceInput.value) || 0;
-            if (price > 0) {
-                previewPrice.classList.remove('empty');
-                previewPrice.textContent = `${price.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₺`;
-            } else {
-                previewPrice.classList.add('empty');
-                previewPrice.textContent = 'Fiyat girin';
+        // Logout function
+        function confirmLogout() {
+            if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
             }
-
-            const categoryText = (titleInput.value + ' ' + descriptionInput.value).trim();
-            const detectedCategory = detectCategory(categoryText);
-            const categoryIcon = getCategoryIcon(detectedCategory);
-            previewCategory.innerHTML = `<i class="${categoryIcon}"></i> ${detectedCategory}`;
         }
 
-        titleInput.addEventListener('input', updatePreview);
-        priceInput.addEventListener('input', updatePreview);
-        descriptionInput.addEventListener('input', updatePreview);
+        function openMessages() { window.location.href = 'mesajlar\u0131m.html'; }
 
-        // --- Form Gönderimi ---
-        submitBtn.addEventListener('click', async () => {
-            const title = titleInput.value.trim();
-            const price = parseFloat(priceInput.value);
-            const description = descriptionInput.value.trim();
-            const hasImage = uploadedImageUrls.length > 0;
-            const userRaw = localStorage.getItem('user');
+        // Theme toggle
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const themeIcon = document.getElementById('theme-icon');
+            if (theme === 'light') {
+                themeIcon.className = 'fas fa-moon';
+            } else {
+                themeIcon.className = 'fas fa-sun';
+            }
+        }
+
+        // Initialize theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
+            // Theme toggle button
+            const themeToggleBtn = document.querySelector('.theme-toggle-btn');
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', toggleTheme);
+            }
+        });
+
+        // Form submit
+        document.getElementById('addListingForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
             const token = localStorage.getItem('token');
-
-            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-            const swalBg = isLight ? '#fff' : '#1e1e24';
-            const swalColor = isLight ? '#1f2937' : '#f4f4f5';
-
-            if (!userRaw || !token) {
-                Swal.fire({
-                    icon: 'warning', title: 'Giriş gerekli', text: 'İlan eklemek için lütfen giriş yapın.',
-                    background: swalBg, color: swalColor, confirmButtonColor: '#8b5cf6'
-                }).then(() => { window.location.href = '/giris-yap'; });
+            if (!token) {
+                alert('Lütfen önce giriş yapın.');
+                window.location.href = 'login.html';
                 return;
             }
 
-            let user;
-            try {
-                user = JSON.parse(userRaw);
-            } catch (err) {
-                localStorage.removeItem('user'); localStorage.removeItem('token');
-                window.location.href = '/giris-yap';
-                return;
+            const title = this.querySelector('input[type="text"]').value;
+            const category = this.querySelector('select').value;
+            const deliveryTime = this.querySelectorAll('select')[1].value;
+            const price = this.querySelector('input[type="number"]').value;
+            const description = this.querySelector('textarea').value;
+
+            // Image handling
+            const previewImages = document.querySelectorAll('.image-preview img');
+            let image = 'assets/img/placeholder.png';
+            if (previewImages.length > 0) {
+                image = previewImages[0].src;
             }
 
-            if (!title) { Swal.fire({ icon: 'error', title: 'Hata', text: 'Lütfen başlık girin', background: swalBg, color: swalColor, confirmButtonColor: '#8b5cf6' }); return; }
-            if (isNaN(price) || price <= 0) { Swal.fire({ icon: 'error', title: 'Hata', text: 'Lütfen geçerli bir fiyat girin', background: swalBg, color: swalColor, confirmButtonColor: '#8b5cf6' }); return; }
-            if (!description) { Swal.fire({ icon: 'error', title: 'Hata', text: 'Lütfen açıklama girin', background: swalBg, color: swalColor, confirmButtonColor: '#8b5cf6' }); return; }
-            if (!hasImage) { Swal.fire({ icon: 'error', title: 'Hata', text: 'Lütfen en az bir görsel yükleyin', background: swalBg, color: swalColor, confirmButtonColor: '#8b5cf6' }); return; }
-
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('price', price);
-            formData.append('description', description);
-            formData.append('sellerId', user.id || user._id || 'unknown');
-            formData.append('sellerName', user.username || user.fullName || user.name || 'Kullanıcı');
-            formData.append('imageUrl', uploadedImageUrls[0]);
-
-            submitBtn.classList.add('loading');
-            submitBtn.disabled = true;
-            const originalContent = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<div class="spinner"></div><span>Gönderiliyor...</span>';
+            const productData = {
+                title,
+                category,
+                deliveryTime,
+                price,
+                description,
+                image
+            };
 
             try {
-                const response = await fetch('/api/products/create', { method: 'POST', body: formData });
-                const result = await response.json();
-
-                if (!response.ok) throw new Error(result.error || 'İlan oluşturulamadı.');
-
-                const category = detectCategory(title + ' ' + description);
-
-                await Swal.fire({
-                    icon: 'success',
-                    title: 'Tebrikler!',
-                    html: `<div style="text-align: left;">
-                        <p>İlanınız başarıyla onaya gönderildi.</p>
-                        <hr style="border-color: var(--border); margin: 15px 0;">
-                        <p><strong>Başlık:</strong> ${title}</p>
-                        <p><strong>Fiyat:</strong> ${price.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₺</p>
-                        <p><strong>Kategori:</strong> ${category}</p>
-                    </div>`,
-                    background: swalBg, color: swalColor, confirmButtonColor: '#8b5cf6', allowOutsideClick: false
+                const response = await fetch('/api/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(productData)
                 });
 
-                document.getElementById('listingForm').reset();
-                uploadedImageUrls = [];
-                if (uploader) uploader.reset();
+                const data = await response.json();
 
-                const cardImage = previewCard.querySelector('.card-image');
-                cardImage.innerHTML = '<div class="card-image-placeholder"><i class="fas fa-image"></i></div>';
-                updatePreview();
-
-                window.location.href = 'ilanlarım.html';
-
-            } catch (err) {
-                Swal.fire({ icon: 'error', title: 'Hata', text: err.message || 'İlan gönderilirken bir hata oluştu.', background: swalBg, color: swalColor, confirmButtonColor: '#8b5cf6' });
-            } finally {
-                submitBtn.classList.remove('loading');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalContent;
+                if (data.success) {
+                    // Show success popup
+                    showSuccessPopup();
+                } else {
+                    alert('İlan oluşturulamadı: ' + (data.error || 'Bilinmeyen hata'));
+                }
+            } catch (error) {
+                console.error('İlan oluşturma hatası:', error);
+                alert('İlan oluşturulamadı. Sunucu hatası.');
             }
         });
 
-        updatePreview();
+        // Success popup function
+        function showSuccessPopup() {
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 99999;
+                animation: fadeIn 0.3s ease;
+            `;
+
+            popup.innerHTML = `
+                <div style="
+                    background: rgba(26, 29, 41, 0.95);
+                    border: 1px solid rgba(139, 92, 246, 0.3);
+                    padding: 30px;
+                    border-radius: 16px;
+                    text-align: center;
+                    color: white;
+                    max-width: 320px;
+                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+                    animation: slideIn 0.3s ease;
+                ">
+                    <div style="
+                        width: 60px;
+                        height: 60px;
+                        background: rgba(16, 185, 129, 0.15);
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin: 0 auto 20px;
+                    ">
+                        <i class="fas fa-check" style="font-size: 28px; color: #10b981;"></i>
+                    </div>
+                    <h2 style="margin: 0 0 12px 0; font-size: 18px; font-weight: 600; color: #e8e8f0;">İlan Başarıyla Oluşturuldu!</h2>
+                    <p style="margin: 0 0 20px 0; font-size: 13px; line-height: 1.5; color: #94a3b8;">
+                        İlanınız en kısa sürede yöneticilerimiz tarafından gözlemlenip onaylanacaktır.
+                    </p>
+                    <button onclick="closePopupAndRedirect()" style="
+                        background: rgba(139, 92, 246, 0.8);
+                        color: white;
+                        border: none;
+                        padding: 10px 24px;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">
+                        Tamam
+                    </button>
+                </div>
+                <style>
+                    @keyframes fadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+                    @keyframes slideIn {
+                        from { transform: translateY(-30px); opacity: 0; }
+                        to { transform: translateY(0); opacity: 1; }
+                    }
+                </style>
+            `;
+
+            document.body.appendChild(popup);
+        }
+
+        function closePopupAndRedirect() {
+            const popup = document.querySelector('div[style*="position: fixed"]');
+            if (popup) {
+                popup.remove();
+            }
+            window.location.href = 'ilanlarım.html?tab=pasif';
+        }
     </script>
 </body>
 </html>

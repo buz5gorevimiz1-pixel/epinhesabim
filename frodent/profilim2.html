@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profilim - Epin Hesabım</title>
+    <meta name="description" content="Kullanıcı profili, bakiye, sipariş ve hesap bilgileri.">
+    <link rel="icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== TEMEL ===== */
+        * { font-family: 'Poppins', sans-serif; box-sizing: border-box; }
+
+        body {
+            overflow-x: hidden;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #080c1a;
+            background-image:
+                linear-gradient(180deg, rgba(8,12,26,0.55), rgba(8,12,26,0.65)),
+                url('assets/arkaplan.png');
+            background-repeat: no-repeat, repeat;
+            background-size: cover, 900px auto;
+            background-attachment: fixed, fixed;
+            background-position: center center, center center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== TOPBAR (index ile aynı) ===== */
+        .topbar {
+            background: linear-gradient(135deg,
+                rgba(18,8,40,0.98) 0%,
+                rgba(46,11,95,0.95) 45%,
+                rgba(236,72,153,0.65) 55%,
+                rgba(26,9,60,0.95) 80%
+            );
+            border-bottom: 1px solid rgba(236,72,153,0.4);
+            padding: 8px 0;
+            font-size: 13px;
+            box-shadow: inset 0 -2px 8px rgba(0,0,0,0.45);
+        }
+        .topbar-content { display:flex; justify-content:space-between; align-items:center; max-width:1400px; margin:0 auto; padding:0 24px; }
+        .topbar-right { display:flex; align-items:center; gap:15px; }
+        .topbar-dropdown { position:relative; }
+        .topbar-dropdown-btn {
+            display:flex; align-items:center; gap:6px;
+            background:none; border:none; color:#e8e8f0; cursor:pointer;
+            padding:6px 12px; border-radius:6px; transition:all 0.3s; font-size:12px; font-weight:500;
+        }
+        .topbar-dropdown-btn:hover { color:#d4af37; background:rgba(212,175,55,0.1); }
+        .topbar-dropdown-menu {
+            display:none; position:absolute; top:100%; right:0; min-width:180px;
+            background:rgba(15,10,35,0.98); border:1px solid rgba(255,255,255,0.08);
+            border-radius:12px; padding:6px; z-index:2000;
+            box-shadow:0 20px 40px rgba(0,0,0,0.5);
+        }
+        .topbar-dropdown:hover .topbar-dropdown-menu { display:block; }
+        .topbar-dropdown-item {
+            display:flex; align-items:center; gap:10px; padding:10px 14px;
+            color:#e8e8f0; text-decoration:none; border-radius:8px; font-size:13px; transition:all 0.2s;
+        }
+        .topbar-dropdown-item:hover { background:rgba(139,92,246,0.15); color:#a78bfa; }
+        .topbar-left { display:flex; align-items:center; gap:20px; }
+
+        /* ===== HEADER (index ile aynı renk/yapı) ===== */
+        .frontend-header {
+            background: linear-gradient(90deg,#0a0f22 0%,#1b0d3b 35%,rgba(147,51,234,0.65) 52%,#17093a 75%,#0a0f22 100%) !important;
+            position: relative; z-index: 1100;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.35) !important;
+            overflow: visible !important; width: 100%;
+        }
+        .frontend-header .header-top {
+            padding: 12px 24px; background: transparent !important;
+            border-bottom: 0 !important; width: 100%; position: relative;
+            display: flex; justify-content: center;
+        }
+        .frontend-header .header-top::after {
+            content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+            background: linear-gradient(90deg,rgba(140,100,255,0),rgba(140,100,255,0.75),rgba(140,100,255,0));
+            pointer-events: none;
+        }
+        .header-content { max-width:1400px; width:100%; display:flex; align-items:center; justify-content:space-between; }
+        .header-nav {
+            display:flex; align-items:center; justify-content:flex-start;
+            padding:10px 24px; gap:8px; max-width:1400px; margin:0 auto; width:100%;
+            position:relative; z-index:1000; overflow-x:auto;
+        }
+        .header-nav::-webkit-scrollbar { display:none; }
+
+        /* Logo */
+        .logo-section a { text-decoration:none; color:inherit; }
+
+        /* Search */
+        .header-search-container { flex:1; max-width:480px; margin:0 24px; }
+        .header-search-box {
+            display:flex; align-items:center; width:100%;
+            background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12);
+            border-radius:99px; padding:6px 6px 6px 20px; transition:all 0.3s;
+        }
+        .header-search-box:focus-within { border-color:#8b5cf6; box-shadow:0 0 20px rgba(139,92,246,0.25); background:rgba(255,255,255,0.08); }
+        .header-search-input { flex:1; border:none; background:transparent; color:#fff; font-size:14px; outline:none; }
+        .header-search-input::placeholder { color:rgba(255,255,255,0.35); }
+        .header-search-btn {
+            border:none; width:36px; height:36px; border-radius:50%;
+            background:linear-gradient(135deg,#7c3aed,#ec4899); color:#fff;
+            display:grid; place-items:center; cursor:pointer; font-size:14px; flex-shrink:0;
+        }
+
+        /* Header actions */
+        .header-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+        .theme-toggle-btn {
+            width:38px; height:38px; border-radius:50%;
+            background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
+            color:#fff; cursor:pointer; display:grid; place-items:center; font-size:16px; transition:all 0.3s;
+        }
+        .theme-toggle-btn:hover { background:rgba(139,92,246,0.2); border-color:#8b5cf6; }
+
+        .mobile-menu-toggle {
+            display:none; width:38px; height:38px; border-radius:10px;
+            background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
+            color:#fff; font-size:18px; cursor:pointer; align-items:center; justify-content:center;
+        }
+
+        /* Auth buttons */
+        .auth-buttons { display:flex; gap:8px; }
+        .btn-login, .btn-register {
+            padding:8px 18px; border-radius:10px; font-size:13px; font-weight:600;
+            cursor:pointer; border:none; transition:all 0.3s; text-decoration:none;
+            display:inline-flex; align-items:center; gap:6px;
+        }
+        .btn-login { background:rgba(255,255,255,0.07); color:#fff; border:1px solid rgba(255,255,255,0.15); }
+        .btn-login:hover { background:rgba(255,255,255,0.12); }
+        .btn-register { background:linear-gradient(135deg,#7c3aed,#ec4899); color:#fff; }
+        .btn-register:hover { opacity:0.9; transform:translateY(-1px); }
+
+        /* User dropdown */
+        .user-dropdown { position:relative; }
+        .user-dropdown-trigger {
+            display:flex; align-items:center; gap:10px; padding:6px 14px 6px 6px;
+            background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
+            border-radius:99px; cursor:pointer; transition:all 0.3s;
+        }
+        .user-dropdown-trigger:hover { background:rgba(139,92,246,0.15); border-color:#8b5cf6; }
+        .user-avatar-small { width:32px; height:32px; border-radius:50%; object-fit:cover; }
+        .user-info-small { display:flex; flex-direction:column; }
+        .username-small { font-size:13px; font-weight:600; color:#fff; line-height:1.2; }
+        .balance-small { font-size:11px; color:#a78bfa; line-height:1.2; }
+        .dropdown-arrow-small { font-size:10px; color:rgba(255,255,255,0.5); transition:transform 0.3s; }
+        .user-dropdown:hover .dropdown-arrow-small { transform:rotate(180deg); }
+
+        .user-dropdown-menu {
+            display:none; position:absolute; top:calc(100% + 10px); right:0; width:260px;
+            background:rgba(10,12,26,0.98); border:1px solid rgba(139,92,246,0.2);
+            border-radius:16px; padding:8px; z-index:3000;
+            box-shadow:0 20px 60px rgba(0,0,0,0.6); backdrop-filter:blur(20px);
+        }
+        .user-dropdown:hover .user-dropdown-menu { display:block; }
+        .dropdown-profile-header { display:flex; align-items:center; gap:12px; padding:12px; border-bottom:1px solid rgba(255,255,255,0.06); margin-bottom:6px; }
+        .dropdown-avatar-wrapper { position:relative; }
+        .dropdown-avatar { width:44px; height:44px; border-radius:50%; object-fit:cover; }
+        .dropdown-online-indicator { position:absolute; bottom:1px; right:1px; width:10px; height:10px; background:#10b981; border-radius:50%; border:2px solid rgba(10,12,26,0.98); }
+        .dropdown-username { font-size:14px; font-weight:700; color:#fff; }
+        .dropdown-user-status { display:flex; align-items:center; gap:5px; font-size:11px; color:rgba(255,255,255,0.45); margin-top:2px; }
+        .status-dot-small { width:6px; height:6px; background:#10b981; border-radius:50%; }
+        .dropdown-balance-card { margin:6px 0; padding:10px 12px; background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(236,72,153,0.1)); border:1px solid rgba(139,92,246,0.2); border-radius:10px; }
+        .balance-label-small { font-size:10px; color:rgba(255,255,255,0.4); letter-spacing:1px; text-transform:uppercase; margin-bottom:3px; }
+        .balance-amount-small { font-size:20px; font-weight:800; color:#fff; }
+        .balance-currency-small { font-size:11px; color:rgba(255,255,255,0.35); }
+        .user-dropdown-menu-items { display:flex; flex-direction:column; gap:2px; }
+        .dropdown-menu-item {
+            display:flex; align-items:center; gap:10px; padding:9px 12px;
+            border-radius:8px; color:rgba(255,255,255,0.75); text-decoration:none;
+            font-size:13px; transition:all 0.2s;
+        }
+        .dropdown-menu-item:hover { background:rgba(139,92,246,0.12); color:#fff; }
+        .dropdown-menu-item i { width:16px; text-align:center; font-size:13px; color:#8b5cf6; }
+        .logout-menu-item:hover { background:rgba(239,68,68,0.1); color:#ef4444; }
+        .logout-menu-item:hover i { color:#ef4444; }
+
+        /* Nav items */
+        .nav-item {
+            display:flex; align-items:center; gap:6px; padding:8px 14px;
+            color:rgba(255,255,255,0.8); font-size:13px; font-weight:500;
+            border-radius:10px; text-decoration:none; cursor:pointer; position:relative;
+            white-space:nowrap; transition:all 0.2s; flex-shrink:0;
+        }
+        .nav-item:hover { background:rgba(255,255,255,0.08); color:#fff; }
+        .nav-item.active { background:rgba(139,92,246,0.15); color:#a78bfa; }
+
+        /* ===== MOBILE SLIDE MENU (index gibi sol taraftan) ===== */
+        .mobile-menu-overlay {
+            display:none; position:fixed; inset:0;
+            background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:1500;
+        }
+        .mobile-menu-overlay.active { display:block; }
+        .mobile-menu {
+            position:fixed; top:0; left:0; width:min(300px,85vw); height:100vh;
+            background:rgba(8,8,20,0.99); border-right:1px solid rgba(139,92,246,0.2);
+            z-index:1600; transform:translateX(-110%); transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
+            display:flex; flex-direction:column; overflow-y:auto;
+        }
+        .mobile-menu.active { transform:translateX(0); }
+        .mobile-menu-header-bar {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:16px 20px; border-bottom:1px solid rgba(255,255,255,0.06);
+        }
+        .mobile-menu-close-btn {
+            width:34px; height:34px; border-radius:8px; background:rgba(255,255,255,0.07);
+            border:1px solid rgba(255,255,255,0.1); color:#fff; font-size:16px;
+            cursor:pointer; display:grid; place-items:center;
+        }
+        .mobile-user-info {
+            display:flex; align-items:center; gap:14px; padding:20px;
+            border-bottom:1px solid rgba(255,255,255,0.05);
+        }
+        .mobile-user-info img { width:52px; height:52px; border-radius:50%; object-fit:cover; border:2px solid rgba(139,92,246,0.4); }
+        .mobile-user-meta-name { font-size:15px; font-weight:700; color:#fff; }
+        .mobile-user-meta-balance { font-size:12px; color:#a78bfa; margin-top:2px; }
+        .mobile-menu-nav { display:flex; flex-direction:column; padding:10px 12px; gap:2px; }
+        .mobile-menu-nav a {
+            display:flex; align-items:center; gap:12px; padding:12px 14px;
+            border-radius:10px; color:rgba(255,255,255,0.8); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s;
+        }
+        .mobile-menu-nav a i { width:20px; text-align:center; color:#8b5cf6; }
+        .mobile-menu-nav a:hover, .mobile-menu-nav a.active { background:rgba(139,92,246,0.12); color:#fff; }
+        .mobile-menu-nav a.logout-link:hover { background:rgba(239,68,68,0.1); color:#ef4444; }
+        .mobile-menu-nav a.logout-link i { color:#ef4444; }
+        .mobile-menu-divider { height:1px; background:rgba(255,255,255,0.05); margin:8px 16px; }
+
+        /* ===== BOTTOM MENU (index ile aynı) ===== */
+        .mobile-bottom-menu {
+            display:none; position:fixed; bottom:0; left:0; right:0; height:60px;
+            background:rgba(8,8,22,0.97); border-top:1px solid rgba(139,92,246,0.2);
+            z-index:1400; align-items:center; justify-content:space-around;
+            backdrop-filter:blur(20px);
+        }
+        .bottom-menu-item {
+            display:flex; flex-direction:column; align-items:center; gap:3px;
+            color:rgba(255,255,255,0.5); text-decoration:none; font-size:10px;
+            font-weight:500; flex:1; padding:6px 0; transition:all 0.2s; position:relative;
+        }
+        .bottom-menu-item i { font-size:20px; }
+        .bottom-menu-item.active, .bottom-menu-item:hover { color:#a78bfa; }
+        .bottom-menu-item.active i { filter:drop-shadow(0 0 6px rgba(167,139,250,0.5)); }
+
+        /* ===== SAYFA İÇERİĞİ ===== */
+        .page-content {
+            flex:1; max-width:1200px; width:100%; margin:0 auto;
+            padding:30px 24px 100px;
+        }
+
+        /* Profil başlık kartı */
+        .profile-hero {
+            position:relative; border-radius:20px; overflow:hidden; margin-bottom:24px;
+            background:rgba(20,22,36,0.75);
+            border:1px solid rgba(255,255,255,0.06); padding:32px;
+            display:flex; align-items:center; gap:28px; flex-wrap:wrap;
+        }
+        .profile-hero::before {
+            content:''; position:absolute; inset:0;
+            background:url('assets/arkaplan.png') repeat; background-size:600px;
+            opacity:0.04; pointer-events:none;
+        }
+        .avatar-ring {
+            position:relative; width:110px; height:110px; flex-shrink:0;
+        }
+        .avatar-ring::before {
+            content:''; position:absolute; inset:-3px; border-radius:50%;
+            background:linear-gradient(135deg,#9ca3af,#6b7280); z-index:0;
+            animation:ringPulse 3s ease-in-out infinite;
+        }
+        @keyframes ringPulse { 0%,100%{box-shadow:0 0 0 0 rgba(156,163,175,0.4);} 50%{box-shadow:0 0 0 10px rgba(156,163,175,0);} }
+        .avatar-ring img {
+            width:100%; height:100%; border-radius:50%; object-fit:cover;
+            position:relative; z-index:1; border:3px solid rgba(8,8,22,0.9);
+        }
+        .avatar-online { position:absolute; bottom:6px; right:6px; width:16px; height:16px; background:#10b981; border-radius:50%; border:3px solid rgba(8,8,22,0.95); z-index:2; }
+        .profile-hero-info { flex:1; position:relative; z-index:1; }
+        .profile-hero-name { font-size:26px; font-weight:800; color:#fff; margin:0 0 6px; }
+        .profile-hero-username { font-size:14px; color:rgba(255,255,255,0.6); margin-bottom:10px; }
+        .profile-hero-badges { display:flex; gap:8px; flex-wrap:wrap; }
+        .badge-pill {
+            display:inline-flex; align-items:center; gap:5px; padding:4px 12px;
+            border-radius:99px; font-size:11px; font-weight:600;
+        }
+        .badge-pill.green { background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.12); }
+        .badge-pill.purple { background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.12); }
+        .badge-pill.orange { background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.12); }
+        .profile-hero-actions { display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+        .btn-hero {
+            display:inline-flex; align-items:center; gap:8px; padding:10px 20px;
+            border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; border:none; transition:all 0.3s;
+        }
+        .btn-hero.primary { background:linear-gradient(135deg,#4c1d95,#6d28d9); color:#fff; border:1px solid rgba(109,40,217,0.5); box-shadow:0 4px 15px rgba(109,40,217,0.35); }
+        .btn-hero.primary:hover { transform:translateY(-2px); background:linear-gradient(135deg,#5b21b6,#7c3aed); box-shadow:0 8px 25px rgba(109,40,217,0.5); }
+        .btn-hero.secondary { background:linear-gradient(135deg,#1e3a8a,#2563eb); color:#fff; border:1px solid rgba(37,99,235,0.5); box-shadow:0 4px 15px rgba(37,99,235,0.3); }
+        .btn-hero.secondary:hover { transform:translateY(-2px); background:linear-gradient(135deg,#1d4ed8,#3b82f6); box-shadow:0 8px 25px rgba(37,99,235,0.45); }
+
+        /* İstatistik kartları */
+        .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+        .stat-card {
+            background:rgba(20,22,36,0.7); border:1px solid rgba(255,255,255,0.06);
+            border-radius:16px; padding:20px 18px; backdrop-filter:blur(12px);
+            transition:all 0.3s; position:relative; overflow:hidden;
+        }
+        .stat-card::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:3px;
+            border-radius:16px 16px 0 0;
+            background:rgba(255,255,255,0.55);
+        }
+        .stat-card:hover { transform:translateY(-3px); border-color:rgba(255,255,255,0.12); box-shadow:0 10px 30px rgba(0,0,0,0.3); }
+        .stat-card-icon { font-size:22px; margin-bottom:10px; color:rgba(255,255,255,0.7); }
+        .stat-card-value { font-size:24px; font-weight:800; color:#fff; line-height:1; margin-bottom:4px; }
+        .stat-card-value { font-size:24px; font-weight:800; color:#fff; line-height:1; margin-bottom:4px; }
+        .stat-card-label { font-size:12px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.5px; }
+
+        /* Bilgi grid */
+        .info-grid { display:grid; grid-template-columns:380px 1fr; gap:20px; }
+
+        /* Sol kart */
+        .glass-card {
+            background:rgba(20,22,36,0.7); border:1px solid rgba(255,255,255,0.06);
+            border-radius:18px; backdrop-filter:blur(12px); overflow:hidden;
+        }
+        .glass-card-header {
+            padding:18px 22px; border-bottom:1px solid rgba(255,255,255,0.05);
+            display:flex; align-items:center; gap:10px; font-size:14px; font-weight:700; color:#fff;
+        }
+        .glass-card-header i { color:#fff; }
+        .glass-card-body { padding:20px 22px; }
+
+        .info-item { display:flex; flex-direction:column; gap:3px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+        .info-item:last-child { border-bottom:none; }
+        .info-label { font-size:11px; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.5px; }
+        .info-value { font-size:14px; color:#fff; font-weight:500; }
+
+        /* Bakiye kartı */
+        .balance-display-card {
+            background:rgba(20,22,36,0.5); border:1px solid rgba(255,255,255,0.08); border-radius:14px;
+            padding:18px 20px; margin-bottom:16px;
+        }
+        .balance-display-label { font-size:11px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+        .balance-display-value { font-size:32px; font-weight:900; color:#fff; }
+        .balance-sub-row { display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-top:12px; padding-top:12px; border-top:1px dashed rgba(255,255,255,0.08); }
+        .balance-sub-row span { color:rgba(255,255,255,0.4); }
+        .balance-sub-value { font-weight:600; }
+        .balance-sub-value.warn { color:#f59e0b; }
+        .balance-sub-value.ok { color:#10b981; }
+        .balance-actions { display:flex; gap:8px; margin-top:14px; }
+        .balance-btn {
+            flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+            padding:9px 12px; border-radius:10px; font-size:12px; font-weight:600;
+            text-decoration:none; border:none; cursor:pointer; transition:all 0.3s;
+        }
+        .balance-btn.add { background:linear-gradient(135deg,#5b21b6,#7c3aed); color:#fff; border:1px solid rgba(124,58,237,0.5); box-shadow:0 4px 12px rgba(124,58,237,0.3); }
+        .balance-btn.add:hover { transform:translateY(-1px); background:linear-gradient(135deg,#6d28d9,#8b5cf6); box-shadow:0 6px 18px rgba(124,58,237,0.45); }
+        .balance-btn.withdraw { background:linear-gradient(135deg,#1e3a8a,#2563eb); color:#fff; border:1px solid rgba(37,99,235,0.5); box-shadow:0 4px 12px rgba(37,99,235,0.3); }
+        .balance-btn:hover { transform:translateY(-1px); }
+        .balance-btn.withdraw:hover { background:linear-gradient(135deg,#1d4ed8,#3b82f6); box-shadow:0 6px 18px rgba(37,99,235,0.45); }
+
+        /* Sağ alan — sekmeler */
+        .tabs-header { display:flex; gap:6px; padding:0 22px; border-bottom:1px solid rgba(255,255,255,0.05); }
+        .tab-btn {
+            padding:14px 18px; font-size:13px; font-weight:600; color:rgba(255,255,255,0.45);
+            cursor:pointer; background:none; border:none; border-bottom:2px solid transparent;
+            transition:all 0.2s; white-space:nowrap;
+        }
+        .tab-btn.active { color:#fff; border-bottom-color:#fff; }
+        .tab-btn:hover { color:#fff; }
+        .tab-pane { display:none; padding:22px; }
+        .tab-pane.active { display:block; }
+
+        /* Düzenleme formu */
+        .form-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+        .form-group { display:flex; flex-direction:column; gap:6px; }
+        .form-group label { font-size:11px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.5px; }
+        .form-group input, .form-group select {
+            width:100%; padding:11px 14px; border-radius:10px;
+            border:1px solid rgba(255,255,255,0.1); background:rgba(0,0,0,0.25);
+            color:#fff; font-size:14px; outline:none; transition:all 0.3s;
+            font-family:'Poppins',sans-serif;
+        }
+        .form-group input:focus { border-color:#fff; background:rgba(0,0,0,0.4); box-shadow:0 0 0 3px rgba(255,255,255,0.1); }
+        .form-actions { display:flex; gap:10px; margin-top:20px; }
+        .btn-save { padding:11px 26px; border-radius:10px; background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.15); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.3s; display:inline-flex; align-items:center; gap:7px; }
+        .btn-save:hover { transform:translateY(-2px); background:rgba(255,255,255,0.15); box-shadow:0 8px 20px rgba(0,0,0,0.3); }
+        .btn-cancel { padding:11px 20px; border-radius:10px; background:rgba(255,255,255,0.07); color:#fff; border:1px solid rgba(255,255,255,0.1); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.3s; }
+        .btn-cancel:hover { background:rgba(255,255,255,0.12); }
+
+        /* Güvenlik */
+        .security-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+        .security-item {
+            background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06);
+            border-radius:12px; padding:16px;
+        }
+        .security-item-label { font-size:11px; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
+        .security-item-value { font-size:14px; font-weight:600; color:#fff; }
+
+        /* Toast */
+        .toast-container { position:fixed; right:20px; bottom:80px; z-index:9999; display:flex; flex-direction:column; gap:10px; pointer-events:none; }
+        .toast {
+            min-width:280px; padding:14px 18px; border-radius:12px;
+            background:rgba(10,12,26,0.97); color:#fff; font-size:13px; font-weight:500;
+            box-shadow:0 10px 30px rgba(0,0,0,0.5); backdrop-filter:blur(10px);
+            opacity:0; transform:translateX(40px); transition:all 0.35s cubic-bezier(0.68,-0.55,0.265,1.55);
+            pointer-events:auto; border-left:4px solid;
+        }
+        .toast.show { opacity:1; transform:translateX(0); }
+        .toast.success { border-color:#10b981; }
+        .toast.info { border-color:#3b82f6; }
+        .toast.warning { border-color:#f59e0b; }
+        .toast.error { border-color:#ef4444; }
+
+        /* Light theme */
+        [data-theme="light"] body { background-image: linear-gradient(180deg,rgba(240,240,250,0.5),rgba(240,240,250,0.5)), url('assets/arkaplan.png'); }
+        [data-theme="light"] .glass-card, [data-theme="light"] .stat-card { background:rgba(255,255,255,0.75); border-color:rgba(0,0,0,0.06); color:#0f172a; }
+        [data-theme="light"] .info-value, [data-theme="light"] .stat-card-value, [data-theme="light"] .security-item-value, [data-theme="light"] .profile-hero-name, [data-theme="light"] .balance-display-value { color:#0f172a; }
+        [data-theme="light"] .form-group input { background:rgba(255,255,255,0.8); color:#0f172a; border-color:rgba(0,0,0,0.12); }
+        [data-theme="light"] .btn-hero.primary { background:rgba(0,0,0,0.08); color:#0f172a; border-color:rgba(0,0,0,0.12); }
+        [data-theme="light"] .btn-hero.secondary { background:rgba(0,0,0,0.05); color:#0f172a; border-color:rgba(0,0,0,0.1); }
+        [data-theme="light"] .balance-btn.add { background:rgba(0,0,0,0.08); color:#0f172a; border-color:rgba(0,0,0,0.12); }
+        [data-theme="light"] .balance-btn.withdraw { background:rgba(0,0,0,0.05); color:#0f172a; border-color:rgba(0,0,0,0.1); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width:1024px) {
+            .stats-row { grid-template-columns:repeat(2,1fr); }
+            .info-grid { grid-template-columns:1fr; }
+        }
+
+        @media (max-width:768px) {
+            .topbar { display:none; }
+            .header-search-container { display:none; }
+            .auth-buttons { display:none; }
+            .user-dropdown .user-info-small { display:none; }
+            .mobile-menu-toggle { display:inline-flex; }
+            .mobile-bottom-menu { display:flex; }
+            .page-content { padding:16px 14px 80px; }
+            .profile-hero { padding:20px 18px; gap:16px; }
+            .avatar-ring { width:80px; height:80px; }
+            .profile-hero-name { font-size:20px; }
+            .stats-row { grid-template-columns:repeat(2,1fr); gap:10px; }
+            .stat-card { padding:14px; }
+            .stat-card-value { font-size:20px; }
+            .form-grid { grid-template-columns:1fr; }
+            .security-grid { grid-template-columns:1fr; }
+            .tabs-header { overflow-x:auto; }
+            .tabs-header::-webkit-scrollbar { display:none; }
+            .header-nav { display:none; }
+
+            /* Mobil header düzeni */
+            .frontend-header .header-top { padding: 0 14px; }
+            .header-content {
+                position: relative;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                height: 58px;
+                width: 100%;
+            }
+            /* Logo: absolute, tam ortada, diğer elemanlardan bağımsız */
+            .logo-section {
+                position: absolute !important;
+                left: 50% !important;
+                top: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                pointer-events: auto;
+                z-index: 1;
+            }
+            /* Sol: hamburger — sağa taşmayı önle */
+            .mobile-menu-toggle { flex-shrink: 0; z-index: 2; }
+            /* Sağ: actions flex row */
+            .header-actions {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                gap: 8px !important;
+                flex-shrink: 0;
+                z-index: 2;
+            }
+            /* Mobilde auth butonları zaten gizli */
+            /* Dropdown trigger → sadece yuvarlak ikon */
+            .user-dropdown-trigger {
+                background: rgba(255,255,255,0.07) !important;
+                border: 1px solid rgba(255,255,255,0.12) !important;
+                border-radius: 50% !important;
+                padding: 0 !important;
+                width: 38px !important;
+                height: 38px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 0 !important;
+            }
+            .user-dropdown-trigger .user-info-small { display: none !important; }
+            .user-dropdown-trigger .dropdown-arrow-small { display: none !important; }
+            .user-dropdown-trigger .user-avatar-small {
+                width: 26px !important;
+                height: 26px !important;
+                border-radius: 50% !important;
+            }
+        }
+
+        @media (max-width:480px) {
+            .stats-row { grid-template-columns:1fr 1fr; }
+            .profile-hero-actions .btn-hero span { display:none; }
+            .profile-hero-actions .btn-hero { padding:10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== TOPBAR ===== -->
+<div class="topbar">
+    <div class="topbar-content">
+        <div class="topbar-left"></div>
+        <div class="topbar-right">
+            <div class="topbar-dropdown">
+                <button class="topbar-dropdown-btn">
+                    <i class="fas fa-building"></i><span>Kurumsal</span><i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="topbar-dropdown-menu">
+                    <a href="hakkimizda.html" class="topbar-dropdown-item"><i class="fas fa-info-circle"></i><span>Hakkımızda</span></a>
+                    <a href="iletişim.html" class="topbar-dropdown-item"><i class="fas fa-phone"></i><span>İletişim</span></a>
+                </div>
+            </div>
+            <div class="topbar-dropdown">
+                <button class="topbar-dropdown-btn">
+                    <i class="fas fa-question-circle"></i><span>Yardım</span><i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="topbar-dropdown-menu">
+                    <a href="sık-sorulan-sorular.html" class="topbar-dropdown-item"><i class="fas fa-question"></i><span>SSS</span></a>
+                    <a href="destek.html" class="topbar-dropdown-item"><i class="fas fa-life-ring"></i><span>Destek</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header class="frontend-header">
+    <div class="header-top">
+        <div class="header-content">
+            <!-- Hamburger (mobil) -->
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="openMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Logo -->
+            <div class="logo-section">
+                <a href="index.html">
+                    <img src="assets/uploads/servers/logod1ef6502-ec0d-.png" alt="Logo" style="height:38px;max-width:180px;object-fit:contain;">
+                </a>
+            </div>
+
+            <!-- Arama -->
+            <div class="header-search-container">
+                <div class="header-search-box">
+                    <input type="text" class="header-search-input" placeholder="Ürün, hesap veya yang ara..." id="headerSearchInput">
+                    <button class="header-search-btn" onclick="doSearch()"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="header-actions">
+                <button class="theme-toggle-btn" onclick="toggleTheme()" title="Tema">
+                    <i class="fas fa-sun" id="themeIcon"></i>
+                </button>
+
+                <!-- Auth (giriş yapılmamışsa) -->
+                <div class="auth-buttons" id="authButtons">
+                    <a href="login.html" class="btn-login"><i class="fas fa-sign-in-alt"></i> Giriş</a>
+                    <a href="register.html" class="btn-register"><i class="fas fa-user-plus"></i> Kayıt</a>
+                </div>
+
+                <!-- Kullanıcı dropdown (giriş yapılmışsa) -->
+                <div class="user-dropdown" id="desktopUserDropdown" style="display:none;">
+                    <div class="user-dropdown-trigger" id="desktopDropdownTrigger">
+                        <img src="assets/img/avatar-1.png" class="user-avatar-small" id="desktopUserAvatar" alt="Profil">
+                        <div class="user-info-small">
+                            <span class="username-small" id="desktopUsername">Kullanıcı</span>
+                            <span class="balance-small" id="desktopBalance">₺0.00</span>
+                        </div>
+                        <i class="fas fa-chevron-down dropdown-arrow-small"></i>
+                    </div>
+                    <div class="user-dropdown-menu">
+                        <div class="dropdown-profile-header">
+                            <div class="dropdown-avatar-wrapper">
+                                <img src="assets/img/avatar-1.png" class="dropdown-avatar" id="desktopProfileAvatar" alt="Profil">
+                                <div class="dropdown-online-indicator"></div>
+                            </div>
+                            <div class="dropdown-user-info">
+                                <div class="dropdown-username" id="desktopDropdownUsername">Kullanıcı</div>
+                                <div class="dropdown-user-status"><span class="status-dot-small"></span><span>Çevrimiçi</span></div>
+                            </div>
+                        </div>
+                        <div class="dropdown-balance-card">
+                            <div class="balance-label-small">BAKİYE</div>
+                            <div style="display:flex;align-items:baseline;gap:4px;">
+                                <div class="balance-amount-small" id="desktopDropdownBalance">₺0.00</div>
+                                <div class="balance-currency-small">TRY</div>
+                            </div>
+                        </div>
+                        <div class="user-dropdown-menu-items">
+                            <a href="profilim2.html" class="dropdown-menu-item active"><i class="fas fa-user"></i><span>Profilim</span></a>
+                            <a href="mesajlarım.html" class="dropdown-menu-item"><i class="fas fa-envelope"></i><span>Mesajlarım</span></a>
+                            <a href="ilanlarım.html" class="dropdown-menu-item"><i class="fas fa-list"></i><span>İlanlarım</span></a>
+                            <a href="siparişlerim.html" class="dropdown-menu-item"><i class="fas fa-shopping-cart"></i><span>Siparişlerim</span></a>
+                            <a href="bakiye-ekle.html" class="dropdown-menu-item"><i class="fas fa-plus-circle"></i><span>Bakiye Yükle</span></a>
+                            <a href="para-çek.html" class="dropdown-menu-item"><i class="fas fa-wallet"></i><span>Para Çek</span></a>
+                            <a href="ayarlar.html" class="dropdown-menu-item"><i class="fas fa-cog"></i><span>Ayarlar</span></a>
+                            <a href="#" class="dropdown-menu-item logout-menu-item" onclick="confirmLogout()"><i class="fas fa-sign-out-alt"></i><span>Çıkış Yap</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header nav -->
+    <nav class="header-nav">
+        <a href="katagoriler2.html" class="nav-item"><i class="ri-apps-line"></i><span>Kategoriler</span></a>
+        <a href="kasalar.html" class="nav-item"><i class="fas fa-box-open"></i><span>Kasalar</span></a>
+        <a href="cekilis.html" class="nav-item"><i class="fas fa-gift"></i><span>Çekiliş</span></a>
+        <a href="/ilan-olustur" class="nav-item"><i class="fas fa-plus-circle"></i><span>İlan Ekle</span></a>
+    </nav>
+</header>
+
+<!-- ===== MOBİL SOL MENÜ ===== -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-header-bar">
+        <img src="assets/uploads/servers/logod1ef6502-ec0d-.png" alt="Logo" style="height:28px;object-fit:contain;">
+        <button class="mobile-menu-close-btn" onclick="closeMobileMenu()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="mobile-user-info" id="mobileUserInfoSection">
+        <img src="assets/img/avatar-1.png" alt="Profil" id="mobileUserAvatar">
+        <div>
+            <div class="mobile-user-meta-name" id="mobileUserName">Kullanıcı</div>
+            <div class="mobile-user-meta-balance" id="mobileUserBalance">₺0.00</div>
+        </div>
+    </div>
+    <nav class="mobile-menu-nav">
+        <a href="index.html"><i class="fas fa-home"></i> Ana Sayfa</a>
+        <a href="profilim2.html" class="active"><i class="fas fa-user"></i> Profilim</a>
+        <a href="mesajlarım.html"><i class="fas fa-envelope"></i> Mesajlarım</a>
+        <a href="ilanlarım.html"><i class="fas fa-list"></i> İlanlarım</a>
+        <a href="siparişlerim.html"><i class="fas fa-shopping-cart"></i> Siparişlerim</a>
+        <div class="mobile-menu-divider"></div>
+        <a href="bakiye-ekle.html"><i class="fas fa-plus-circle"></i> Bakiye Yükle</a>
+        <a href="para-çek.html"><i class="fas fa-wallet"></i> Para Çek</a>
+        <a href="ayarlar.html"><i class="fas fa-cog"></i> Ayarlar</a>
+        <div class="mobile-menu-divider"></div>
+        <a href="#" onclick="confirmLogout()" class="logout-link"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
+    </nav>
+</div>
+
+<!-- ===== SAYFA İÇERİĞİ ===== -->
+<main class="page-content">
+
+    <!-- Profil Hero -->
+    <div class="profile-hero">
+        <div class="avatar-ring">
+            <img src="assets/img/avatar-1.png" alt="Profil" id="heroAvatar">
+            <div class="avatar-online"></div>
+        </div>
+        <div class="profile-hero-info">
+            <h1 class="profile-hero-name" id="heroName">Kullanıcı</h1>
+            <div class="profile-hero-username" id="heroUsername">@kullanici</div>
+            <div class="profile-hero-badges">
+                <span class="badge-pill purple" id="heroBadgeRole"><i class="fas fa-star"></i> Satıcı</span>
+                <span class="badge-pill green" id="heroBadgeStatus"><i class="fas fa-check-circle"></i> Aktif</span>
+                <span class="badge-pill orange" id="heroBadgeJoined"><i class="fas fa-calendar"></i> 2024</span>
+            </div>
+            <div class="profile-hero-actions">
+                <button class="btn-hero primary" onclick="switchTab('duzenle')">
+                    <i class="fas fa-pen"></i><span>Profili Düzenle</span>
+                </button>
+                <button class="btn-hero secondary" onclick="switchTab('guvenlik')">
+                    <i class="fas fa-shield-alt"></i><span>Güvenlik</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- İstatistikler -->
+    <div class="stats-row">
+        <div class="stat-card blue">
+            <div class="stat-card-icon"><i class="fas fa-wallet"></i></div>
+            <div class="stat-card-value" id="statBalance">₺0,00</div>
+            <div class="stat-card-label">Güncel Bakiye</div>
+        </div>
+        <div class="stat-card purple">
+            <div class="stat-card-icon"><i class="fas fa-tags"></i></div>
+            <div class="stat-card-value" id="statListings">0</div>
+            <div class="stat-card-label">Aktif İlan</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-card-icon"><i class="fas fa-shopping-bag"></i></div>
+            <div class="stat-card-value" id="statOrders">0</div>
+            <div class="stat-card-label">Sipariş</div>
+        </div>
+        <div class="stat-card pink">
+            <div class="stat-card-icon"><i class="fas fa-star"></i></div>
+            <div class="stat-card-value" id="statRating">—</div>
+            <div class="stat-card-label">Ortalama Puan</div>
+        </div>
+    </div>
+
+    <!-- İki sütun -->
+    <div class="info-grid">
+
+        <!-- Sol: Bakiye + Bilgiler -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+
+            <!-- Bakiye -->
+            <div class="glass-card">
+                <div class="glass-card-header"><i class="fas fa-wallet"></i> Bakiye Durumu</div>
+                <div class="glass-card-body">
+                    <div class="balance-display-card">
+                        <div class="balance-display-label">Kullanılabilir Bakiye</div>
+                        <div class="balance-display-value" id="balanceDisplay">₺0,00</div>
+                        <div class="balance-sub-row">
+                            <span>Bekleyen Çekim:</span>
+                            <span class="balance-sub-value warn" id="pendingWithdraw">₺0,00</span>
+                        </div>
+                        <div class="balance-sub-row">
+                            <span>Toplam Çekilen:</span>
+                            <span class="balance-sub-value ok" id="totalWithdrawn">₺0,00</span>
+                        </div>
+                    </div>
+                    <div class="balance-actions">
+                        <a href="bakiye-ekle.html" class="balance-btn add"><i class="fas fa-plus"></i> Yükle</a>
+                        <a href="para-çek.html" class="balance-btn withdraw"><i class="fas fa-arrow-down"></i> Çek</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hesap Bilgileri -->
+            <div class="glass-card">
+                <div class="glass-card-header"><i class="fas fa-info-circle"></i> Hesap Bilgileri</div>
+                <div class="glass-card-body">
+                    <div class="info-item"><span class="info-label">Üyelik Durumu</span><span class="info-value" id="infoStatus">—</span></div>
+                    <div class="info-item"><span class="info-label">Kayıt Tarihi</span><span class="info-value" id="infoJoined">—</span></div>
+                    <div class="info-item"><span class="info-label">Son Giriş</span><span class="info-value" id="infoLastLogin">—</span></div>
+                    <div class="info-item"><span class="info-label">Hesap Onayı</span><span class="info-value" id="infoVerified">—</span></div>
+                    <div class="info-item"><span class="info-label">Konum</span><span class="info-value" id="infoLocation">Türkiye</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sağ: Sekmeli alan -->
+        <div class="glass-card" style="display:flex;flex-direction:column;">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="switchTab('bilgiler')">Kişisel Bilgiler</button>
+                <button class="tab-btn" onclick="switchTab('duzenle')">Düzenle</button>
+                <button class="tab-btn" onclick="switchTab('guvenlik')">Güvenlik</button>
+            </div>
+
+            <!-- Kişisel Bilgiler -->
+            <div class="tab-pane active" id="tab-bilgiler">
+                <div class="security-grid">
+                    <div class="security-item"><div class="security-item-label">Ad Soyad</div><div class="security-item-value" id="infoFullName">—</div></div>
+                    <div class="security-item"><div class="security-item-label">Kullanıcı Adı</div><div class="security-item-value" id="infoUsername">—</div></div>
+                    <div class="security-item"><div class="security-item-label">E-posta</div><div class="security-item-value" id="infoEmail">—</div></div>
+                    <div class="security-item"><div class="security-item-label">Telefon</div><div class="security-item-value" id="infoPhone">—</div></div>
+                    <div class="security-item"><div class="security-item-label">Rol</div><div class="security-item-value" id="infoRole">—</div></div>
+                    <div class="security-item"><div class="security-item-label">2FA Durumu</div><div class="security-item-value" id="info2FA">—</div></div>
+                </div>
+            </div>
+
+            <!-- Düzenle -->
+            <div class="tab-pane" id="tab-duzenle">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Ad Soyad</label>
+                        <input type="text" id="inputFullName" placeholder="Ad Soyadınız">
+                    </div>
+                    <div class="form-group">
+                        <label>Kullanıcı Adı</label>
+                        <input type="text" id="inputUsername" placeholder="@kullaniciadi">
+                    </div>
+                    <div class="form-group">
+                        <label>E-posta</label>
+                        <input type="email" id="inputEmail" placeholder="ornek@mail.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefon</label>
+                        <input type="tel" id="inputPhone" placeholder="+90 5XX XXX XX XX">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-save" onclick="saveProfile()"><i class="fas fa-save"></i> Kaydet</button>
+                    <button class="btn-cancel" onclick="switchTab('bilgiler')">İptal</button>
+                </div>
+            </div>
+
+            <!-- Güvenlik -->
+            <div class="tab-pane" id="tab-guvenlik">
+                <div class="security-grid">
+                    <div class="security-item">
+                        <div class="security-item-label">2 Adımlı Doğrulama</div>
+                        <div class="security-item-value" id="sec2FA" style="color:#10b981;">Aktif</div>
+                    </div>
+                    <div class="security-item">
+                        <div class="security-item-label">Son Şifre Değişikliği</div>
+                        <div class="security-item-value" id="secLastPwd">—</div>
+                    </div>
+                    <div class="security-item">
+                        <div class="security-item-label">Aktif Oturum</div>
+                        <div class="security-item-value" id="secSession" style="color:#10b981;">Güvenli</div>
+                    </div>
+                    <div class="security-item">
+                        <div class="security-item-label">Şifre Gücü</div>
+                        <div class="security-item-value" id="secPwdStrength">Güçlü</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<!-- ===== MOBİL BOTTOM MENU ===== -->
+<div class="mobile-bottom-menu">
+    <a href="index.html" class="bottom-menu-item"><i class="fas fa-home"></i><span>Ana Sayfa</span></a>
+    <a href="katagoriler2.html" class="bottom-menu-item"><i class="fas fa-th-large"></i><span>Kategoriler</span></a>
+    <a href="mesajlarım.html" class="bottom-menu-item"><i class="fas fa-envelope"></i><span>Mesajlarım</span></a>
+    <a href="/ilan-olustur" class="bottom-menu-item"><i class="fas fa-plus"></i><span>İlan Ekle</span></a>
+    <a href="profilim2.html" class="bottom-menu-item active"><i class="fas fa-user"></i><span>Profilim</span></a>
+</div>
+
+<!-- Toast -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+    // ===== TEMA =====
+    (function(){
+        const saved = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+        const icon = document.getElementById('themeIcon');
+        if (icon) icon.className = saved === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    })();
+
+    function toggleTheme() {
+        const html = document.documentElement;
+        const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        const icon = document.getElementById('themeIcon');
+        if (icon) icon.className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        showToast('Tema ' + (next === 'dark' ? 'Karanlık' : 'Aydınlık') + ' moda geçirildi.', 'info');
+    }
+
+    // ===== MOBILE MENU =====
+    function openMobileMenu() {
+        document.getElementById('mobileMenu').classList.add('active');
+        document.getElementById('mobileMenuOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeMobileMenu() {
+        document.getElementById('mobileMenu').classList.remove('active');
+        document.getElementById('mobileMenuOverlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // ===== TOAST =====
+    function showToast(msg, type) {
+        type = type || 'info';
+        const container = document.getElementById('toastContainer');
+        const icons = { success:'fa-check-circle', info:'fa-info-circle', warning:'fa-exclamation-triangle', error:'fa-times-circle' };
+        const t = document.createElement('div');
+        t.className = 'toast ' + type;
+        t.innerHTML = '<i class="fas ' + (icons[type] || 'fa-info-circle') + '" style="margin-right:8px;"></i>' + msg;
+        container.appendChild(t);
+        requestAnimationFrame(() => { requestAnimationFrame(() => { t.classList.add('show'); }); });
+        setTimeout(() => {
+            t.classList.remove('show');
+            t.addEventListener('transitionend', () => t.remove(), { once: true });
+        }, 3000);
+    }
+
+    // ===== SEKMELER =====
+    function switchTab(id) {
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        const pane = document.getElementById('tab-' + id);
+        if (pane) pane.classList.add('active');
+        const idx = ['bilgiler','duzenle','guvenlik'].indexOf(id);
+        const btns = document.querySelectorAll('.tab-btn');
+        if (btns[idx]) btns[idx].classList.add('active');
+        if (id === 'duzenle') prefillForm();
+    }
+
+    // ===== ARAMA =====
+    function doSearch() {
+        const q = document.getElementById('headerSearchInput').value.trim();
+        if (q) window.location.href = 'index.html?q=' + encodeURIComponent(q);
+        else window.location.href = 'index.html';
+    }
+    document.getElementById('headerSearchInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') doSearch();
+    });
+
+    // ===== ÇIKIŞ =====
+    function confirmLogout() {
+        if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+    }
+
+    function openMessages() { window.location.href = 'mesajlarım.html'; }
+
+    // ===== KULLANICI VERİSİ =====
+    function getUser() {
+        try { return JSON.parse(localStorage.getItem('user') || 'null'); } catch(e) { return null; }
+    }
+
+    function fmt(n, decimals) {
+        return parseFloat(n || 0).toLocaleString('tr-TR', { minimumFractionDigits: decimals||2, maximumFractionDigits: decimals||2 });
+    }
+
+    function fillUI(user) {
+        if (!user) return;
+        const name = user.fullName || user.username || 'Kullanıcı';
+        const username = user.username || 'Kullanıcı';
+        const uname = '@' + (user.username || 'kullanici').replace(/^@/, '');
+        const balance = fmt(user.balance);
+        const role = user.role === 'admin' ? 'Yönetici' : 'Satıcı';
+
+        // Hero
+        setEl('heroAvatar', 'src', user.avatar || 'assets/img/avatar-1.png');
+        setEl('heroName', null, name);
+        setEl('heroUsername', null, uname);
+        setEl('heroBadgeRole', null, '<i class="fas fa-star"></i> ' + role, true);
+
+        // Desktop header
+        setEl('desktopUserAvatar', 'src', user.avatar || 'assets/img/avatar-1.png');
+        setEl('desktopProfileAvatar', 'src', user.avatar || 'assets/img/avatar-1.png');
+        setEl('desktopUsername', null, username);
+        setEl('desktopDropdownUsername', null, username);
+        setEl('desktopBalance', null, '₺' + balance);
+        setEl('desktopDropdownBalance', null, '₺' + balance);
+        show('desktopUserDropdown', true);
+        show('authButtons', false);
+
+        // Mobile menu
+        setEl('mobileUserAvatar', 'src', user.avatar || 'assets/img/avatar-1.png');
+        setEl('mobileUserName', null, name);
+        setEl('mobileUserBalance', null, '₺' + balance);
+
+        // Stats
+        setEl('statBalance', null, '₺' + balance);
+        setEl('balanceDisplay', null, '₺' + balance);
+
+        // Bilgiler
+        setEl('infoStatus', null, user.status ? (user.status.charAt(0).toUpperCase() + user.status.slice(1) + ' Üye') : 'Aktif Üye');
+        setEl('infoLastLogin', null, user.lastLogin ? new Date(user.lastLogin).toLocaleString('tr-TR') : '—');
+        setEl('infoLocation', null, user.location || 'Türkiye');
+
+        const verMap = { approved:'<span style="color:#10b981"><i class="fas fa-check-circle"></i> Doğrulandı</span>', pending:'<span style="color:#f59e0b"><i class="fas fa-clock"></i> İncelemede</span>', rejected:'<span style="color:#ef4444"><i class="fas fa-times-circle"></i> Reddedildi</span>' };
+        const verHtml = verMap[user.verificationStatus] || '<span style="color:#ef4444"><i class="fas fa-times-circle"></i> Doğrulanmadı</span>';
+        setEl('infoVerified', null, verHtml, true);
+
+        // Kişisel bilgiler sekmesi
+        setEl('infoFullName', null, name);
+        setEl('infoUsername', null, uname);
+        setEl('infoEmail', null, user.email || '—');
+        setEl('infoPhone', null, user.phone || '—');
+        setEl('infoRole', null, role);
+        setEl('info2FA', null, user.twoFactorEnabled ? '<span style="color:#10b981">Aktif</span>' : '<span style="color:#f59e0b">Kapalı</span>', true);
+
+        // Güvenlik
+        setEl('sec2FA', null, user.twoFactorEnabled ? '<span style="color:#10b981">Aktif ve Koruyor</span>' : '<span style="color:#f59e0b">Kapalı</span>', true);
+        setEl('secLastPwd', null, user.passwordChangedAt || '—');
+    }
+
+    function setEl(id, attr, val, html) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (attr) el[attr] = val;
+        else if (html) el.innerHTML = val;
+        else el.textContent = val;
+    }
+    function show(id, visible) {
+        const el = document.getElementById(id);
+        if (el) el.style.display = visible ? 'block' : 'none';
+    }
+
+    function prefillForm() {
+        const user = getUser();
+        if (!user) return;
+        const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v || ''; };
+        set('inputFullName', user.fullName || user.username);
+        set('inputUsername', user.username);
+        set('inputEmail', user.email);
+        set('inputPhone', user.phone);
+    }
+
+    async function fetchFreshUser() {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        try {
+            const res = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } });
+            if (!res.ok) return;
+            const data = await res.json();
+            if (data && (data._id || data.id)) {
+                const existing = getUser() || {};
+                const merged = Object.assign({}, existing, data);
+                localStorage.setItem('user', JSON.stringify(merged));
+                fillUI(merged);
+            }
+        } catch(e) { console.warn('fetchFreshUser:', e.message); }
+    }
+
+    async function fetchWithdrawStats() {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        try {
+            const res = await fetch('/api/withdrawals/stats', { headers: { 'Authorization': 'Bearer ' + token } });
+            if (!res.ok) return;
+            const data = await res.json();
+            setEl('pendingWithdraw', null, '₺' + fmt(data.pendingTotal));
+            setEl('totalWithdrawn', null, '₺' + fmt(data.completedWithdrawn));
+        } catch(e) { }
+    }
+
+    async function saveProfile() {
+        const user = getUser();
+        const token = localStorage.getItem('token');
+        if (!user || !token) { showToast('Oturum bulunamadı.', 'error'); return; }
+        const body = {
+            fullName: document.getElementById('inputFullName').value.trim() || user.fullName,
+            username: document.getElementById('inputUsername').value.trim() || user.username,
+            email: document.getElementById('inputEmail').value.trim() || user.email,
+            phone: document.getElementById('inputPhone').value.trim() || user.phone
+        };
+        try {
+            const res = await fetch('/api/user/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                body: JSON.stringify(body)
+            });
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error || 'Güncelleme başarısız');
+            const merged = Object.assign({}, user, result.user || result);
+            localStorage.setItem('user', JSON.stringify(merged));
+            fillUI(merged);
+            switchTab('bilgiler');
+            showToast('Profil güncellendi!', 'success');
+        } catch(e) {
+            showToast('Hata: ' + e.message, 'error');
+        }
+    }
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', function() {
+        const user = getUser();
+        const token = localStorage.getItem('token');
+        if (!user || !token) {
+            showToast('Profilinizi görmek için giriş yapın.', 'warning');
+            setTimeout(() => { window.location.href = 'login.html'; }, 1000);
+            return;
+        }
+        fillUI(user);
+        fetchFreshUser();
+        fetchWithdrawStats();
+    });
+
+    // Arama header topbar
+    const darkHeaderTopGradient = 'linear-gradient(135deg, rgba(8,8,26,0.95) 0%, rgba(18,9,42,0.95) 30%, rgba(147,51,234,0.45) 52%, rgba(17,7,37,0.95) 70%, rgba(8,8,26,0.95) 100%)';
+    const lightHeaderTopGradient = 'linear-gradient(135deg, rgba(240,240,250,0.95) 0%, rgba(220,220,240,0.95) 30%, rgba(147,51,234,0.25) 52%, rgba(230,230,250,0.95) 70%, rgba(240,240,250,0.95) 100%)';
+
+    function forceHeaderTopBackground() {
+        const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const header = document.querySelector('.frontend-header');
+        if (header) header.style.background = theme === 'dark' ? darkHeaderTopGradient : lightHeaderTopGradient;
+    }
+    forceHeaderTopBackground();
+</script>
+</body>
+</html>

@@ -361,11 +361,23 @@
         .pending-info p { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
         .pending-actions {
             display: flex;
+            flex-wrap: wrap;
             gap: 8px;
             padding: 12px 16px;
             border-top: 1px solid var(--border-color);
-            flex-wrap: wrap;
         }
+
+        .role-select {
+            background: rgba(255,255,255,0.06);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            outline: none;
+        }
+        .role-select option { background: var(--surface-solid); color: var(--text-main); }
 
         /* Modal */
         .modal-overlay {
@@ -1191,6 +1203,13 @@
         item.addEventListener('click', () => showSection(item.dataset.section + 'Section'));
     });
 
+    // Check URL parameter for section
+    const urlParams = new URLSearchParams(window.location.search);
+    const sectionParam = urlParams.get('section');
+    if (sectionParam) {
+        showSection(sectionParam + 'Section');
+    }
+
     // =====================
     // DATA LOADING
     // =====================
@@ -1310,6 +1329,12 @@
                         (product.status === 'active' && product.saleStatus === 'available' ? '<button class="btn btn-warning btn-sm" onclick="setProductPassive(' + jsString(product._id) + ', ' + jsString(product.title) + ')"><i class="fas fa-pause"></i> Pasif Et</button>' : '') +
                         (product.status !== 'rejected' ? '<button class="btn btn-danger btn-sm" onclick="rejectProduct(' + jsString(product._id) + ', ' + jsString(product.title) + ')"><i class="fas fa-times"></i> Reddet</button>' : '') +
                         '<button class="btn btn-secondary btn-sm" onclick="openProductModal(' + jsString(product._id) + ')"><i class="fas fa-eye"></i> Detay</button>' +
+                        '<select class="role-select btn-sm" onchange="setProductRole(' + jsString(product._id) + ', ' + jsString(product.title) + ', this.value); this.value = \'\'">' +
+                            '<option value="" selected disabled>İlan Rolü</option>' +
+                            '<option value="vitrin">Vitrin İlanı Yap</option>' +
+                            '<option value="featured">Öne Çıkanlar Yap</option>' +
+                            '<option value="none">Kaldır (Sıradan İlan Yap)</option>' +
+                        '</select>' +
                     '</div>' +
                 '</div>';
             }).join('') + '</div>';
@@ -1611,6 +1636,26 @@
             loadPendingProducts();
             closeModal('productModal');
         } catch (err) { addNotification('Hata', 'Pasif etme başarısız', 'fa-exclamation-circle', 'error'); }
+    }
+
+    async function setProductRole(id, title, role) {
+        if (!role) return;
+        const body = role === 'vitrin'
+            ? { vitrin: true, featured: false }
+            : role === 'featured'
+                ? { vitrin: false, featured: true }
+                : { vitrin: false, featured: false };
+        try {
+            await apiCall('/product-status/' + id, { method: 'PUT', body: JSON.stringify(body) });
+            const message = role === 'vitrin'
+                ? title + ' vitrin ilanı yapıldı'
+                : role === 'featured'
+                    ? title + ' öne çıkanlar arasına eklendi'
+                    : title + ' sıradan ilan yapıldı';
+            addNotification('Başarılı', message, 'fa-star', 'success');
+            loadPendingProducts();
+            closeModal('productModal');
+        } catch (err) { addNotification('Hata', 'İlan rolü güncellenemedi', 'fa-exclamation-circle', 'error'); }
     }
 
     function openProductModal(id) {

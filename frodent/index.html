@@ -3563,7 +3563,7 @@ main > .container{
 
                             <!-- Menu Items -->
                             <div class="user-dropdown-menu-items">
-                                <a href="profilim.html" class="dropdown-menu-item">
+                                <a href="profilim2.html" class="dropdown-menu-item">
                                     <i class="fas fa-user"></i>
                                     <span>Profilim</span>
                                 </a>
@@ -3990,11 +3990,11 @@ onclick="confirmLogout()">
                                                                 <span>Steam</span>
                             </a>
                                                                                                 <!-- Simple menu item -->
-                            <a href="#butun-ilanlar" class="nav-item" style="text-decoration: none;">
+                            <a href="ilan-pazari.html" class="nav-item" style="text-decoration: none;">
                                                                     <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background-color: rgba(0,45,224,0.2) !important;">
                                         <i class="ti ti-coins" style="font-size:16px;color: currentColor;"></i>
                                     </span>
-                                                                <span>İlanlar</span>
+                                                                <span>İlan Pazarı</span>
                             </a>
                                                             
                 <!-- Flex spacer to push view_type=3 links to the right -->
@@ -4059,7 +4059,7 @@ onclick="confirmLogout()">
 
         <!-- Menu Items -->
         <div class="profile-menu">
-            <a href="profilim.html" class="profile-menu-item">
+            <a href="profilim2.html" class="profile-menu-item">
                 <i class="fas fa-user"></i>
                 <span>Profilim</span>
             </a>
@@ -4290,12 +4290,12 @@ onclick="confirmLogout()">
                             </div>
                         </a>
                                                                                 <!-- Simple mobile menu item -->
-                        <a href="#butun-ilanlar" class="mobile-nav-item">
+                        <a href="ilan-pazari.html" class="mobile-nav-item">
                             <div style="display: flex; align-items: center; gap: 12px;">
                                                                 <span class="mobile-nav-icon" style="background-color: rgba(0,45,224,0.2);">
                                                                             <i class="ti ti-coins"></i>
                                                                     </span>
-                                <span>İlanlar</span>
+                                <span>İlan Pazarı</span>
                             </div>
                         </a>
                                                         </div>
@@ -5066,10 +5066,12 @@ onclick="confirmLogout()">
         // Close when clicking menu item
         desktopMenuItems.forEach(item => {
             item.addEventListener('click', function(e) {
-                // Don't close on logout click
-                if (!item.classList.contains('logout-menu-item')) {
-                    desktopDropdown.classList.remove('active');
-                }
+                // Allow default link behavior, then close dropdown
+                setTimeout(() => {
+                    if (!item.classList.contains('logout-menu-item')) {
+                        desktopDropdown.classList.remove('active');
+                    }
+                }, 100);
             });
         });
 
@@ -5564,15 +5566,70 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="tabs-header" style="gap:12px; align-items:center;">
       <div class="tabs-left">
         <button class="tab-btn active" type="button" data-listings-tab="home" aria-pressed="true">
-          <span class="tab-icon"><i class="fas fa-list"></i></span>
-          <span>Bütün İlanlar</span>
+          <span class="tab-icon"><i class="fas fa-crown"></i></span>
+          <span>Vitrin İlanları</span>
         </button>
       </div>
-      <button type="button" class="tabs-all-btn" data-listings-tab="market" aria-pressed="false"><i class="fas fa-store"></i>&nbsp;İlan Pazarı</button>
+      <a href="ilan-pazari.html" class="tabs-all-btn" style="text-decoration:none;"><i class="fas fa-store"></i>&nbsp;İlan Pazarı</a>
     </div>
 
     <!-- INLINE CSS (theme-proof) -->
     <style>
+      /* Vitrin İlanları başlığı */
+      .vitrin-title {
+        display:flex; align-items:center; gap:10px;
+        font-size:22px; font-weight:800; color:#ff8a00;
+        margin:0 0 14px; padding:0;
+        text-shadow: 0 0 8px rgba(255,138,0,0.45), 0 0 18px rgba(255,138,0,0.25);
+      }
+      .vitrin-title i { color:#ff8a00; filter: drop-shadow(0 0 6px rgba(255,138,0,0.6)); }
+
+      /* İlan kartı sağ üst vitrin rozeti */
+      .ipvitrin-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(255, 138, 0, 0.92);
+        color: #fff;
+        font-size: 8px;
+        font-weight: 700;
+        padding: 3px 7px;
+        border-radius: 99px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 0 12px rgba(255, 138, 0, 0.6);
+        z-index: 10;
+        pointer-events: none;
+        animation: vitrinBadgeBlink 1.2s ease-in-out infinite;
+      }
+      @keyframes vitrinBadgeBlink {
+        0%, 100% { opacity: 1; box-shadow: 0 0 12px rgba(255, 138, 0, 0.6); }
+        50% { opacity: 0.55; box-shadow: 0 0 4px rgba(255, 138, 0, 0.3); }
+      }
+
+      /* İlan kartı sağ üst ÖNE ÇIKANLAR rozeti */
+      .iponecikan-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(255, 30, 30, 0.92);
+        color: #fff;
+        font-size: 8px;
+        font-weight: 700;
+        padding: 3px 7px;
+        border-radius: 99px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 0 12px rgba(255, 30, 30, 0.7);
+        z-index: 10;
+        pointer-events: none;
+        animation: onecikanBadgePulse 1.5s ease-in-out infinite;
+      }
+      @keyframes onecikanBadgePulse {
+        0%, 100% { opacity: 1; box-shadow: 0 0 12px rgba(255, 30, 30, 0.7); }
+        50% { opacity: 0.75; box-shadow: 0 0 20px rgba(255, 30, 30, 0.95), 0 0 30px rgba(255, 100, 0, 0.6); }
+      }
+
       /* İlan Pazarı ile aynı kart stili (ana sayfa) */
       .ipgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px;align-items:stretch}
       @media(max-width:1100px){.ipgrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -5581,6 +5638,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       .ipcard{
         display:flex;flex-direction:column;
+        position:relative;
         border:1px solid rgba(255,255,255,.10);
         background: rgba(18,20,32,.62);
         border-radius:16px;overflow:hidden;min-width:0;
@@ -5640,34 +5698,12 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       .ipcard:hover .ipprice{transform:translateX(-50%) scale(1.05)}
 
-      /* Vitrin neon/pulse */
-      @keyframes ipPulse{
-        0%{box-shadow:0 0 0 rgba(255,138,0,0),0 0 0 rgba(98,0,234,0);transform:translateZ(0) scale(1)}
-        50%{box-shadow:0 0 18px rgba(255,138,0,.55),0 0 34px rgba(98,0,234,.35);transform:translateZ(0) scale(1.01)}
-        100%{box-shadow:0 0 0 rgba(255,138,0,0),0 0 0 rgba(98,0,234,0);transform:translateZ(0) scale(1)}
-      }
-      @keyframes ipBlink{
-        0%,100%{filter:drop-shadow(0 0 2px rgba(255,255,255,.4)) drop-shadow(0 0 10px rgba(255,138,0,.55));opacity:1}
-        50%{filter:drop-shadow(0 0 8px rgba(255,255,255,.75)) drop-shadow(0 0 20px rgba(255,138,0,.95));opacity:.85}
-      }
-      @keyframes ipGlow{
-        0%,100%{box-shadow:0 0 6px rgba(255,138,0,.35),0 0 14px rgba(98,0,234,.25)}
-        50%{box-shadow:0 0 14px rgba(255,138,0,.85),0 0 28px rgba(98,0,234,.55)}
-      }
-
       .ipcard.vitrin{
         border:1px solid rgba(255,138,0,.60);
-        animation:ipPulse 1.6s ease-in-out infinite;
-        position:relative;
       }
-      .ipcard.vitrin::before{
-        content:"";position:absolute;inset:-2px;border-radius:inherit;pointer-events:none;
-        box-shadow:0 0 18px rgba(255,138,0,.35),0 0 34px rgba(98,0,234,.22);opacity:.9
+      .ipcard.onecikan{
+        border:1px solid rgba(255,30,30,.60);
       }
-      .ipcard.vitrin .ipbadge{animation:ipBlink 1.1s ease-in-out infinite}
-      .ipcard.vitrin .ipprice{animation:ipGlow 1.1s ease-in-out infinite;border:1px solid rgba(255,138,0,.45)}
-      .ipcard.vitrin:hover{box-shadow:0 0 25px rgba(255,138,0,.9),0 0 45px rgba(98,0,234,.6)}
-
 
       /* Mobilde sağdaki "İlan Pazarı" butonu gizlenmesin */
       .tabs-header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
@@ -5833,7 +5869,9 @@ function renderProducts(products, containerId) {
         return;
     }
     container.innerHTML = products.map(product => `
-        <a class="ipcard" href="/ilan/${product.id}">
+        <a class="ipcard ${product.vitrin ? 'vitrin' : ''} ${product.featured ? 'onecikan' : ''}" href="/ilan/${product.id}">
+            ${product.vitrin ? '<div class="ipvitrin-badge">Vitrin İlanı</div>' : ''}
+            ${product.featured ? '<div class="iponecikan-badge">Öne Çıkanlar</div>' : ''}
             <div class="ipthumb">
                 <img src="${product.image || 'assets/img/placeholder.jpg'}" alt="${product.title}">
                 <div class="ipprice">${product.price.toLocaleString('tr-TR', {minimumFractionDigits: 2})} TL</div>
@@ -5842,7 +5880,7 @@ function renderProducts(products, containerId) {
                 <p class="iptitle">${product.title}</p>
                 <p class="ipsub">${product.category || 'Pubg Mobile'}</p>
                 <div class="ipmeta">
-                    <div class="ipdel">⚡ Manuel Teslimat</div>
+                    <div class="ipdel"><i class="fas fa-bolt" style="color:#ff8a00; margin-right:4px;"></i> Manuel Teslimat</div>
                     <div></div>
                 </div>
             </div>
@@ -5865,7 +5903,7 @@ function applyListingsView(query) {
             return text.includes(q);
         });
     }
-    renderProducts(getListingsForCurrentTab(source));
+    renderProducts(getListingsForCurrentTab(source), 'ilanlar-kutusu');
 }
 
 function filterProducts(query) {
@@ -5895,7 +5933,7 @@ function initListingsTabs() {
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('ilanlar-kutusu');
     initListingsTabs();
-    fetch('/api/listings?limit=500&page=1')
+    fetch('/api/listings?pool=featured&limit=500&page=1')
         .then(response => response.json())
         .then(data => {
             const raw = Array.isArray(data) ? data : (data.listings || []);
@@ -6268,7 +6306,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </main>
 
     <!-- Blog/News Section -->
-        <section class="blog-section">
+        <section class="blog-section" id="haberler">
         <div class="blog-container">
             <div class="blog-header">
                 <div class="blog-title-wrap"><div class="blog-icon-box"><i class="far fa-newspaper"></i></div><h3>Haberler</h3></div>
@@ -7410,11 +7448,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         </a>
                     </div>
                     <div class="action-buttons">
-                        <a href="/ilanlar" class="action-btn action-listings">
+                        <a href="ilan-pazari.html" class="action-btn action-listings">
                             <i class="fas fa-shopping-cart"></i>
-                            <span>İlanlar</span>
+                            <span>İlan Pazarı</span>
                         </a>
-                        <a href="/magazalar" class="action-btn action-shops">
+                        <a href="katagoriler2.html" class="action-btn action-shops">
                             <i class="fas fa-store"></i>
                             <span>Mağazalar</span>
                         </a>
@@ -7425,27 +7463,27 @@ document.addEventListener('DOMContentLoaded', () => {
         <!-- Topbar altı hızlı linkler -->
         <div class="footer-quicknav">
             <div class="quicknav-container">
-                <a href="/ilanlar" class="quick-item">
+                <a href="ilan-pazari.html" class="quick-item">
                     <span class="quick-icon qi-blue"><i class="fas fa-shopping-cart"></i></span>
                     <span class="quick-text">İlan Pazarı</span>
                 </a>
-                <a href="/magazalar" class="quick-item">
+                <a href="katagoriler2.html" class="quick-item">
                     <span class="quick-icon qi-green"><i class="fas fa-store"></i></span>
                     <span class="quick-text">Mağazalar</span>
                 </a>
-                <a href="/kategori/valorant" class="quick-item">
+                <a href="kategori-detay.html?slug=valorant" class="quick-item">
                     <span class="quick-icon qi-purple"><i class="fas fa-bullseye"></i></span>
                     <span class="quick-text">Valorant</span>
                 </a>
-                <a href="/urunler" class="quick-item">
+                <a href="#butun-ilanlar" class="quick-item">
                     <span class="quick-icon qi-orange"><i class="fas fa-box"></i></span>
                     <span class="quick-text">Ürünler</span>
                 </a>
-                <a href="/blog" class="quick-item">
+                <a href="blog.html" class="quick-item">
                     <span class="quick-icon qi-cyan"><i class="fas fa-blog"></i></span>
                     <span class="quick-text">Blog</span>
                 </a>
-                <a href="/yayincilar" class="quick-item">
+                <a href="#haberler" class="quick-item">
                     <span class="quick-icon qi-pink"><i class="fas fa-broadcast-tower"></i></span>
                     <span class="quick-text">Yayıncılar</span>
                 </a>
@@ -8542,16 +8580,7 @@ function getUserDisplayName(userId) {
 }
 
 function openMessages() {
-  messagesState.currentUser = getStoredUser();
-  messagesState.token = localStorage.getItem('token');
-
-  if (!messagesState.currentUser || !messagesState.token || !getCurrentUserId()) {
-    window.location.href = '/giris-yap';
-    return;
-  }
-
-  document.getElementById('messagesContent').style.display = 'flex';
-  loadMessagesPanel();
+  window.location.href = 'mesajlarım.html';
 }
 
 function closeMessages() {

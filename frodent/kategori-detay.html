@@ -2628,7 +2628,7 @@ main > .container{
 
                             <!-- Menu Items -->
                             <div class="user-dropdown-menu-items">
-                                <a href="profilim.html" class="dropdown-menu-item">
+                                <a href="profilim2.html" class="dropdown-menu-item">
                                     <i class="fas fa-user"></i>
                                     <span>Profilim</span>
                                 </a>
@@ -3054,7 +3054,7 @@ onclick="confirmLogout()">
                                                                     <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background-color: rgba(0,45,224,0.2) !important;">
                                         <i class="ti ti-coins" style="font-size:16px;color: currentColor;"></i>
                                     </span>
-                                                                <span>İlanlar</span>
+                                                                <span>İlan Pazarı</span>
                             </a>
                                                             
                 <!-- Flex spacer to push view_type=3 links to the right -->
@@ -3093,7 +3093,7 @@ onclick="confirmLogout()">
             <i class="fas fa-th-large"></i>
             <span>Kategoriler</span>
         </span>
-        <a href="/mesajlarim" class="bottom-menu-item messages-item">
+        <a href="mesajlarım.html" class="bottom-menu-item messages-item">
             <i class="fas fa-envelope"></i>
             <span>Mesajlarım</span>
                     </a>
@@ -3253,7 +3253,7 @@ onclick="confirmLogout()">
                                                                 <span class="mobile-nav-icon" style="background-color: rgba(0,45,224,0.2);">
                                                                             <i class="ti ti-coins"></i>
                                                                     </span>
-                                <span>İlanlar</span>
+                                <span>İlan Pazarı</span>
                             </div>
                         </a>
                                                         </div>
@@ -5126,12 +5126,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function openMessages() {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            openLoginModal();
-            return;
-        }
-        window.location.href = '/mesajlarim';
+        window.location.href = 'mesajlarım.html';
     }
 </script>
 </body>

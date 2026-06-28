@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İlan Pazarı - EpinHesabım</title>
+    <title>Mağazalar - EpinHesabım</title>
             <meta name="description" content="Epin Hesabım, oyunlar, dijital ürünler ve epin alışverişinde güvenilir adresiniz. Uygun fiyat, hızlı teslimat ve güvenli ödeme seçenekleriyle hemen keşfedin.">
             <meta name="keywords" content="Epin Hesabım, oyunlar, dijital ürünler ve epin alışverişinde güvenilir adresiniz. Uygun fiyat, hızlı teslimat ve güvenli ödeme seçenekleriyle hemen keşfedin.">
             <link rel="icon" type="image/x-icon" href="/assets/settings/favicon_1772100659.png">
@@ -2628,7 +2628,7 @@ main > .container{
 
                             <!-- Menu Items -->
                             <div class="user-dropdown-menu-items">
-                                <a href="profilim.html" class="dropdown-menu-item">
+                                <a href="profilim2.html" class="dropdown-menu-item">
                                     <i class="fas fa-user"></i>
                                     <span>Profilim</span>
                                 </a>
@@ -3054,7 +3054,7 @@ onclick="confirmLogout()">
                                                                     <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background-color: rgba(0,45,224,0.2) !important;">
                                         <i class="ti ti-coins" style="font-size:16px;color: currentColor;"></i>
                                     </span>
-                                                                <span>İlanlar</span>
+                                                                <span>Mağazalar</span>
                             </a>
                                                             
                 <!-- Flex spacer to push view_type=3 links to the right -->
@@ -3093,7 +3093,7 @@ onclick="confirmLogout()">
             <i class="fas fa-th-large"></i>
             <span>Kategoriler</span>
         </span>
-        <a href="/mesajlarim" class="bottom-menu-item messages-item">
+        <a href="mesajlarım.html" class="bottom-menu-item messages-item">
             <i class="fas fa-envelope"></i>
             <span>Mesajlarım</span>
                     </a>
@@ -3253,7 +3253,7 @@ onclick="confirmLogout()">
                                                                 <span class="mobile-nav-icon" style="background-color: rgba(0,45,224,0.2);">
                                                                             <i class="ti ti-coins"></i>
                                                                     </span>
-                                <span>İlanlar</span>
+                                <span>Mağazalar</span>
                             </div>
                         </a>
                                                         </div>
@@ -3906,7 +3906,7 @@ onclick="confirmLogout()">
                 </li>
                             <li class="breadcrumb-item">
                     <div class="bc-row">
-                                                    <span class="bc-current">İlan Pazarı</span>
+                                                    <span class="bc-current">Mağazalar</span>
                                             </div>
                 </li>
                     </ol>
@@ -3940,7 +3940,7 @@ onclick="confirmLogout()">
     <div class="categories-container">
       <div class="categories-header">
         <div class="categories-text">
-          <h1 class="categories-title">İlan Pazarı</h1>
+          <h1 class="categories-title">Mağazalar</h1>
           <p class="categories-subtitle">Oyunlarını ve sunucularını burada keşfet! Tarzına uyan oyunu seç, hemen oynamaya başla.</p>
         </div>
         <div class="search-container">
@@ -5067,12 +5067,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function openMessages() {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            openLoginModal();
-            return;
-        }
-        window.location.href = '/mesajlarim';
+        window.location.href = 'mesajlarım.html';
     }
 </script>
 </body>

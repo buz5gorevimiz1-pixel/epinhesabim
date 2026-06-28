@@ -1,0 +1,403 @@
+﻿<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog ve Haberler - epinhesabim</title>
+<link rel="icon" type="image/x-icon" href="assets/settings/favicon_1772100659.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{font-family:'Poppins',sans-serif;box-sizing:border-box;margin:0;padding:0}
+html{background:#080c1a!important}
+body{overflow-x:hidden!important;min-height:100vh;background:#080c1a!important;color:#e8e8f0}
+.frontend-header,.frontend-header .header-top,.frontend-header .header-nav{position:relative;background:linear-gradient(90deg,#0a0f22 0%,#1b0d3b 35%,rgba(147,51,234,0.65) 52%,#17093a 75%,#0a0f22 100%)!important;border-bottom:none!important;box-shadow:none!important}
+.frontend-header{z-index:1100;box-shadow:0 6px 22px rgba(0,0,0,0.35)!important}
+.frontend-header .header-top{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;width:100%}
+.frontend-header .header-top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,rgba(140,100,255,0),rgba(140,100,255,0.75),rgba(140,100,255,0));pointer-events:none}
+.header-content{display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin:0 auto;width:100%}
+.logo-section img{height:40px;max-width:200px;object-fit:contain}
+.header-search-container{display:flex;align-items:center;flex:1;max-width:400px;margin:0 15px}
+.header-search-box{width:100%;display:flex;align-items:center;background:linear-gradient(135deg,rgba(24,12,50,0.95),rgba(147,51,234,0.55));border:1px solid rgba(147,51,234,0.5);border-radius:6px;padding:0 16px;gap:12px;height:48px}
+.header-search-input{flex:1;background:none;border:none;outline:none;color:#ffe2e2;font-size:15px}
+.header-search-btn{background:#8b5cf6;border:none;color:white;cursor:pointer;padding:8px 12px;border-radius:4px;height:36px;display:flex;align-items:center;justify-content:center}
+.header-actions{display:flex;align-items:center;gap:8px}
+.theme-toggle-btn{width:40px;height:40px;border-radius:50%;background:#374151;border:1px solid #4b5563;color:#d1d5db;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mobile-account-btn{display:none;background:#8b5cf6;color:white;border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;align-items:center;justify-content:center;font-size:16px}
+.mobile-menu-toggle{display:none;background:none;border:none;color:#e8e8f0;font-size:20px;padding:8px;cursor:pointer}
+.auth-buttons{display:flex;gap:8px}
+.btn-register,.btn-login{color:white;padding:10px 18px;border-radius:6px;border:none;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;height:44px}
+.btn-register{background:linear-gradient(135deg,#1e40af,#3b82f6)}
+.btn-login{background:linear-gradient(135deg,#8b5cf6,#ec4899)}
+.user-dropdown{position:relative}
+.user-dropdown-trigger{display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px 12px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:10px;transition:all 0.3s}
+.user-dropdown-trigger:hover{background:rgba(139,92,246,0.2)}
+.user-avatar-small{width:36px;height:36px;border-radius:8px;border:2px solid rgba(139,92,246,0.5);object-fit:cover}
+.user-info-small{display:flex;flex-direction:column;gap:2px}
+.username-small{font-size:13px;font-weight:600;color:#e8e8f0}
+.balance-small{font-size:11px;color:rgba(255,255,255,0.6)}
+.dropdown-arrow-small{font-size:10px;color:rgba(255,255,255,0.6);transition:transform 0.3s}
+.user-dropdown.open .dropdown-arrow-small{transform:rotate(180deg)}
+.user-dropdown-menu{position:absolute;top:calc(100% + 12px);right:0;width:300px;background:linear-gradient(180deg,rgba(10,15,34,0.98),rgba(27,13,59,0.95) 35%,rgba(147,51,234,0.5) 52%,rgba(23,9,58,0.95) 70%,rgba(10,15,34,0.98));border:1px solid rgba(147,51,234,0.4);border-radius:16px;padding:16px;z-index:99999;opacity:0;visibility:hidden;transform:translateY(-10px) scale(0.95);transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none;box-shadow:0 12px 48px rgba(0,0,0,0.4);backdrop-filter:blur(12px)}
+.user-dropdown.open .user-dropdown-menu{opacity:1;visibility:visible;transform:translateY(0) scale(1);pointer-events:auto}
+.dropdown-profile-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(147,51,234,0.2)}
+.dropdown-avatar-wrapper{position:relative;width:52px;height:52px;flex-shrink:0}
+.dropdown-avatar{width:100%;height:100%;border-radius:12px;border:2px solid rgba(147,51,234,0.6);object-fit:cover}
+.dropdown-online-indicator{position:absolute;bottom:2px;right:2px;width:12px;height:12px;background:#10b981;border:2px solid rgba(10,15,34,0.95);border-radius:50%}
+.dropdown-username{font-size:14px;font-weight:700;color:#e8e8f0;margin-bottom:4px}
+.dropdown-user-status{font-size:11px;color:rgba(255,255,255,0.6);display:flex;align-items:center;gap:5px}
+.status-dot-small{width:6px;height:6px;background:#10b981;border-radius:50%}
+.dropdown-balance-card{background:linear-gradient(135deg,rgba(147,51,234,0.25),rgba(236,72,153,0.15));border:1px solid rgba(147,51,234,0.3);border-radius:12px;padding:12px 16px;margin-bottom:16px}
+.balance-label-small{font-size:10px;font-weight:700;color:rgba(255,255,255,0.6);letter-spacing:1px}
+.balance-amount-small{font-size:20px;font-weight:800;color:#fff;margin-bottom:2px}
+.user-dropdown-menu-items{display:flex;flex-direction:column;gap:4px}
+.dropdown-menu-item{display:flex;align-items:center;gap:12px;padding:10px 12px;color:rgba(255,255,255,0.8);text-decoration:none;border-radius:8px;transition:all 0.2s;font-size:13px;font-weight:500;border-left:2px solid transparent}
+.dropdown-menu-item:hover{background:rgba(147,51,234,0.2);border-left-color:#d4af37;color:#d4af37;padding-left:16px}
+.dropdown-menu-item i{width:18px;font-size:15px;color:rgba(255,255,255,0.5)}
+.logout-menu-item{color:#ef4444!important}
+.logout-menu-item:hover{background:rgba(239,68,68,0.1)!important;border-left-color:#ef4444!important}
+.header-nav{display:flex;align-items:center;padding:12px 24px;gap:24px;width:100%}
+.nav-item{display:flex;align-items:center;gap:8px;color:#e8e8f0;text-decoration:none;padding:8px 10px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.3s;white-space:nowrap}
+.nav-item:hover{background:rgba(255,255,255,0.05);color:#d4af37}
+.has-dropdown{position:relative}
+.dropdown-panel{display:none;position:absolute;top:calc(100% + 8px);left:0;background:linear-gradient(180deg,rgba(10,15,34,0.98),rgba(27,13,59,0.96));border:1px solid rgba(147,51,234,0.35);border-radius:16px;padding:20px;z-index:9999;min-width:480px;box-shadow:0 20px 60px rgba(0,0,0,0.6);backdrop-filter:blur(16px)}
+.has-dropdown:hover .dropdown-panel{display:block}
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.cat-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:10px;text-decoration:none;color:#e8e8f0;font-size:12px;font-weight:500;text-align:center;transition:all 0.2s;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)}
+.cat-card:hover{background:rgba(139,92,246,0.15);border-color:rgba(139,92,246,0.4);color:#d4af37}
+.cat-card img{width:44px;height:44px;object-fit:cover;border-radius:8px}
+@media(max-width:992px){.header-nav,.header-search-container,.auth-buttons,.user-dropdown{display:none!important}.mobile-menu-toggle{display:block!important}.mobile-account-btn{display:flex!important}}
+@media(max-width:768px){.header-content{display:grid;grid-template-columns:auto 1fr auto;gap:8px}.logo-section{justify-self:center}}
+.mobile-bottom-menu{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(10,12,28,0.95);backdrop-filter:blur(16px);border-top:1px solid rgba(255,255,255,0.08);z-index:1000;justify-content:space-around;padding:8px 0}
+@media(max-width:992px){.mobile-bottom-menu{display:flex}}
+.bottom-menu-item{display:flex;flex-direction:column;align-items:center;gap:4px;color:rgba(255,255,255,0.6);text-decoration:none;font-size:10px;padding:6px 8px}
+.bottom-menu-item.active,.bottom-menu-item:hover{color:#d4af37}
+.mobile-profile-panel{position:fixed;top:10px;bottom:10px;width:min(320px,90vw);background:linear-gradient(180deg,rgba(10,15,34,0.98),rgba(27,13,59,0.95) 35%,rgba(147,51,234,0.5) 52%,rgba(23,9,58,0.95) 70%,rgba(10,15,34,0.98));border:1px solid rgba(147,51,234,0.4);border-radius:0 24px 24px 0;padding:24px 20px 32px;z-index:2001;transform:translateX(-100%);transition:transform 0.35s ease;overflow-y:auto;backdrop-filter:blur(12px)}
+.mobile-profile-panel.active{transform:translateX(0)}
+.profile-panel-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:2000}
+.profile-panel-backdrop.active{display:block}
+.panel-close-btn{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.1);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+/* PAGE */
+.page-wrapper{max-width:1200px;margin:30px auto 100px;padding:0 24px}
+.blog-banner{background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(59,130,246,0.06));border:1px solid rgba(139,92,246,0.25);border-radius:16px;padding:32px;margin-bottom:28px;text-align:center;position:relative;overflow:hidden}
+.blog-banner::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(139,92,246,0.06),transparent 55%);animation:rotateGlow 12s linear infinite;pointer-events:none}
+@keyframes rotateGlow{to{transform:rotate(360deg)}}
+.blog-banner h1{font-size:28px;font-weight:700;color:#fff;margin-bottom:8px;position:relative}
+.blog-banner p{color:rgba(255,255,255,0.6);font-size:15px;position:relative}
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.filter-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.65);padding:8px 18px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s}
+.filter-btn:hover,.filter-btn.active{background:rgba(139,92,246,0.2);border-color:#8b5cf6;color:#fff}
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
+.blog-card{background:rgba(20,23,38,0.85);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:all 0.3s;cursor:pointer}
+.blog-card:hover{transform:translateY(-5px);border-color:rgba(139,92,246,0.4);box-shadow:0 12px 35px rgba(0,0,0,0.35),0 0 18px rgba(139,92,246,0.15)}
+.blog-thumb{width:100%;height:195px;position:relative;overflow:hidden}
+.blog-thumb img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s}
+.blog-card:hover .blog-thumb img{transform:scale(1.06)}
+.thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:56px;color:rgba(255,255,255,0.07)}
+.blog-cat-badge{position:absolute;top:12px;left:12px;background:rgba(139,92,246,0.9);color:#fff;padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;backdrop-filter:blur(4px)}
+.blog-body{padding:20px;flex:1;display:flex;flex-direction:column}
+.blog-meta-row{display:flex;gap:14px;font-size:12px;color:rgba(255,255,255,0.45);margin-bottom:10px}
+.blog-meta-row i{color:#8b5cf6;margin-right:3px}
+.blog-title{font-size:17px;font-weight:600;color:#e8e8f0;margin-bottom:10px;line-height:1.45}
+.blog-excerpt{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.65;flex:1;margin-bottom:18px}
+.blog-read-more{display:inline-flex;align-items:center;gap:8px;color:#8b5cf6;font-size:13px;font-weight:600;background:none;border:none;cursor:pointer;padding:0;transition:color 0.2s;margin-top:auto}
+.blog-read-more:hover{color:#a78bfa}
+.blog-read-more:hover i{transform:translateX(4px)}
+.blog-read-more i{transition:transform 0.25s}
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);backdrop-filter:blur(8px);z-index:9999;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal-box{background:linear-gradient(160deg,#12102a,#1c1040);border:1px solid rgba(139,92,246,0.3);border-radius:20px;max-width:680px;width:100%;max-height:88vh;overflow-y:auto;position:relative;animation:modalIn 0.25s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes modalIn{from{transform:scale(0.88);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-img{width:100%;height:250px;object-fit:cover;border-radius:20px 20px 0 0}
+.modal-img-placeholder{width:100%;height:250px;border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:center;font-size:72px;color:rgba(255,255,255,0.07)}
+.modal-content{padding:26px 28px 32px}
+.modal-cat{display:inline-block;background:rgba(139,92,246,0.2);color:#a78bfa;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:14px}
+.modal-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:12px;line-height:1.4}
+.modal-meta{display:flex;gap:16px;font-size:12px;color:rgba(255,255,255,0.45);margin-bottom:20px}
+.modal-meta i{color:#8b5cf6;margin-right:4px}
+.modal-body{font-size:14px;color:rgba(255,255,255,0.7);line-height:1.9}
+.modal-body p{margin-bottom:14px}
+.modal-close{position:absolute;top:14px;right:14px;background:rgba(0,0,0,0.4);border:none;color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:background 0.2s;z-index:10}
+.modal-close:hover{background:rgba(255,255,255,0.2)}
+@media(max-width:768px){.page-wrapper{padding:0 14px;margin-top:16px}.blog-banner{padding:22px 16px}.blog-banner h1{font-size:22px}.blog-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body><header class="frontend-header">
+  <div class="header-top">
+    <div class="header-content">
+      <button class="mobile-menu-toggle" onclick="openMobilePanel()"><i class="fas fa-bars"></i></button>
+      <div class="logo-section">
+        <a href="index.html"><img src="assets/uploads/servers/logod1ef6502-ec0d-.png" alt="epinhesabim"></a>
+      </div>
+      <div class="header-search-container">
+        <div class="header-search-box">
+          <input type="text" class="header-search-input" placeholder="Urun, hesap ara...">
+          <button class="header-search-btn"><i class="fas fa-search"></i></button>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="theme-toggle-btn" onclick="toggleTheme()" title="Tema"><i class="fas fa-sun" id="theme-icon"></i></button>
+        <button class="mobile-account-btn" onclick="openMobilePanel()"><i class="fas fa-user"></i></button>
+        <div class="auth-buttons" id="authButtons"></div>
+        <div class="user-dropdown" id="desktopUserDropdown">
+          <div class="user-dropdown-trigger" id="desktopDropdownTrigger">
+            <img src="assets/img/avatar-1.png" alt="Profil" class="user-avatar-small" id="desktopUserAvatar">
+            <div class="user-info-small">
+              <span class="username-small" id="desktopUsername">Kullanici</span>
+              <span class="balance-small" id="desktopBalance">0.00 TL</span>
+            </div>
+            <i class="fas fa-chevron-down dropdown-arrow-small"></i>
+          </div>
+          <div class="user-dropdown-menu" id="desktopDropdownMenu">
+            <div class="dropdown-profile-header">
+              <div class="dropdown-avatar-wrapper">
+                <img src="assets/img/avatar-1.png" alt="Profil" class="dropdown-avatar" id="desktopProfileAvatar">
+                <div class="dropdown-online-indicator"></div>
+              </div>
+              <div>
+                <div class="dropdown-username" id="desktopDropdownUsername">Kullanici Adi</div>
+                <div class="dropdown-user-status"><span class="status-dot-small"></span><span>Cevrimici</span></div>
+              </div>
+            </div>
+            <div class="dropdown-balance-card">
+              <div class="balance-label-small">BAKIYE</div>
+              <div class="balance-amount-small" id="desktopDropdownBalance">0.00 TL</div>
+            </div>
+            <div class="user-dropdown-menu-items">
+              <a href="profilim2.html" class="dropdown-menu-item"><i class="fas fa-user"></i><span>Profilim</span></a>
+              <a href="mesajlarim.html" class="dropdown-menu-item"><i class="fas fa-envelope"></i><span>Mesajlarim</span></a>
+              <a href="ilanlarim.html" class="dropdown-menu-item"><i class="fas fa-list"></i><span>Ilanlarim</span></a>
+              <a href="siparislerim.html" class="dropdown-menu-item"><i class="fas fa-shopping-cart"></i><span>Siparislerim</span></a>
+              <a href="bakiye-ekle.html" class="dropdown-menu-item"><i class="fas fa-plus-circle"></i><span>Bakiye Yukle</span></a>
+              <a href="para-cek.html" class="dropdown-menu-item"><i class="fas fa-wallet"></i><span>Para Cek</span></a>
+              <a href="ayarlar.html" class="dropdown-menu-item"><i class="fas fa-cog"></i><span>Ayarlar</span></a>
+              <a href="#" class="dropdown-menu-item logout-menu-item" onclick="confirmLogout()"><i class="fas fa-sign-out-alt"></i><span>Cikis Yap</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="header-nav">
+    <div style="display:flex;align-items:center;gap:20px;max-width:1400px;margin:0 auto;width:100%;padding:0 4px;">
+      <div class="has-dropdown nav-item">
+        <a href="katagoriler2.html" style="display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;"><i class="ri-apps-line"></i><span>Kategoriler</span></a>
+        <div class="dropdown-panel">
+          <div class="cat-grid">
+            <a href="kategori-detay.html?slug=valorant" class="cat-card"><img src="assets/uploads/menu/menu_1757953634_0cd71794.png" alt="Valorant"><span>Valorant</span></a>
+            <a href="kategori-detay.html?slug=pubg-mobile" class="cat-card"><img src="assets/uploads/menu/menu_1757953822_0ea66b60.png" alt="PUBG"><span>PUBG Mobile</span></a>
+            <a href="kategori-detay.html?slug=sosyal-medya" class="cat-card"><img src="assets/uploads/menu/menu_1757943468_8ca80874.webp" alt="Sosyal Medya"><span>Sosyal Medya</span></a>
+            <a href="katagoriler2.html" class="cat-card"><i class="fas fa-th" style="font-size:26px;color:#8b5cf6"></i><span>Tum Kategoriler</span></a>
+          </div>
+        </div>
+      </div>
+      <a href="kategori-detay.html?slug=valorant" class="nav-item"><img src="assets/uploads/menu/menu_1757953634_0cd71794.png" style="width:22px;border-radius:4px;"><span>Valorant</span></a>
+      <a href="kategori-detay.html?slug=pubg-mobile" class="nav-item"><img src="assets/uploads/menu/menu_1757953822_0ea66b60.png" style="width:22px;border-radius:4px;"><span>PUBG</span></a>
+      <a href="ilan-pazari.html" class="nav-item"><i class="fas fa-store"></i><span>Ilan Pazari</span></a>
+      <a href="kasalar.html" class="nav-item"><i class="fas fa-box"></i><span>Kasalar</span></a>
+      <div style="flex:1"></div>
+      <a href="blog.html" class="nav-item" style="color:#a855f7;font-weight:600;"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+    </div>
+  </nav>
+</header>
+
+<div class="profile-panel-backdrop" id="profilePanelBackdrop" onclick="closeMobilePanel()"></div>
+<div class="mobile-profile-panel" id="mobileProfilePanel">
+  <button class="panel-close-btn" onclick="closeMobilePanel()"><i class="fas fa-times"></i></button>
+  <div id="mobilePanelContent"></div>
+</div>
+
+<div class="page-wrapper">
+  <div class="blog-banner">
+    <h1><i class="fas fa-newspaper" style="color:#8b5cf6;margin-right:10px;"></i>Blog &amp; Haberler</h1>
+    <p>Oyun dunyasindaki en son guncellemeler, e-pin firsatlari ve platformumuzdaki yenilikler</p>
+  </div>
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" data-cat="hepsi">Hepsi</button>
+    <button class="filter-btn" data-cat="Haberler">Haberler</button>
+    <button class="filter-btn" data-cat="Duyuru">Duyurular</button>
+    <button class="filter-btn" data-cat="Rehber">Rehberler</button>
+  </div>
+  <div class="blog-grid" id="blogGrid"></div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal-box" id="modalBox">
+    <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    <div id="modalImgArea"></div>
+    <div class="modal-content">
+      <span class="modal-cat" id="modalCat"></span>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-meta" id="modalMeta"></div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+</div>
+
+<div class="mobile-bottom-menu">
+  <a href="index.html" class="bottom-menu-item"><i class="fas fa-home"></i><span>Ana Sayfa</span></a>
+  <a href="katagoriler2.html" class="bottom-menu-item"><i class="fas fa-th-large"></i><span>Kategoriler</span></a>
+  <a href="ilan-pazari.html" class="bottom-menu-item"><i class="fas fa-store"></i><span>Pazar</span></a>
+  <a href="blog.html" class="bottom-menu-item active"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+  <a href="#" class="bottom-menu-item" id="mobileAuthMenuItem"><i class="fas fa-user"></i><span>Hesap</span></a>
+</div>
+
+<script>
+const POSTS = [
+  {id:1,cat:"Haberler",title:"League of Legends Yeni Darkin Sampiyonu",date:"2 gun once",views:"2.1k",img:"https://cdn.itemsatis.com/uploads/news/74f51c428995f68868cae8d77834f561-9536.png?height=160",bg:"linear-gradient(45deg,#1f1235,#3a1c71)",icon:"fas fa-gamepad",excerpt:"Riot Games'in yeni gizli kahramani Zaahen hakkinda tum detaylar ortaya cikti. Evren uyumu, tasarim sureci ve oynanis ipuclari.",full:"<p>Riot Games, League of Legends evrenine yeni bir Darkin sampiyonu kazandiriyor. Zaahen olarak bilinen bu yeni karakter, Aatrox'un aksine kendi silahina degil, baska varliklarla olan baglantisina dayanarak savasan bir Darkin.</p><p>Gelistirme sureci boyunca tasarim ekibi, karakterin hikayesini oncelikle evrenin lore'una entegre etmis ve oynanisini daha sonra sekillendirmistir. Yeni sezon guncellemesiyle birlikte gelen bu ek, oyuncular arasinda buyuk heyecan yaratti.</p><p>Beta test sunucusunda sizdirilan goruntüler, karakterin yuksek mobiliteye sahip bir assassin/fighter melezi oldugunu ortaya koyuyor.</p>"},
+  {id:2,cat:"Haberler",title:"Roblox 2025 Yas Tahmini ve Guvenlik Adimlar",date:"4 gun once",views:"980",img:"https://cdn.itemsatis.com/uploads/news/e551c4189c1d6d30bd9197fa74abcb8d-9484.png?height=160",bg:"linear-gradient(45deg,#0d2137,#1a4a6b)",icon:"fas fa-shield-alt",excerpt:"Roblox'un yeni yas tahmini teknolojisi ve platformdaki guvenlik adimlarinin detaylari.",full:"<p>Roblox Corporation, platformdaki kucuk yasli kullanicilari korumak amaciyla 2025 yilinda devreye alacagi yeni yas tahmini sistemini duyurdu.</p><p>Yapay zeka destekli bu sistem, kullanicinin profil davranislarini, icerik tercihlerini ve oyun suresini analiz ederek yaklasik bir yas grubu belirleyecek. Bu veri, cocuklara yonelik daha guvenli icerik onerileri ve ebeveyn denetim araclari gelistirmek icin kullanilacak.</p><p>Platform ayrica sohbet filtreleme algoritmalarini da guncelledi; hakaret, bullying ve kisisel bilgi paylasimi konularinda daha hassas bir izleme sistemi hayata geciriliyor.</p>"},
+  {id:3,cat:"Haberler",title:"Injustice 3 Sizdirildi: Sanatcilar Konustu",date:"4 gun once",views:"1.4k",img:"https://cdn.itemsatis.com/uploads/news/4ba02f37d048577b4f78e47b09972415-4825.png?height=160",bg:"linear-gradient(45deg,#1a0a0a,#5c1515)",icon:"fas fa-fist-raised",excerpt:"NetherRealm Studios'un yeni projesi Injustice 3 hakkinda eski calisanlardan onemli bilgiler sizdiriladir.",full:"<p>Bilinen bir oyun sizdirici, Injustice 3'un aktif gelistirme surecinde oldugunu ve 2026 sonu ya da 2027 basinda duyurulmasinin beklendini acikladi.</p><p>Eski NetherRealm Studios calisanlarindan alinan anonim ifadelere gore oyun, Mortal Kombat 1 motoruyla gelistiriliyor ve karakter kadrosunda hem DC Comics karakterleri hem de surpriz ortakliklar konusunda dahili tartismalar surdugu ogreniladir.</p><p>Hikaye, Injustice 2'nin bitisinden birlesik bir evren anlayisiyla devam edecek; Batman ve Superman'in ittifakinin bir sonraki sinavi olacak.</p>"},
+  {id:4,cat:"Haberler",title:"Football Manager 26 Yenilikleri",date:"5 gun once",views:"760",img:"https://cdn.itemsatis.com/uploads/news/df9b520d2e3b26ff6460df2eb64d38a0-3021.png?height=160",bg:"linear-gradient(45deg,#0a2012,#1a4a25)",icon:"fas fa-futbol",excerpt:"FM26'nin yeni grafik motoru, atmosfer sistemi ve taktik ekrani hakkinda ilk detaylar.",full:"<p>Sports Interactive tarafindan gelistirilen Football Manager 26, serinin en buyuk gorsel donusumunu beraberinde getiriyor. Yeni Unreal Engine 5 tabanli motor sayesinde soyunma odasi konusmalari ve mac oncesi animasyonlar cok daha gercekci.</p><p>Takim morali mekanigi de yeniden tasarlandi; artik oyuncu mutlulugu sadece performans degil, takimdaki sosyal iliskiler ve kocu ile bire bir etkilesimden de etkileniyor.</p><p>Oyunun beta surumu secili icerik ureticiyle Ekim 2025'te paylasilmis ve ilk tepkiler son derece olumlu olmustur.</p>"},
+  {id:5,cat:"Haberler",title:"First Light: James Bond Donuyor",date:"5 gun once",views:"1.8k",img:"https://cdn.itemsatis.com/uploads/news/af6274f2f6b09a505143803cd80c6987-1793.png?height=160",bg:"linear-gradient(45deg,#0a0a1a,#1a1a3a)",icon:"fas fa-user-secret",excerpt:"Yeni Bond oyunu First Light, klasik dokunuslar ile modern oynanis mekaniklarini birlestiriyor.",full:"<p>IO Interactive'in gelistirdigi James Bond oyunu Project 007, resmi adi First Light olarak aciklandi. Oyun, Bond'un henuz 00 statusu kazanmadan once gecen bir koken hikayesini anlatacak.</p><p>Hitman serisindeki gibi sandbox-stealth elemanlarina sahip olan oyun, hem sessiz yaklasimlari hem de aksiyonu destekliyor. Gelistirici, Bond'un tarzini yansitmak icin ozel kiyafet sistemi, araba takip modulleri ve karakter gelistirme agaci ekledigini dogruladi.</p><p>Cikis tarihi henuz belli olmamakla birlikte traylerina gore 2026 ortasi hedefleniyor.</p>"},
+  {id:6,cat:"Duyuru",title:"Yeni Vitrin ve One Cikanlar Sistemi Aktif!",date:"8 gun once",views:"3.4k",img:"",bg:"linear-gradient(45deg,#1a2a6c,#b21f1f,#fdbb2d)",icon:"fas fa-bullhorn",excerpt:"Ilanlarinizi daha fazla kisiye ulastirmak icin gelistirdigimiz yeni algoritma devreye girdi.",full:"<p>Platformumuzda hayata gecen yeni vitrin ve one cikan ilan sistemiyle saticilarimizin urunleri artik cok daha genis bir kitleye ulasiyor.</p><p>Yeni algoritmamiz; ilan kalitesi, satici guven skoru, teslimat hizi ve kullanici yorumlarini goz onune alarak ilanlar arasinda puanlama yapiyor. En yuksek skorlu ilanlar otomatik olarak ana sayfadaki vitrin alanina ekleniyor.</p><p>Ek olarak, saticilar belirli bir ucret karsiliginda ilanlarini 3 veya 7 gunlugune one cikarabilecek. Bu ozellik suan beta surecinde olup tum kullanicilara kademeli acilacak.</p>"},
+  {id:7,cat:"Rehber",title:"Guvenli PUBG Hesap Satisinin Puf Noktalari",date:"10 gun once",views:"850",img:"",bg:"linear-gradient(45deg,#2b1b1b,#873e23)",icon:"fas fa-crosshairs",excerpt:"Platformumuz uzerinden PUBG Mobile hesaplarini satarken nelere dikkat etmelisiniz?",full:"<p>PUBG Mobile hesap satisinda en onemli kural, hesabin orijinal kayit e-postasina ve telefon numarasina sahip olmanizdir.</p><p>Alici ile yapilan anlasmada mutlaka platforma entegre guvenli odeme sistemini kullanin; disarida yapilan islemler garanti kapsaminda degildir. Hesabi teslim ederken sifre degisikligini alicinin dogrulamasi beklenmeden yapmayin.</p><p>Satis sonrasinda en az 48 saat boyunca hesaba giris yapmayin. Platformumuzun guvenli odeme ozelligi her iki taraf icin sureci guvence altina almaktadir.</p>"},
+  {id:8,cat:"Rehber",title:"Valorant VP Alma Rehberi 2026",date:"12 gun once",views:"2.2k",img:"",bg:"linear-gradient(45deg,#1f0a2a,#6b21a8)",icon:"fas fa-gem",excerpt:"En uygun fiyatlarla Valorant Points almanin yollari ve dikkat edilmesi gerekenler.",full:"<p>Valorant Points (VP) almak icin en ekonomik yol, deger paketlerini tercih etmektir. 2026 yili itibaroyla Riot Games Turkiye fiyatlarinda artislar gelmis olsa da platformumuz uzerindeki saticilardan elde edilen epinler sayesinde orijinal fiyatin altinda VP elde etmek mumkun.</p><p>VP satin alirken dikkat etmeniz gereken noktalar: bolgene uygun hesap kullanmak, guvenilir satici rozeti olan listeleri tercih etmek ve garanti kapsamindaki teklifleri secmek.</p><p>Platformumuzda butun VP satislari guvence altinda olup teslimat genellikle 5-15 dakika icerisinde gerceklesiyor.</p>"}
+];
+
+let activeFilter = 'hepsi';
+
+function renderPosts(filter){
+  const grid = document.getElementById('blogGrid');
+  const filtered = filter==='hepsi' ? POSTS : POSTS.filter(p=>p.cat===filter);
+  grid.innerHTML = filtered.map(p=>`
+    <article class="blog-card" onclick="openModal(${p.id})">
+      <div class="blog-thumb" style="background:${p.bg}">
+        ${p.img ? `<img src="${p.img}" alt="${p.title}" onerror="this.parentElement.innerHTML='<div class=thumb-placeholder><i class=\\''+p.icon+'\\'></i></div>'">` : `<div class="thumb-placeholder"><i class="${p.icon}"></i></div>`}
+        <span class="blog-cat-badge">${p.cat}</span>
+      </div>
+      <div class="blog-body">
+        <div class="blog-meta-row">
+          <span><i class="fas fa-calendar-alt"></i>${p.date}</span>
+          <span><i class="fas fa-eye"></i>${p.views}</span>
+        </div>
+        <div class="blog-title">${p.title}</div>
+        <div class="blog-excerpt">${p.excerpt}</div>
+        <button class="blog-read-more">Devamini Oku <i class="fas fa-arrow-right"></i></button>
+      </div>
+    </article>
+  `).join('');
+}
+
+function openModal(id){
+  const p = POSTS.find(x=>x.id===id);
+  if(!p) return;
+  const imgArea = document.getElementById('modalImgArea');
+  if(p.img){
+    imgArea.innerHTML = `<img src="${p.img}" alt="${p.title}" class="modal-img" onerror="this.parentElement.innerHTML='<div class=modal-img-placeholder style=background:${p.bg}><i class=\\'${p.icon}\\'></i></div>'">`;
+  } else {
+    imgArea.innerHTML = `<div class="modal-img-placeholder" style="background:${p.bg}"><i class="${p.icon}"></i></div>`;
+  }
+  document.getElementById('modalCat').textContent = p.cat;
+  document.getElementById('modalTitle').textContent = p.title;
+  document.getElementById('modalMeta').innerHTML = `<span><i class="fas fa-calendar-alt"></i>${p.date}</span><span><i class="fas fa-eye"></i>${p.views} goruntulenme</span>`;
+  document.getElementById('modalBody').innerHTML = p.full;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function closeModalOnBg(e){
+  if(e.target===document.getElementById('modalOverlay')) closeModal();
+}
+
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+document.getElementById('filterBar').addEventListener('click',function(e){
+  const btn = e.target.closest('.filter-btn');
+  if(!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.cat;
+  renderPosts(activeFilter);
+});
+
+renderPosts('hepsi');
+
+/* AUTH */
+function updateAuthDisplay(){
+  const raw = localStorage.getItem('user');
+  const token = localStorage.getItem('token');
+  const dd = document.getElementById('desktopUserDropdown');
+  const ab = document.getElementById('authButtons');
+  const mob = document.getElementById('mobileAuthMenuItem');
+  if(raw && token){
+    try{
+      const u = JSON.parse(raw);
+      const name = u.username || u.fullName || 'Kullanici';
+      const bal = parseFloat(u.balance||0).toLocaleString('tr-TR',{minimumFractionDigits:2});
+      const av = u.avatar ? (u.avatar.startsWith('http') ? u.avatar : '/'+u.avatar) : 'assets/img/avatar-1.png';
+      dd.style.display='flex';
+      ab.innerHTML='';
+      document.getElementById('desktopUsername').textContent=name;
+      document.getElementById('desktopBalance').textContent='TL '+bal;
+      document.getElementById('desktopUserAvatar').src=av;
+      document.getElementById('desktopProfileAvatar').src=av;
+      document.getElementById('desktopDropdownUsername').textContent=name;
+      document.getElementById('desktopDropdownBalance').textContent='TL '+bal;
+      if(mob){ mob.innerHTML='<i class="fas fa-sign-out-alt"></i><span>Cikis</span>'; mob.onclick=confirmLogout; }
+      renderMobilePanel(name,bal,av,true);
+    }catch(e){}
+  } else {
+    dd.style.display='none';
+    ab.innerHTML=`<button class="btn-login" onclick="location.href='login.html'"><i class="fas fa-sign-in-alt"></i><span>Giris Yap</span></button><button class="btn-register" onclick="location.href='register.html'"><i class="fas fa-user-plus"></i><span>Kayit Ol</span></button>`;
+    if(mob){ mob.innerHTML='<i class="fas fa-sign-in-alt"></i><span>Giris Yap</span>'; mob.onclick=()=>location.href='login.html'; }
+    renderMobilePanel('','','',false);
+  }
+}
+
+function renderMobilePanel(name,bal,av,loggedIn){
+  const c = document.getElementById('mobilePanelContent');
+  if(!c) return;
+  if(loggedIn){
+    c.innerHTML=`<div style="text-align:center;margin-bottom:24px;padding-top:12px"><img src="${av}" style="width:72px;height:72px;border-radius:16px;border:2px solid rgba(139,92,246,0.6);object-fit:cover;margin-bottom:12px"><div style="font-size:16px;font-weight:700;color:#fff">${name}</div><div style="font-size:13px;color:rgba(255,255,255,0.55)">TL ${bal}</div></div><div style="display:flex;flex-direction:column;gap:6px"><a href="profilim2.html" class="dropdown-menu-item"><i class="fas fa-user"></i><span>Profilim</span></a><a href="siparislerim.html" class="dropdown-menu-item"><i class="fas fa-shopping-cart"></i><span>Siparislerim</span></a><a href="bakiye-ekle.html" class="dropdown-menu-item"><i class="fas fa-plus-circle"></i><span>Bakiye Yukle</span></a><a href="para-cek.html" class="dropdown-menu-item"><i class="fas fa-wallet"></i><span>Para Cek</span></a><a href="#" class="dropdown-menu-item logout-menu-item" onclick="confirmLogout()"><i class="fas fa-sign-out-alt"></i><span>Cikis Yap</span></a></div>`;
+  } else {
+    c.innerHTML=`<div style="text-align:center;padding:32px 0"><i class="fas fa-user-circle" style="font-size:64px;color:rgba(139,92,246,0.4);margin-bottom:16px;display:block"></i><p style="color:rgba(255,255,255,0.5);margin-bottom:20px;font-size:14px">Hesabiniza giris yapin</p><button onclick="location.href='login.html'" class="btn-login" style="width:100%;justify-content:center;margin-bottom:10px"><i class="fas fa-sign-in-alt"></i>Giris Yap</button><button onclick="location.href='register.html'" class="btn-register" style="width:100%;justify-content:center"><i class="fas fa-user-plus"></i>Kayit Ol</button></div>`;
+  }
+}
+
+function openMobilePanel(){ document.getElementById('mobileProfilePanel').classList.add('active'); document.getElementById('profilePanelBackdrop').classList.add('active'); }
+function closeMobilePanel(){ document.getElementById('mobileProfilePanel').classList.remove('active'); document.getElementById('profilePanelBackdrop').classList.remove('active'); }
+
+/* DROPDOWN */
+document.getElementById('desktopDropdownTrigger').addEventListener('click',function(e){
+  e.stopPropagation();
+  document.getElementById('desktopUserDropdown').classList.toggle('open');
+});
+document.addEventListener('click',function(e){
+  if(!document.getElementById('desktopUserDropdown').contains(e.target))
+    document.getElementById('desktopUserDropdown').classList.remove('open');
+});
+
+function confirmLogout(){
+  if(confirm('Cikis yapmak istediginizden emin misiniz?')){
+    localStorage.removeItem('user'); localStorage.removeItem('token');
+    location.href='login.html';
+  }
+}
+
+function toggleTheme(){
+  const t = document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  localStorage.setItem('theme',t);
+  document.getElementById('theme-icon').className = t==='light'?'fas fa-moon':'fas fa-sun';
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  const t = localStorage.getItem('theme')||'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  document.getElementById('theme-icon').className = t==='light'?'fas fa-moon':'fas fa-sun';
+  updateAuthDisplay();
+});
+window.addEventListener('storage', updateAuthDisplay);
+</script>
+</body>
+</html>

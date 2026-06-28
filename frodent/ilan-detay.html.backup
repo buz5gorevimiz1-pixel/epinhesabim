@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>İlan Detayı</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #f8fafc;
+      background-color: #0b0e17;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, rgba(96, 165, 250, 0.08), transparent 40%),
+                  radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.06), transparent 35%),
+                  #070913;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Üst İlan Kartı Düzeni (Masaüstü için Yan Yana) */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      width: 100%;
+    }
+
+    /* Sol Panel: Galeri */
+    .gallery-container {
+      background: #0f1322;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .gallery-main {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #070913;
+      position: relative;
+    }
+
+    .gallery-main img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-thumbnails {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .thumb-item {
+      width: 70px;
+      height: 70px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: all 0.2s ease;
+    }
+
+    .thumb-item.active, .thumb-item:hover {
+      border-color: #3b82f6;
+      opacity: 1;
+    }
+
+    .thumb-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Sağ Panel: Satın Alma Bilgileri */
+    .purchase-card {
+      background: #0f1322;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .badge-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .status-badge {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .fav-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #ef4444;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background 0.2s;
+    }
+
+    .fav-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .product-title {
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .tags-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .tag-item {
+      background: #181f38;
+      color: #94a3b8;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .price-text {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #6366f1;
+      margin-bottom: 4px;
+    }
+
+    .secure-text {
+      font-size: 0.85rem;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 28px;
+    }
+
+    /* Butonlar */
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .btn-buy {
+      background: linear-gradient(90deg, #a855f7 0%, #3b82f6 100%);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .btn-buy:hover:not(:disabled) {
+      opacity: 0.95;
+    }
+
+    .btn-buy:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+
+    .btn-offer {
+      background: #161b30;
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-offer:hover:not(:disabled) {
+      background: #1e2542;
+    }
+
+    .btn-buy:disabled, .btn-offer:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* 3'lü Güvence Özellikleri */
+    .trust-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    .trust-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 6px;
+    }
+
+    .trust-icon {
+      color: #3b82f6;
+      font-size: 1.2rem;
+      background: rgba(59, 130, 246, 0.06);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+    }
+
+    .trust-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+
+    .trust-desc {
+      font-size: 0.7rem;
+      color: #64748b;
+    }
+
+    /* Alt Kısım: Açıklama ve Satıcı Bilgileri */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+    }
+
+    .description-card, .seller-card {
+      background: #0f1322;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #f8fafc;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title i {
+      color: #3b82f6;
+    }
+
+    .desc-text {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+    }
+
+    .feature-list li i {
+      color: #10b981;
+      font-size: 0.85rem;
+    }
+
+    /* Satıcı Kartı Detayları */
+    .seller-profile {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .seller-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .seller-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #1e2542;
+    }
+
+    .seller-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .seller-rating {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .seller-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      background: #070913;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    .stat-value {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    .stat-value.online {
+      color: #10b981;
+    }
+
+    .btn-seller-all {
+      width: 100%;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-seller-all:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .message-box {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .message-box textarea {
+      width: 100%;
+      min-height: 110px;
+      resize: vertical;
+      background: #070913;
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px;
+      font: inherit;
+      outline: none;
+      margin-bottom: 12px;
+    }
+
+    .message-box textarea:focus {
+      border-color: rgba(59, 130, 246, 0.55);
+    }
+
+    .message-feedback {
+      min-height: 20px;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+
+    .message-feedback.success {
+      color: #10b981;
+    }
+
+    .message-feedback.error {
+      color: #f87171;
+    }
+
+    /* Dinamik Banner Yapıları */
+    .success-banner {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .detail-message-card.error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      padding: 20px;
+      border-radius: 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .detail-message-card.error button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* Skeleton Loading Durumu */
+    .loading .product-title,
+    .loading .price-text,
+    .loading .desc-text {
+      background: linear-gradient(90deg, #181f38 25%, #242f54 50%, #181f38 75%);
+      background-size: 200% 100%;
+      animation: loading-shimmer 1.5s infinite;
+      color: transparent !important;
+      border-radius: 4px;
+    }
+
+    @keyframes loading-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ==========================================================================
+       MOBİL UYUMLULUK (RESPONSIVE DÜZEN - GÖRSELDEKİ BİRE BİR MOBİL TASARIM)
+       ========================================================================== */
+    @media (max-width: 768px) {
+      body {
+        padding: 0;
+        background: #070913;
+      }
+
+      .page-wrapper {
+        gap: 0;
+      }
+
+      /* Tüm grid yapıları mobil cihazda tek kolona düşer */
+      .main-grid, .bottom-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      /* Kartların dış çerçeveleri mobilde sıfırlanır, tam ekran genişliği alır */
+      .gallery-container, .purchase-card, .description-card, .seller-card {
+        background: #0f1322;
+        border: none;
+        border-radius: 0;
+        padding: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .gallery-container {
+        padding-bottom: 10px;
+      }
+
+      .gallery-main {
+        aspect-ratio: 4 / 3; /* Görseldeki mobil en-boy oranı */
+      }
+
+      .purchase-card {
+        padding-top: 10px;
+      }
+
+      .product-title {
+        font-size: 1.5rem;
+      }
+
+      .price-text {
+        font-size: 2rem;
+      }
+
+      .trust-features {
+        margin-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <main class="main-grid detail-card">
+      
+      <section class="gallery-container">
+        <div class="gallery-main">
+          <img id="detailImage" src="/assets/img/placeholder.jpg" alt="İlan resmi" />
+        </div>
+        <!-- Thumbnail alanı kaldırıldı -->
+      </section>
+
+      <section class="purchase-card">
+        <div class="badge-row">
+          <div class="status-badge" id="detailStatus">
+            <i class="fas fa-info-circle"></i> Aktif İlan
+          </div>
+          <button class="fav-btn" type="button">
+            <i class="fa-regular fa-heart"></i>
+          </button>
+        </div>
+
+        <h1 class="product-title" id="detailTitle">İlan yükleniyor...</h1>
+        
+        <div class="tags-wrapper" id="detailMeta">
+        </div>
+
+        <div class="price-text" id="detailPrice">0,00 TL</div>
+        <div class="secure-text">
+          <i class="fas fa-shield-alt"></i> %100 Güvenli Alışveriş
+        </div>
+
+        <div class="action-buttons">
+          <button id="buyButton" class="btn-buy">
+            <i class="fas fa-shopping-cart"></i> Satın Al
+          </button>
+          <button id="offerButton" class="btn-offer" type="button">Teklif Ver</button>
+          <button id="loginButton" class="btn-offer" type="button" style="display:none;">Giriş Yap</button>
+        </div>
+
+        <div class="trust-features">
+          <div class="trust-item">
+            <div class="trust-icon"><i class="fas fa-bolt"></i></div>
+            <div class="trust-title">Anında Teslimat</div>
+            <div class="trust-desc">Hızlı teslimat</div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon"><i class="fas fa-lock"></i></div>
+            <div class="trust-title">Güvenli Alışveriş</div>
+            <div class="trust-desc">Sistem korumalı</div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon"><i class="fas fa-headset"></i></div>
+            <div class="trust-title">7/24 Destek</div>
+            <div class="trust-desc">Canlı destek</div>
+          </div>
+        </div>
+
+        <div id="detailMessage" style="margin-top: 15px;"></div>
+      </section>
+    </main>
+
+    <footer class="bottom-grid">
+      <article class="description-card">
+        <h2 class="section-title"><i class="far fa-file-alt"></i> İlan Açıklaması</h2>
+        <p class="desc-text" id="detailDescription">Detaylar yükleniyor...</p>
+      </article>
+
+      <aside class="seller-card">
+        <h2 class="section-title"><i class="far fa-user"></i> Satıcı Bilgileri</h2>
+        
+        <div class="seller-profile">
+          <div class="seller-info">
+            <div>
+              <div class="seller-name" id="sellerInfo">Satıcı yükleniyor...</div>
+              <div class="seller-rating"><i class="fas fa-shield-alt"></i> Doğrulanmış Satıcı</div>
+            </div>
+          </div>
+          <img class="seller-avatar" id="sellerAvatar" src="/assets/img/placeholder.jpg" alt="Satıcı" />
+        </div>
+
+        <div class="seller-stats">
+          <div class="stat-item">
+            <span class="stat-label">Üyelik Tarihi</span>
+            <span class="stat-value" id="sellerJoinDate">Bilgi yok</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Son Giriş</span>
+            <span class="stat-value online" id="sellerLastActive">Aktif</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Toplam İlan</span>
+            <span class="stat-value" id="sellerListingCount">-</span>
+          </div>
+        </div>
+
+        <button class="btn-seller-all" type="button">Tüm İlanları Gör</button>
+
+        <div class="message-box">
+          <h3 class="section-title"><i class="far fa-paper-plane"></i> Satıcıya Mesaj Gönder</h3>
+          <textarea id="messageText" placeholder="Satıcıya sormak istediğiniz mesajı yazın..."></textarea>
+          <button id="sendMessageButton" class="btn-seller-all" type="button">Mesaj Gönder</button>
+          <div id="messageFeedback" class="message-feedback"></div>
+        </div>
+      </aside>
+    </footer>
+  </div>
+
+  <script>
+    const detailCard = document.querySelector('.detail-card');
+    const detailTitle = document.getElementById('detailTitle');
+    const detailPrice = document.getElementById('detailPrice');
+    const detailImage = document.getElementById('detailImage');
+    const detailMeta = document.getElementById('detailMeta');
+    const detailDescription = document.getElementById('detailDescription');
+    const sellerInfo = document.getElementById('sellerInfo');
+    const sellerAvatar = document.getElementById('sellerAvatar');
+    const sellerJoinDate = document.getElementById('sellerJoinDate');
+    const sellerLastActive = document.getElementById('sellerLastActive');
+    const sellerListingCount = document.getElementById('sellerListingCount');
+    const detailStatus = document.getElementById('detailStatus');
+    const buyButton = document.getElementById('buyButton');
+    const offerButton = document.getElementById('offerButton');
+    const loginButton = document.getElementById('loginButton');
+    const detailMessage = document.getElementById('detailMessage');
+    const messageText = document.getElementById('messageText');
+    const sendMessageButton = document.getElementById('sendMessageButton');
+    const messageFeedback = document.getElementById('messageFeedback');
+
+    const currentUser = JSON.parse(localStorage.getItem('user') || 'null');
+    const token = localStorage.getItem('token');
+    const urlParams = new URLSearchParams(window.location.search);
+    const productIdFromQuery = urlParams.get('id');
+    const rawPath = window.location.pathname.replace(/\/$/, '');
+    const productIdFromPath = rawPath.split('/').pop();
+    const productId = productIdFromQuery || (productIdFromPath === 'ilan-detay.html' ? '' : productIdFromPath);
+    let currentProduct = null;
+
+    function createBanner(message, type = 'error') {
+      return `<div class="${type === 'success' ? 'success-banner' : 'banner'}">${message}</div>`;
+    }
+
+    function setMessageFeedback(message, type = '') {
+      messageFeedback.textContent = message;
+      messageFeedback.className = `message-feedback ${type}`;
+    }
+
+    function createErrorCard(message) {
+      return `
+        <div class="detail-message-card error">
+          <h3>Ürün detay alınamadı</h3>
+          <p>${message}</p>
+          <button type="button" onclick="window.location.href='index.html'">Pazara Geri Dön</button>
+        </div>
+      `;
+    }
+
+    function setLoadingState() {
+      detailCard.classList.add('loading');
+      detailTitle.textContent = 'İlan yükleniyor...';
+      detailPrice.textContent = '';
+      detailDescription.textContent = 'Lütfen bekleyin, ilan bilgileri yükleniyor.';
+      detailStatus.innerHTML = '';
+      detailMeta.innerHTML = '';
+      sellerInfo.textContent = '';
+      if (sellerAvatar) sellerAvatar.src = '/assets/img/placeholder.jpg';
+      if (sellerJoinDate) sellerJoinDate.textContent = 'Bilgi yok';
+      if (sellerLastActive) { sellerLastActive.textContent = 'Aktif'; sellerLastActive.className = 'stat-value online'; }
+      if (sellerListingCount) sellerListingCount.textContent = '-';
+      detailImage.src = '/assets/img/placeholder.jpg';
+      detailMessage.innerHTML = '';
+      buyButton.disabled = true;
+      loginButton.style.display = 'none';
+    }
+
+    function clearLoadingState() {
+      detailCard.classList.remove('loading');
+    }
+
+    function setError(message) {
+      clearLoadingState();
+      detailMessage.innerHTML = createErrorCard(message);
+      buyButton.disabled = true;
+      loginButton.style.display = 'none';
+      detailTitle.textContent = 'İlan bulunamadı';
+      detailPrice.textContent = '';
+      detailStatus.innerHTML = '';
+      detailMeta.innerHTML = '';
+      detailDescription.textContent = 'Aradığınız ilan mevcut değil veya veri yüklenemedi.';
+      sellerInfo.textContent = '';
+      if (sellerAvatar) sellerAvatar.src = '/assets/img/placeholder.jpg';
+      if (sellerJoinDate) sellerJoinDate.textContent = 'Bilgi yok';
+      if (sellerLastActive) { sellerLastActive.textContent = 'Aktif'; sellerLastActive.className = 'stat-value online'; }
+      if (sellerListingCount) sellerListingCount.textContent = '-';
+      setMessageFeedback('');
+    }
+
+    function updateActionButtons(product) {
+
+    const isSeller = currentUser && String(currentUser.id || currentUser._id) === String(product.sellerId);
+
+    if(product.saleStatus === 'sold'){
+        buyButton.disabled = true;
+        buyButton.innerHTML = 'Satıldı';
+        return;
+    }
+
+    if(product.saleStatus === 'delivery_pending'){
+        buyButton.disabled = true;
+
+        buyButton.innerHTML = `
+        <i class="fas fa-truck"></i>
+        Teslimat Bekleniyor
+        `;
+        return;
+    }
+
+    if(isSeller){
+        buyButton.disabled = true;
+        buyButton.innerHTML =
+        'Kendi ilanını satın alamazsın';
+        return;
+    }
+
+    buyButton.disabled = false;
+
+    buyButton.innerHTML = `
+    <i class="fas fa-shopping-cart"></i>
+    Satın Al
+    `;
+}
+
+    function renderProduct(product) {
+      clearLoadingState();
+      currentProduct = product;
+      detailTitle.textContent = product.title || 'Başlık yok';
+      detailPrice.textContent = product.price ? product.price.toLocaleString('tr-TR') + ' TL' : 'Fiyat yok';
+      detailDescription.textContent = product.description || 'Açıklama yok';
+      const normalizedImage = product.image
+        ? product.image.startsWith('/') || product.image.startsWith('http')
+          ? product.image
+          : '/' + product.image
+        : '/assets/img/placeholder.jpg';
+      detailImage.src = normalizedImage;
+      detailImage.alt = product.title || 'Ürün resmi';
+      sellerInfo.textContent = `${product.sellerName || 'Bilinmiyor'}`;
+
+      // Satıcı detaylarını çek ve doldur
+      if (product.sellerId) {
+        fetch(`/api/seller/${product.sellerId}`)
+          .then(r => r.ok ? r.json() : null)
+          .then(seller => {
+            if (!seller) return;
+            sellerInfo.textContent = seller.fullName || seller.username || 'Bilinmiyor';
+            const avatarUrl = seller.avatar && seller.avatar.trim()
+              ? (seller.avatar.startsWith('http') ? seller.avatar : '/' + seller.avatar)
+              : `https://ui-avatars.com/api/?name=${encodeURIComponent(seller.fullName || seller.username || 'U')}&background=6366f1&color=fff&size=128`;
+            if (sellerAvatar) sellerAvatar.src = avatarUrl;
+            if (sellerJoinDate && seller.createdAt) {
+              sellerJoinDate.textContent = new Date(seller.createdAt).toLocaleDateString('tr-TR');
+            }
+            if (sellerListingCount) {
+              sellerListingCount.textContent = typeof seller.productCount === 'number' ? seller.productCount : '-';
+            }
+            if (sellerLastActive) {
+              const currentUserId = currentUser ? (currentUser.id || currentUser._id) : null;
+              if (currentUserId && String(currentUserId) === String(seller._id)) {
+                sellerLastActive.textContent = 'Aktif';
+                sellerLastActive.className = 'stat-value online';
+              } else {
+                sellerLastActive.textContent = 'Bilinmiyor';
+                sellerLastActive.className = 'stat-value';
+              }
+            }
+          })
+          .catch(() => {});
+      }
+
+      const statusLabel =
+    product.saleStatus === 'sold'
+        ? 'Satıldı'
+        : product.saleStatus === 'delivery_pending'
+            ? 'Teslimat Bekleniyor'
+            : product.saleStatus === 'reserved'
+                ? 'Satış Beklemede'
+                : product.status === 'active'
+                    ? 'Satın Alınabilir'
+                    : 'İlan aktif değil';
+
+detailMeta.innerHTML = `
+    <span class="tag-item">${product.category || 'Genel'}</span>
+    <span class="tag-item">${statusLabel}</span>
+`;
+
+detailStatus.innerHTML = `
+    <span><i class="fas fa-info-circle"></i> ${statusLabel}</span>
+`;
+
+buyButton.disabled =
+    product.saleStatus === 'sold' ||
+    product.saleStatus === 'delivery_pending';
+
+buyButton.innerHTML =
+    product.saleStatus === 'delivery_pending'
+        ? '<i class="fas fa-truck"></i> Teslimat Bekleniyor'
+        : '<i class="fas fa-shopping-cart"></i> Satın Al';
+
+      detailMessage.innerHTML = '';
+      updateActionButtons(product);
+    }
+
+    async function sendSellerMessage() {
+      if (!token || !currentUser) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      if (!currentProduct || !currentProduct.sellerId) {
+        setMessageFeedback('Satıcı bilgisi bulunamadı.', 'error');
+        return;
+      }
+
+      if (String(currentUser.id || currentUser._id) === String(currentProduct.sellerId)) {
+        setMessageFeedback('Kendi ilanınıza mesaj gönderemezsiniz.', 'error');
+        return;
+      }
+
+      const text = messageText.value.trim();
+      if (!text) {
+        setMessageFeedback('Lütfen mesajınızı yazın.', 'error');
+        return;
+      }
+
+      sendMessageButton.disabled = true;
+      setMessageFeedback('Mesaj gönderiliyor...');
+
+      try {
+        const response = await fetch('/api/messages/send', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            receiverId: currentProduct.sellerId,
+            message: text,
+            type: 'user'
+          })
+        });
+
+        const result = await response.json().catch(() => null);
+        if (!response.ok || !result?.success) {
+          throw new Error(result?.error || 'Mesaj gönderilemedi.');
+        }
+
+        messageText.value = '';
+        setMessageFeedback('Mesajınız satıcıya gönderildi.', 'success');
+      } catch (error) {
+        setMessageFeedback(error.message || 'Mesaj gönderilirken hata oluştu.', 'error');
+      } finally {
+        sendMessageButton.disabled = false;
+      }
+    }
+
+    async function loadProduct() {
+      setLoadingState();
+      try {
+        const response = await fetch(`/api/products/${productId}`, { cache: 'no-store' });
+        const data = await response.json().catch(() => null);
+        if (!response.ok || !data) {
+          const errorMessage = data?.error || 'İlan yüklenirken bir hata oluştu.';
+          setError(errorMessage);
+          return;
+        }
+
+        if (!data._id && !data.title) {
+          setError('İlan bilgisi bulunamadı.');
+          return;
+        }
+
+        renderProduct(data);
+      } catch (error) {
+        console.error('Product load error:', error);
+        setError('Sunucuya bağlanırken hata oluştu.');
+      }
+    }
+
+    buyButton.addEventListener('click', async () => {
+      if (!token) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      if (!currentProduct) {
+        setError('İlan bilgileri henüz hazır değil.');
+        return;
+      }
+
+      try {
+        buyButton.disabled = true;
+
+        // Bakiye kontrolü
+        const meResponse = await fetch('/api/auth/me', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const meData = await meResponse.json().catch(() => null);
+        if (!meResponse.ok || !meData) {
+          setError(meData?.error || 'Kullanıcı bilgisi alınamadı.');
+          updateActionButtons(currentProduct);
+          return;
+        }
+
+        const userBalance = Number(meData.balance || 0);
+        if (userBalance < Number(currentProduct.price || 0)) {
+          setError('Mevcut bakiyeniz yetersiz.');
+          updateActionButtons(currentProduct);
+          return;
+        }
+
+        const response = await fetch('/api/orders/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            productId,
+            sellerId: currentProduct.sellerId,
+            productName: currentProduct.title,
+            price: currentProduct.price
+          })
+        });
+
+        const result = await response.json().catch(() => null);
+        if (!response.ok || !result) {
+          setError(result?.error || 'Satın alma başarısız oldu.');
+          updateActionButtons(currentProduct);
+          return;
+        }
+
+       showPurchasePopup();
+
+function showPurchasePopup() {
+
+    const popup = document.createElement("div");
+
+    popup.innerHTML = `
+    <div id="purchasePopup" style="
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.65);
+        backdrop-filter:blur(6px);
+        z-index:99999;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    ">
+        <div style="
+            width:90%;
+            max-width:420px;
+            background:#0f1322;
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:20px;
+            padding:30px;
+            text-align:center;
+            animation:popupAnim .25s ease;
+        ">
+
+            <div style="
+                width:75px;
+                height:75px;
+                margin:auto;
+                margin-bottom:20px;
+                border-radius:50%;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                background:rgba(16,185,129,.15);
+                color:#10b981;
+                font-size:30px;
+            ">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <h2 style="
+                color:#fff;
+                margin-bottom:12px;
+            ">
+                Başarıyla Satın Alındı
+            </h2>
+
+            <p style="
+                color:#94a3b8;
+                line-height:1.7;
+                margin-bottom:25px;
+            ">
+                Siparişiniz oluşturuldu.<br>
+                Lütfen canlı destek ile iletişime geçiniz.
+            </p>
+
+            <button id="closePopup" style="
+                width:100%;
+                padding:14px;
+                border:none;
+                border-radius:12px;
+                font-weight:700;
+                cursor:pointer;
+                color:white;
+                background:linear-gradient(
+                    90deg,
+                    #a855f7,
+                    #3b82f6
+                );
+            ">
+                Tamam
+            </button>
+
+        </div>
+    </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    document.getElementById(
+        "closePopup"
+    ).onclick = () => {
+        popup.remove();
+    };
+}
+        currentProduct.saleStatus = 'delivery_pending';
+        renderProduct(currentProduct);
+      } catch (error) {
+        console.error('Order error:', error);
+        setError('Satın alma isteği gönderilemedi.');
+      }
+    });
+
+    loginButton.addEventListener('click', () => {
+      window.location.href = '/giris-yap';
+    });
+
+    offerButton.addEventListener('click', () => {
+      messageText.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      messageText.focus();
+    });
+
+    sendMessageButton.addEventListener('click', sendSellerMessage);
+
+    loadProduct();
+  </script>
+  
+</body>
+</html>

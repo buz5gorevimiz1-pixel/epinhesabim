@@ -1,6 +1,10 @@
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
+
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -70,8 +74,8 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cookieParser());
 
 // ── CATEGORY NORMALIZATION HELPERS ──
@@ -645,7 +649,7 @@ if (!mongoConnected) {
 
     const token = jwt.sign({
 
-      id: user._id,
+      id: user._id.toString(),
       email: user.email,
       username: user.username,
       role: user.role
@@ -789,7 +793,7 @@ app.put('/api/admin/reject-product/:id', verifyAdmin, async (req, res) => {
 
 app.put('/api/admin/product-status/:id', verifyAdmin, async (req, res) => {
   try {
-    const { status, saleStatus } = req.body;
+    const { status, saleStatus, vitrin, featured } = req.body;
     const update = {};
 
     if (typeof status !== 'undefined') {
@@ -806,6 +810,14 @@ app.put('/api/admin/product-status/:id', verifyAdmin, async (req, res) => {
         return res.status(400).json({ error: 'Geçersiz ilan satış durumu.' });
       }
       update.saleStatus = saleStatus;
+    }
+
+    if (typeof vitrin !== 'undefined') {
+      update.vitrin = !!vitrin;
+    }
+
+    if (typeof featured !== 'undefined') {
+      update.featured = !!featured;
     }
 
     const product = await Product.findByIdAndUpdate(req.params.id, update, { new: true });
@@ -1073,7 +1085,7 @@ app.get('/api/products', async (req, res) => {
 
 app.get('/api/listings', async (req, res) => {
   try {
-    const { category, game, sort = 'createdAt', order = 'desc', page = 1, limit = 20 } = req.query;
+    const { category, game, sort = 'createdAt', order = 'desc', page = 1, limit = 20, pool } = req.query;
     const query = { status: 'active' };
     if (game === 'pubg') {
       query.$or = [
@@ -1086,12 +1098,19 @@ app.get('/api/listings', async (req, res) => {
       query.categorySlug = normalizeCategorySlug(category);
     }
 
+    if (pool === 'featured') {
+      query.$or = [{ vitrin: true }, { featured: true }];
+    } else if (pool === 'ordinary') {
+      query.vitrin = { $ne: true };
+      query.featured = { $ne: true };
+    }
+
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const sortObj = {};
     sortObj[sort] = order === 'asc' ? 1 : -1;
 
     if (mongoConnected) {
-      const unlimited = Boolean(category || game === 'pubg');
+      const unlimited = Boolean(category || game === 'pubg' || pool === 'featured' || pool === 'ordinary');
       let findQuery = Product.find(query).sort(sortObj).skip(skip);
       if (!unlimited) {
         findQuery = findQuery.limit(parseInt(limit) || 20);
@@ -1120,6 +1139,11 @@ app.get('/api/listings', async (req, res) => {
       });
     } else if (category) {
       filtered = filtered.filter(p => p.categorySlug === normalizeCategorySlug(category));
+    }
+    if (pool === 'featured') {
+      filtered = filtered.filter(p => p.vitrin || p.featured);
+    } else if (pool === 'ordinary') {
+      filtered = filtered.filter(p => !p.vitrin && !p.featured);
     }
     return res.json({ listings: filtered, pagination: { page: 1, limit: filtered.length, total: filtered.length, totalPages: 1 } });
   } catch (err) {
@@ -1237,16 +1261,52 @@ app.get('/api/seller/:sellerId', async (req, res) => {
   }
 });
 
-app.post('/api/products', (req, res) => {
+app.post('/api/products', verifyToken, async (req, res) => {
+  try {
+    const { title, category, deliveryTime, price, description, image } = req.body;
 
-inMemoryStorage.products.push(req.body);
+    if (!title || !category || !price || !description) {
+      return res.status(400).json({ error: 'Tüm zorunlu alanları doldurun.' });
+    }
 
-res.json({
+    // Use whichever ID is available
+    const sellerId = req.user.id || req.user._id || req.user.userId;
 
-message: 'Product added'
+    const productData = {
+      title,
+      category,
+      categorySlug: normalizeCategorySlug(category),
+      categoryName: normalizeCategoryName(category),
+      deliveryTime,
+      price: parseFloat(price),
+      description,
+      image: image || 'assets/img/placeholder.png',
+      sellerId: sellerId,
+      sellerName: req.user.username,
+      status: 'hidden', // Admin onayı için hidden (yayında değil)
+      saleStatus: 'available',
+      createdAt: new Date()
+    };
 
-});
+    if (mongoConnected && Product) {
+      const product = new Product(productData);
+      await product.save();
+      productData._id = product._id;
+      console.log("✓ MongoDB product saved");
+    } else {
+      productData.id = String(Date.now());
+      inMemoryStorage.products.push(productData);
+    }
 
+    res.json({
+      success: true,
+      message: 'İlan başarıyla oluşturuldu. Admin onayı bekleniyor.',
+      product: productData
+    });
+  } catch (error) {
+    console.error('Product creation error:', error);
+    res.status(500).json({ error: 'İlan oluşturulamadı.' });
+  }
 });
 
 // STATIC FILES
@@ -1489,6 +1549,96 @@ app.get('/api/users', verifyToken, async (req, res) => {
   } catch (err) {
     console.error('Kullanıcılar alınırken hata:', err);
     res.status(500).json({ error: 'Kullanıcılar alınamadı.' });
+  }
+});
+
+// GET INBOX (conversation list) FOR LOGGED-IN USER
+app.get('/api/messages/inbox', verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Kullanıcıya ait tüm mesajları al
+    const allMessages = await Message.find({
+      $or: [{ senderId: String(userId) }, { receiverId: String(userId) }]
+    }).sort({ createdAt: -1 }).lean();
+
+    // Her benzersiz konuşmacı için son mesajı bul
+    const convMap = {};
+    for (const msg of allMessages) {
+      const otherId = String(msg.senderId) === String(userId) ? String(msg.receiverId) : String(msg.senderId);
+      if (!convMap[otherId]) {
+        convMap[otherId] = msg;
+      }
+    }
+
+    // Konuşmacı bilgilerini çek (system mesajları için özel)
+    const conversations = [];
+    for (const [otherId, lastMsg] of Object.entries(convMap)) {
+      let senderName = 'Sistem';
+      let senderAvatar = '';
+      let isSystem = otherId === 'system';
+
+      if (!isSystem && mongoConnected && User) {
+        try {
+          const otherUser = await User.findById(otherId).select('username avatar').lean();
+          if (otherUser) {
+            senderName = otherUser.username;
+            senderAvatar = otherUser.avatar || '';
+          }
+        } catch (e) {}
+      }
+
+      // Okunmamış sayısı
+      const unreadCount = await Message.countDocuments({
+        senderId: otherId,
+        receiverId: String(userId),
+        read: false
+      });
+
+      conversations.push({
+        partnerId: otherId,
+        partnerName: senderName,
+        partnerAvatar: senderAvatar,
+        isSystem,
+        lastMessage: lastMsg.message,
+        lastMessageAt: lastMsg.createdAt,
+        unreadCount
+      });
+    }
+
+    // En son mesaja göre sırala
+    conversations.sort((a, b) => new Date(b.lastMessageAt) - new Date(a.lastMessageAt));
+
+    res.json({ success: true, conversations });
+  } catch (err) {
+    console.error('Inbox hatası:', err);
+    res.status(500).json({ error: 'Gelen kutusu alınamadı.' });
+  }
+});
+
+// GET MESSAGES BETWEEN TWO USERS
+app.get('/api/messages/conversation/:partnerId', verifyToken, async (req, res) => {
+  try {
+    const userId = String(req.user.id);
+    const partnerId = req.params.partnerId;
+
+    const messages = await Message.find({
+      $or: [
+        { senderId: userId, receiverId: partnerId },
+        { senderId: partnerId, receiverId: userId }
+      ]
+    }).sort({ createdAt: 1 }).lean();
+
+    // Okundu olarak işaretle
+    await Message.updateMany(
+      { senderId: partnerId, receiverId: userId, read: false },
+      { read: true }
+    );
+
+    res.json({ success: true, messages });
+  } catch (err) {
+    console.error('Konuşma mesajları hatası:', err);
+    res.status(500).json({ error: 'Mesajlar alınamadı.' });
   }
 });
 
@@ -1830,6 +1980,10 @@ app.put('/api/orders/:orderId/status', verifyToken, async (req, res) => {
       const product = await Product.findById(order.productId);
       if (product) {
         product.saleStatus = status === 'completed' ? 'sold' : 'available';
+        if (status === 'completed') {
+          product.status = 'sold';
+          product.stock = 0;
+        }
         await product.save();
       }
     }
@@ -2139,6 +2293,8 @@ const listingRoutes = require('./routes/listings');
 const financeRoutes = require('./routes/finance');
 const auditRoutes = require('./routes/audit');
 const dashboardRoutes = require('./routes/dashboard');
+const myListingsRoutes = require('./routes/my-listings');
+const ordersRoutes = require('./routes/orders');
 
 app.use('/api/v2/auth', authRoutes);
 app.use('/api/v2/users', userRoutes);
@@ -2146,6 +2302,8 @@ app.use('/api/v2/listings', listingRoutes);
 app.use('/api/v2/finance', financeRoutes);
 app.use('/api/v2/audit-logs', auditRoutes);
 app.use('/api/v2/dashboard', dashboardRoutes);
+app.use('/api/v2/my-listings', myListingsRoutes);
+app.use('/api/v2/orders', ordersRoutes);
 app.use('/api/v2/sliders', require('./routes/sliders'));
 
 // ── UPLOAD ENDPOINTS ──

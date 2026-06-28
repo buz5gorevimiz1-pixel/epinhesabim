@@ -55,7 +55,8 @@ enum:[
 'rejected',
 'active',
 'hidden',
-'removed'
+'removed',
+'sold'
 ],
 default:'pending'
 },
@@ -68,6 +69,21 @@ saleStatus:{
     'sold'
   ],
   default:'available'
+},
+
+stock:{
+  type:Number,
+  default:1
+},
+
+vitrin:{
+  type:Boolean,
+  default:false
+},
+
+featured:{
+  type:Boolean,
+  default:false
 },
 
 createdAt:{

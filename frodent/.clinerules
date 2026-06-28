@@ -1,0 +1,13 @@
+# Proje Genel Kuralları
+- Sitenin kalıcı marka adı her zaman "epinhesabım" olarak kullanılmalıdır.
+- Yapılan tüm geliştirmelerde ve subpagelerde marka bütünlüğü korunmalıdır.
+
+# Tasarım ve Arayüz Standartları
+- Tasarım dili olarak her zaman modern "Koyu Tema" (Dark Mode) ve "Cam Efekti" (Glassmorphism) detayları öncelikli olmalıdır.
+- Tüm sayfalar ve ilan kartları hem PC hem de mobil görünümlere tam uyumlu (responsive) olacak şekilde tasarlanmalıdır.
+- Mobil görünümde logo ve hamburger menü hizalamaları ortalanmış olmalı, gece/gündüz modülü düzgün çalışmalıdır.
+
+# İş Akışı ve Sayfa Kuralları
+- İlan oluşturma (ilan-oluştur) arayüzünde kesinlikle "taslak olarak kaydet" butonu veya seçeneği yer almamalıdır.
+- Kullanıcılar arası iletişim altyapısında, WhatsApp benzeri gerçek zamanlı bildirim sunan "mesajlarım.html" yapısı baz alınmalıdır.
+- Bakiye ekleme ve para çekme işlemlerinde komisyon hesaplama mantığına ve finans ekibinin onay süreçlerine uygun kod yazılmalıdır.
