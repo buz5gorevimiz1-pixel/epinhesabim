@@ -1086,7 +1086,7 @@ app.get('/api/products', async (req, res) => {
 app.get('/api/listings', async (req, res) => {
   try {
     const { category, game, sort = 'createdAt', order = 'desc', page = 1, limit = 20, pool } = req.query;
-    const query = { status: 'active' };
+    let query = { status: 'active' };
     if (game === 'pubg') {
       query.$or = [
         { categorySlug: { $regex: 'pubg', $options: 'i' } },
@@ -1099,7 +1099,7 @@ app.get('/api/listings', async (req, res) => {
     }
 
     if (pool === 'featured') {
-      query.$or = [{ vitrin: true }, { featured: true }];
+      query = { status: 'active', $or: [{ vitrin: true }, { featured: true }] };
     } else if (pool === 'ordinary') {
       query.vitrin = { $ne: true };
       query.featured = { $ne: true };

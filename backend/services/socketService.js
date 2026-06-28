@@ -271,10 +271,31 @@ socket.on('support:delete', async ({ ticketId }) => {
       referrer: referer || 'direct',
       connectedAt: Date.now(),
       lastActive: Date.now(),
+      name: '',
+      email: '',
     };
     visitors.set(socket.id, visitor);
     broadcastToAdmins('visitors:list', Array.from(visitors.values()));
     broadcastToAdmins('visitors:new', visitor);
+
+    // ── VISITOR IDENTIFIES THEMSELVES (pre-chat form) ──
+    socket.on('support:identify', async ({ name, email }) => {
+      if (name) visitor.name = String(name).substring(0, 80);
+      if (email) visitor.email = String(email).substring(0, 120);
+      visitors.set(socket.id, visitor);
+      broadcastToAdmins('visitors:list', Array.from(visitors.values()));
+
+      // Update ticket if already created
+      const ticketId = visitorIdToTicketMap.get(visitorId);
+      if (ticketId) {
+        await SupportTicket.updateOne(
+          { ticketId },
+          { $set: { visitorName: visitor.name, visitorEmail: visitor.email } }
+        );
+        await broadcastTicketUpdate(ticketId);
+        await broadcastTicketList();
+      }
+    });
 
     socket.on('visitor:page', ({ page }) => {
       const v = visitors.get(socket.id);
@@ -310,8 +331,17 @@ socket.on('support:delete', async ({ ticketId }) => {
           return;
         }
 
+        // Save name/email to ticket if available
+        if (visitor.name || visitor.email) {
+          await SupportTicket.updateOne(
+            { ticketId },
+            { $set: { visitorName: visitor.name || '', visitorEmail: visitor.email || '' } }
+          );
+        }
+
         // Save message
-        await addMessage(ticketId, 'visitor', text, 'Ziyaretçi');
+        const senderLabel = visitor.name || 'Ziyaretçi';
+        await addMessage(ticketId, 'visitor', text, senderLabel);
         console.log('[SUPPORT] Message saved to ticket', ticketId);
 
         await SupportTicket.updateOne(

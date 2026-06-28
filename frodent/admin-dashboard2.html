@@ -676,6 +676,13 @@
             <button class="menu-item" data-section="liveSupport"><i class="fas fa-headset"></i> <span>Canlı Destek</span> <span class="pending-badge" id="supportBadge" style="display:none">0</span></button>
 
             <div style="margin-top: 40px;"></div>
+            <div style="padding: 12px 16px; margin: 0 4px 8px; background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2); border-radius: 10px; display:flex; align-items:center; gap:10px;">
+                <img id="sidebarAdminAvatar" src="https://ui-avatars.com/api/?name=Admin&background=8b5cf6&color=fff" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+                <div style="overflow:hidden;">
+                    <div id="sidebarAdminName" style="font-size:13px;font-weight:600;color:#e8e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Admin</div>
+                    <div id="sidebarAdminRole" style="font-size:11px;color:#94a3b8;">Yönetici</div>
+                </div>
+            </div>
             <button class="menu-item" onclick="logoutAdmin()" style="color: var(--danger);"><i class="fas fa-sign-out-alt"></i> <span>Çıkış Yap</span></button>
         </div>
     </aside>
@@ -1732,13 +1739,22 @@
                 return false;
             }
             currentAdminRole = user.role;
-            // Admin bilgilerini guncelle
+            const roleLabel = user.role === 'super_admin' ? 'Kurucu' : 'Yönetici';
+            const avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.username || 'Admin') + '&background=8b5cf6&color=fff';
+            // Topbar
             const adminNameEl = document.querySelector('.admin-info span');
             const adminRoleEl = document.querySelector('.admin-info small');
             const adminImg = document.querySelector('.admin-profile img');
             if (adminNameEl) adminNameEl.textContent = user.username || 'Admin';
-            if (adminRoleEl) adminRoleEl.textContent = user.role === 'super_admin' ? 'Kurucu' : 'Yönetici';
-            if (adminImg) adminImg.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.username || 'Admin') + '&background=8b5cf6&color=fff';
+            if (adminRoleEl) adminRoleEl.textContent = roleLabel;
+            if (adminImg) adminImg.src = avatarUrl;
+            // Sidebar
+            const sidebarName = document.getElementById('sidebarAdminName');
+            const sidebarRole = document.getElementById('sidebarAdminRole');
+            const sidebarAvatar = document.getElementById('sidebarAdminAvatar');
+            if (sidebarName) sidebarName.textContent = user.username || 'Admin';
+            if (sidebarRole) sidebarRole.textContent = roleLabel;
+            if (sidebarAvatar) sidebarAvatar.src = avatarUrl;
             // Sadece super_admin Admin Yönetimi menüsünü görsün
             const adminMenu = document.getElementById('adminMenuItem');
             if (adminMenu) {
@@ -1883,12 +1899,11 @@
                     <span class="ticket-id">${t.ticketId}</span>
                     ${getStatusBadge(t.status)}
                 </div>
+                ${(t.visitorName || t.visitorEmail) ? `<div style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:4px;"><i class="fas fa-user" style="font-size:11px;margin-right:5px;color:#8b5cf6;"></i>${t.visitorName || ''}${t.visitorEmail ? ' <span style="color:#94a3b8;font-weight:400;font-size:12px;">('+t.visitorEmail+')</span>' : ''}</div>` : ''}
                 <div class="ticket-subject">${t.lastMessagePreview || t.subject}</div>
                 <div class="ticket-meta">
-                    <span>${t.visitorIp}</span>
-                    <span>·</span>
-                    <span>${t.visitorBrowser}</span>
-                    <span>·</span>
+                    <span>${t.visitorIp || ''}</span>
+                    ${t.visitorIp ? '<span>·</span>' : ''}
                     <span>${t.messageCount} mesaj</span>
                 </div>
                 ${t.unreadByAdmin ? '<span class="status-pill status-danger" style="margin-top:8px;display:inline-block;font-size:11px;">Yeni mesaj</span>' : ''}
@@ -1915,7 +1930,9 @@
         selectedTicketId = ticketId;
         messages = [];
         renderTickets();
-        document.getElementById('chatTitle').textContent = 'Sohbet - ' + ticketId;
+        const t = tickets.find(x => x.ticketId === ticketId);
+        const visitorLabel = (t && t.visitorName) ? (t.visitorName + (t.visitorEmail ? ' (' + t.visitorEmail + ')' : '')) : ticketId;
+        document.getElementById('chatTitle').textContent = 'Sohbet - ' + visitorLabel;
         document.getElementById('chatActions').style.display = 'flex';
         document.getElementById('chatInput').disabled = false;
         document.getElementById('sendBtn').disabled = false;
@@ -1995,8 +2012,11 @@
             return;
         }
 
+        const currentTicket = tickets.find(t => t.ticketId === selectedTicketId);
+        const visitorDisplayName = (currentTicket && currentTicket.visitorName) ? currentTicket.visitorName : 'Ziyaretçi';
         container.innerHTML = messages.map(m => `
             <div class="chat-message ${m.sender}">
+                <div style="font-size:11px;color:#64748b;margin-bottom:3px;">${m.sender === 'admin' ? 'Yönetici' : visitorDisplayName}</div>
                 <div style="margin-bottom:4px;">${escapeHtml(m.text)}</div>
                 <div class="chat-message-time">${new Date(m.timestamp).toLocaleString('tr-TR')}</div>
             </div>

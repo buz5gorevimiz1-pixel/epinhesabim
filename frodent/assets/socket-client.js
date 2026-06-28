@@ -355,6 +355,58 @@
           font-weight: 600;
           font-size: 13px;
         }
+        #ls-prechat-form {
+          padding: 20px 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        #ls-prechat-form p {
+          color: #94a3b8;
+          font-size: 13px;
+          margin: 0 0 4px;
+          line-height: 1.5;
+        }
+        .ls-prechat-field {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+        }
+        .ls-prechat-field label {
+          font-size: 12px;
+          color: #94a3b8;
+          font-weight: 500;
+        }
+        .ls-prechat-field input {
+          background: #1e293b;
+          border: 1px solid #334155;
+          border-radius: 8px;
+          padding: 10px 12px;
+          color: #e2e8f0;
+          font-size: 13px;
+          outline: none;
+          transition: border-color 0.2s;
+        }
+        .ls-prechat-field input:focus { border-color: #06b6d4; }
+        #ls-prechat-start {
+          margin-top: 4px;
+          padding: 11px;
+          background: linear-gradient(135deg, #06b6d4, #0891b2);
+          color: #fff;
+          border: none;
+          border-radius: 10px;
+          cursor: pointer;
+          font-weight: 600;
+          font-size: 13px;
+          transition: opacity 0.2s;
+        }
+        #ls-prechat-start:hover { opacity: 0.9; }
+        #ls-prechat-error {
+          color: #f87171;
+          font-size: 12px;
+          text-align: center;
+          display: none;
+        }
         /* Maintenance Modal */
         #ls-maint-modal {
           position: fixed;
@@ -423,8 +475,21 @@
           <span>Canlı Destek</span>
           <button class="ls-close-btn" id="ls-chat-close">&times;</button>
         </div>
-        <div id="ls-chat-messages"></div>
-        <div id="ls-chat-input-area">
+        <div id="ls-prechat-form">
+          <p>Destek ekibimizle görüşmek için lütfen bilgilerinizi girin.</p>
+          <div class="ls-prechat-field">
+            <label>Ad Soyad</label>
+            <input type="text" id="ls-prechat-name" placeholder="Adınızı girin..." />
+          </div>
+          <div class="ls-prechat-field">
+            <label>E-posta</label>
+            <input type="email" id="ls-prechat-email" placeholder="E-posta adresinizi girin..." />
+          </div>
+          <span id="ls-prechat-error">Lütfen ad ve geçerli bir e-posta girin.</span>
+          <button id="ls-prechat-start">Sohbeti Başlat</button>
+        </div>
+        <div id="ls-chat-messages" style="display:none;"></div>
+        <div id="ls-chat-input-area" style="display:none;">
           <input type="text" id="ls-chat-input" placeholder="Mesajınız..." />
           <button id="ls-chat-send">Gönder</button>
         </div>
@@ -450,8 +515,24 @@
     document.getElementById('ls-chat-input').addEventListener('keypress', (e) => {
       if (e.key === 'Enter') sendMessage();
     });
+    document.getElementById('ls-prechat-start').addEventListener('click', startChat);
+    document.getElementById('ls-prechat-name').addEventListener('keypress', (e) => { if (e.key === 'Enter') document.getElementById('ls-prechat-email').focus(); });
+    document.getElementById('ls-prechat-email').addEventListener('keypress', (e) => { if (e.key === 'Enter') startChat(); });
     document.getElementById('ls-popup-close').addEventListener('click', hidePopup);
+
+    // Auto-fill from localStorage user if logged in
+    try {
+      const u = JSON.parse(localStorage.getItem('user') || 'null');
+      if (u) {
+        const nameEl = document.getElementById('ls-prechat-name');
+        const emailEl = document.getElementById('ls-prechat-email');
+        if (nameEl && u.username) nameEl.value = u.username;
+        if (emailEl && u.email) emailEl.value = u.email;
+      }
+    } catch(e) {}
   }
+
+  let chatStarted = false;
 
   function toggleChat() {
     const panel = document.getElementById('ls-chat-panel');
@@ -459,26 +540,67 @@
     panel.style.display = chatOpen ? 'flex' : 'none';
     if (chatOpen) {
       clearUnreadBadge();
-
-      // Load messages from localStorage if available
-      if (chatMessages.length === 0) {
-        const stored = getStoredMessages();
-        if (stored.length > 0) {
-          chatMessages = stored;
-          renderMessages();
+      if (chatStarted || myTicketId) {
+        // Already started — show chat directly
+        showChatScreen();
+        // Load messages from localStorage if available
+        if (chatMessages.length === 0) {
+          const stored = getStoredMessages();
+          if (stored.length > 0) {
+            chatMessages = stored;
+            renderMessages();
+          }
         }
+        scrollToBottom();
+        if (socket && myTicketId) {
+          socket.emit('support:load-my-history');
+        }
+      } else {
+        // Show pre-chat form
+        showPreChatForm();
       }
+    }
+  }
 
-      scrollToBottom();
+  function showPreChatForm() {
+    const form = document.getElementById('ls-prechat-form');
+    const msgs = document.getElementById('ls-chat-messages');
+    const inputArea = document.getElementById('ls-chat-input-area');
+    if (form) form.style.display = 'flex';
+    if (msgs) msgs.style.display = 'none';
+    if (inputArea) inputArea.style.display = 'none';
+  }
 
-      // Load full history from server
-      if (socket && myTicketId) {
-        socket.emit('support:load-my-history');
-      }
+  function showChatScreen() {
+    const form = document.getElementById('ls-prechat-form');
+    const msgs = document.getElementById('ls-chat-messages');
+    const inputArea = document.getElementById('ls-chat-input-area');
+    if (form) form.style.display = 'none';
+    if (msgs) msgs.style.display = 'flex';
+    if (inputArea) inputArea.style.display = 'flex';
+  }
 
-      if (chatMessages.length === 0 && !myTicketId) {
-        addSystemMessage('Merhaba! Size nasıl yardımcı olabilirim? Mesaj yazarak destek talebi oluşturabilirsiniz.');
-      }
+  function startChat() {
+    const nameEl = document.getElementById('ls-prechat-name');
+    const emailEl = document.getElementById('ls-prechat-email');
+    const errEl = document.getElementById('ls-prechat-error');
+    const name = nameEl ? nameEl.value.trim() : '';
+    const email = emailEl ? emailEl.value.trim() : '';
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if (!name || !emailValid) {
+      if (errEl) errEl.style.display = 'block';
+      return;
+    }
+    if (errEl) errEl.style.display = 'none';
+
+    chatStarted = true;
+    showChatScreen();
+    addSystemMessage('Merhaba ' + name + '! Destek ekibimize bağlanlıyorsunuz, lütfen mesajınızı yazın.');
+    scrollToBottom();
+
+    if (socket && socket.connected) {
+      socket.emit('support:identify', { name, email });
     }
   }
 

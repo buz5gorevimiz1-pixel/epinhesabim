@@ -11,6 +11,8 @@ const supportTicketSchema = new mongoose.Schema({
   },
   visitorId: { type: String, index: true }, // Persistent identifier from browser
   visitorSocketId: { type: String }, // Current socket ID (for realtime delivery)
+  visitorName: { type: String, default: '' },
+  visitorEmail: { type: String, default: '' },
   visitorIp: { type: String },
   visitorBrowser: { type: String },
   visitorDevice: { type: String },
