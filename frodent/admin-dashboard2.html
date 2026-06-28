@@ -1783,7 +1783,7 @@
             return;
         }
 
-        supportSocket = io('https://epinhesabim.com', {
+        supportSocket = io(window.location.origin, {
             path: '/socket.io',
             query: { type: 'admin' },
             transports: ['websocket', 'polling'],

@@ -88,18 +88,7 @@ function initSocketIO(server) {
   io = new Server(server, {
     path: '/socket.io',
     cors: {
-      origin: function (origin, callback) {
-        const allowed = [
-          'https://epinhesabim.com',
-          'https://www.epinhesabim.com',
-          'https://www.admin.epinhesabim.com',
-        ];
-        if (!origin || allowed.includes(origin)) {
-          callback(null, true);
-        } else {
-          callback(new Error('CORS not allowed'));
-        }
-      },
+      origin: true,
       methods: ['GET', 'POST'],
       credentials: true,
     },

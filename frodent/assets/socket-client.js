@@ -5,7 +5,7 @@
 (function() {
   'use strict';
 
-  const SOCKET_URL = 'https://epinhesabim.com'; // Production domain
+  const SOCKET_URL = window.location.origin; // Auto-detect server URL
   const STORAGE_KEY_VISITOR_ID = 'ls_visitor_id';
   const STORAGE_KEY_TICKET_ID = 'ls_ticket_id';
   const STORAGE_KEY_MESSAGES = 'ls_messages';
@@ -92,7 +92,8 @@
       transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionAttempts: 10,
-      query: { visitorId: myVisitorId }, // Send visitor ID to backend
+      reconnectionDelay: 1000,
+      query: { visitorId: myVisitorId },
     });
 
     socket.on('connect', () => {
