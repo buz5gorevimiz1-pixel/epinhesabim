@@ -879,6 +879,7 @@ onclick="confirmLogout()">
         const fileInput = document.getElementById('fileInput');
         const previewContainer = document.getElementById('imagePreviewContainer');
         const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+        let selectedFiles = []; // Store actual File objects for upload
 
         // Mobil Galeri açılması için Dropzone'a tıklama olayı
         dropZone.addEventListener('click', () => {
@@ -918,16 +919,18 @@ onclick="confirmLogout()">
                     alert(`${file.name} 50 MB'tan büyük olamaz!`);
                     return;
                 }
-                previewFile(file);
+                selectedFiles.push(file);
+                previewFile(file, selectedFiles.length - 1);
             });
         }
 
-        function previewFile(file) {
+        function previewFile(file, index) {
             let reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onloadend = function() {
                 let div = document.createElement('div');
                 div.className = 'image-preview';
+                div.dataset.index = index;
                 
                 let img = document.createElement('img');
                 img.src = reader.result;
@@ -937,6 +940,8 @@ onclick="confirmLogout()">
                 removeBtn.innerHTML = '<i class="fas fa-times"></i>';
                 removeBtn.onclick = function(e) {
                     e.preventDefault();
+                    const idx = parseInt(div.dataset.index);
+                    selectedFiles[idx] = null;
                     div.remove();
                 };
 
@@ -1140,23 +1145,41 @@ onclick="confirmLogout()">
             const price = this.querySelector('input[type="number"]').value;
             const description = this.querySelector('textarea').value;
 
-            // Image handling
-            const previewImages = document.querySelectorAll('.image-preview img');
-            let image = 'assets/img/placeholder.png';
-            if (previewImages.length > 0) {
-                image = previewImages[0].src;
-            }
+            // Image handling - upload to Cloudinary first
+            const validFiles = selectedFiles.filter(f => f !== null);
+            let imageUrl = '';
 
-            const productData = {
-                title,
-                category,
-                deliveryTime,
-                price,
-                description,
-                image
-            };
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yükleniyor...'; }
 
             try {
+                if (validFiles.length > 0) {
+                    const formData = new FormData();
+                    formData.append('image', validFiles[0]);
+                    const uploadRes = await fetch('/api/upload/single', {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${token}` },
+                        body: formData
+                    });
+                    const uploadData = await uploadRes.json();
+                    if (uploadRes.ok && uploadData.success && uploadData.image && uploadData.image.url) {
+                        imageUrl = uploadData.image.url;
+                    } else {
+                        alert('Görsel yüklenemedi: ' + (uploadData.error || 'Bilinmeyen hata'));
+                        if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> İlanı Yayınla'; }
+                        return;
+                    }
+                }
+
+                const productData = {
+                    title,
+                    category,
+                    deliveryTime,
+                    price,
+                    description,
+                    image: imageUrl
+                };
+
                 const response = await fetch('/api/products', {
                     method: 'POST',
                     headers: {
@@ -1169,14 +1192,15 @@ onclick="confirmLogout()">
                 const data = await response.json();
 
                 if (data.success) {
-                    // Show success popup
                     showSuccessPopup();
                 } else {
                     alert('İlan oluşturulamadı: ' + (data.error || 'Bilinmeyen hata'));
+                    if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> İlanı Yayınla'; }
                 }
             } catch (error) {
                 console.error('İlan oluşturma hatası:', error);
                 alert('İlan oluşturulamadı. Sunucu hatası.');
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> İlanı Yayınla'; }
             }
         });
 
