@@ -4854,10 +4854,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="server-card">
         <a href="/ilan/${encodeURIComponent(item.id || item._id)}" class="server-link">
           <div class="server-image">
-            ${item.image && item.image.trim() && !item.image.includes('placeholder') ? 
-              `<img src="${item.image.startsWith('http') ? item.image : '/' + item.image.replace(/^\/+/, '')}" alt="${item.title}" onerror="this.parentElement.innerHTML='<div class=\\'no-image\\'><i class=\\'fas fa-box\\'></i></div>'">` : 
-              `<div class="no-image"><i class="fas fa-box"></i></div>`
-            }
+            <img src="${item.image && item.image.startsWith('http') ? item.image : '/assets/img/placeholder.jpg'}" alt="${item.title}" onerror="this.onerror=null;this.src='/assets/img/placeholder.jpg'">
           </div>
           <div class="server-info">
             <h3 class="server-name">${item.title}</h3>

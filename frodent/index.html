@@ -5873,7 +5873,7 @@ function renderProducts(products, containerId) {
             ${product.vitrin ? '<div class="ipvitrin-badge">Vitrin İlanı</div>' : ''}
             ${product.featured ? '<div class="iponecikan-badge">Öne Çıkanlar</div>' : ''}
             <div class="ipthumb">
-                <img src="${product.image || 'assets/img/placeholder.jpg'}" alt="${product.title}">
+                <img src="${product.image}" alt="${product.title}" onerror="this.onerror=null;this.src='/assets/img/placeholder.jpg'">
                 <div class="ipprice">${product.price.toLocaleString('tr-TR', {minimumFractionDigits: 2})} TL</div>
             </div>
             <div class="ipbody">
