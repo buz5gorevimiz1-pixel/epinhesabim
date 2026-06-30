@@ -5879,7 +5879,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 window._allProducts = [];
 window._listingsTab = 'home';
-const LISTINGS_HOME_LIMIT = 12;
+const LISTINGS_HOME_LIMIT = 34;
 
 function normalizeListingProduct(p) {
     return {
@@ -6364,7 +6364,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             document.addEventListener('DOMContentLoaded', function() {
-                fetch('/api/listings?pool=guncel&sort=createdAt&order=desc&limit=12')
+                fetch('/api/listings?pool=guncel&sort=createdAt&order=desc&limit=34')
                     .then(function(r) { return r.json(); })
                     .then(function(data) {
                         var list = Array.isArray(data) ? data : (data.listings || []);
