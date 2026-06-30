@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Epin Hesabım - Şifre Sıfırla</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#0b0c12; --surface:#141624; --border-color:#222436; --text-color:#e5e7eb; --text-muted:#9ca3af; --brand:#8b5cf6; }
+    html, body { height: 100%; margin: 0; }
+    body { color: var(--text-color); font-family: 'Poppins', system-ui, sans-serif; background: var(--bg); }
+    .page { min-height: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 24px; padding-bottom: 40px; position: relative; }
+    .page::before { content:""; position:absolute; inset:0; z-index:0; background: url('/assets/img/visuals/login_form_68c980a7d591a_1758036135.jpg') center/cover no-repeat fixed; clip-path: polygon(0 0, 100% 0, 100% 38%, 50% 58%, 0 38%); }
+    .page::after  { content:""; position:absolute; inset:0; z-index:0; background: linear-gradient(180deg, rgba(20,22,36,.55) 0%, rgba(20,22,36,.75) 45%, rgba(20,22,36,.95) 100%); clip-path: polygon(0 0, 100% 0, 100% 38%, 50% 58%, 0 38%); }
+    .auth-block { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: clamp(70px, 10vh, 140px); }
+    .site-logo { position: relative; z-index:1; margin: 0; display:flex; align-items:center; justify-content:center; }
+    .site-logo a { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; color: inherit; }
+    .site-logo img { max-height: 46px; object-fit: contain; display:block; filter: drop-shadow(0 2px 8px rgba(0,0,0,.35)); }
+    .site-logo .logo-text { font-weight: 900; letter-spacing:.3px; font-size: 22px; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,.45); }
+    .card { position: relative; z-index: 1; width: 100%; max-width: 420px; background: rgba(18,16,31,0.95); border-radius: 18px; box-shadow: 0 25px 60px rgba(5,5,20,0.65); padding: 32px 34px 28px; border: 1px solid rgba(255,255,255,0.06); }
+    .card-header { margin-bottom: 6px; }
+    .title { font-size: 22px; font-weight: 800; color:#f8fafc; margin: 0 0 4px 0; }
+    .subtitle { font-size: 13px; color: var(--text-muted); margin: 0 0 20px 0; }
+    form { display:grid; gap:12px; }
+    label { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; display: block; }
+    .input { display:flex; align-items:center; height: 54px; gap:10px; border:1px solid rgba(226,232,240,0.25); background: rgba(14,15,30,0.9); border-radius:12px; padding:0 14px; }
+    .input i { color:#94a3b8; min-width: 16px; }
+    .input input { flex:1; background:transparent; border:0; outline:0; color:#f8fafc; font-size:14px; font-family: inherit; }
+    .input.with-action { padding-right: 44px; position: relative; }
+    .action { position:absolute; right:8px; top:50%; transform: translateY(-50%); width:32px; height:32px; display:grid; place-items:center; border:1px solid var(--border-color); border-radius:8px; background:#1a1625; color:var(--text-color); cursor:pointer; }
+    .btn { width:100%; height:48px; border-radius:14px; border:0; background: linear-gradient(135deg, #a855f7, #7c3aed); color:white; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; font-size:15px; font-family: inherit; transition: opacity .2s; }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+    .btn-back { width:100%; height:42px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); color: var(--text-muted); font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; font-size:14px; font-family: inherit; margin-top: 4px; transition: all .2s; }
+    .btn-back:hover { background: rgba(255,255,255,0.08); color: var(--text-color); }
+    .muted { margin-top: 8px; text-align:center; font-size:13px; color: var(--text-muted); }
+    .muted a { color:#a78bfa; text-decoration:none; }
+    /* Step indicator */
+    .steps-indicator { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 24px; }
+    .step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; border: 2px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); color: var(--text-muted); transition: all .3s; flex-shrink: 0; }
+    .step-dot.active { background: linear-gradient(135deg, #a855f7, #7c3aed); border-color: #a855f7; color: #fff; box-shadow: 0 0 12px rgba(168,85,247,0.5); }
+    .step-dot.done { background: #10b981; border-color: #10b981; color: #fff; }
+    .step-line { width: 40px; height: 2px; background: rgba(255,255,255,0.1); flex-shrink: 0; }
+    .step-line.done { background: #10b981; }
+    /* Code input */
+    .code-inputs { display: flex; gap: 8px; justify-content: center; }
+    .code-input { width: 48px; height: 56px; border-radius: 10px; border: 1px solid rgba(226,232,240,0.25); background: rgba(14,15,30,0.9); color: #f8fafc; font-size: 22px; font-weight: 700; text-align: center; outline: none; font-family: inherit; transition: border-color .2s; }
+    .code-input:focus { border-color: #a855f7; box-shadow: 0 0 0 2px rgba(168,85,247,0.2); }
+    /* Info box */
+    .info-box { background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.25); border-radius: 10px; padding: 12px 14px; font-size: 12px; color: #67e8f9; display: flex; gap: 10px; align-items: flex-start; }
+    .info-box i { margin-top: 1px; flex-shrink: 0; }
+    /* Timer */
+    .timer { text-align: center; font-size: 12px; color: var(--text-muted); }
+    .timer span { color: #a78bfa; font-weight: 700; }
+    /* Hidden step panels */
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+    /* Success */
+    .success-icon { width: 72px; height: 72px; border-radius: 50%; background: rgba(16,185,129,0.15); border: 2px solid rgba(16,185,129,0.4); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+    .success-icon i { font-size: 32px; color: #10b981; }
+
+    @media (max-width: 600px) {
+      html, body { overflow-x: hidden; }
+      .page { padding: 16px; max-width: 100vw; }
+      .card { padding: 20px 16px; }
+      .code-input { width: 40px; height: 48px; font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="auth-block">
+    <div class="site-logo">
+      <a href="/">
+        <img src="/assets/settings/dark_logo_1775388028.png" alt="Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div class="logo-text" style="display:none;">Epin Hesabım</div>
+      </a>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="title">Şifre Sıfırla</div>
+        <div class="subtitle">Hesabınıza erişimi geri kazanın</div>
+      </div>
+
+      <!-- Step Indicator -->
+      <div class="steps-indicator">
+        <div class="step-dot active" id="dot1">1</div>
+        <div class="step-line" id="line1"></div>
+        <div class="step-dot" id="dot2">2</div>
+        <div class="step-line" id="line2"></div>
+        <div class="step-dot" id="dot3">3</div>
+      </div>
+
+      <!-- ADIM 1: E-posta -->
+      <div class="step-panel active" id="step1">
+        <div class="info-box" style="margin-bottom:16px;">
+          <i class="fas fa-info-circle"></i>
+          <span>Kayıtlı e-posta adresinizi girin. Size 6 haneli bir doğrulama kodu göndereceğiz.</span>
+        </div>
+        <form id="form1" novalidate>
+          <div>
+            <label>E-posta Adresi</label>
+            <div class="input">
+              <i class="fas fa-envelope"></i>
+              <input id="emailInput" type="email" placeholder="ornek@email.com" required autocomplete="email">
+            </div>
+          </div>
+          <button type="submit" class="btn" id="btn1">
+            <i class="fas fa-paper-plane"></i> Doğrulama Kodu Gönder
+          </button>
+        </form>
+        <div class="muted" style="margin-top:14px;"><a href="/giris-yap"><i class="fas fa-arrow-left" style="font-size:11px;"></i> Giriş sayfasına dön</a></div>
+      </div>
+
+      <!-- ADIM 2: Kod Doğrulama -->
+      <div class="step-panel" id="step2">
+        <div class="info-box" style="margin-bottom:16px;">
+          <i class="fas fa-shield-halved"></i>
+          <span id="codeInfoText">E-posta adresinize gönderilen 6 haneli kodu girin.</span>
+        </div>
+        <form id="form2" novalidate>
+          <div>
+            <label style="text-align:center; display:block;">Doğrulama Kodu</label>
+            <div class="code-inputs">
+              <input class="code-input" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+              <input class="code-input" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+              <input class="code-input" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+              <input class="code-input" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+              <input class="code-input" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+              <input class="code-input" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+            </div>
+          </div>
+          <div class="timer">Kodun süresi: <span id="timerDisplay">15:00</span></div>
+          <button type="submit" class="btn" id="btn2">
+            <i class="fas fa-check"></i> Kodu Doğrula
+          </button>
+          <button type="button" class="btn-back" onclick="goStep(1)">
+            <i class="fas fa-arrow-left"></i> Geri Dön
+          </button>
+        </form>
+      </div>
+
+      <!-- ADIM 3: Yeni Şifre -->
+      <div class="step-panel" id="step3">
+        <form id="form3" novalidate>
+          <div>
+            <label>Yeni Şifre</label>
+            <div class="input with-action">
+              <i class="fas fa-lock"></i>
+              <input id="newPassword" type="password" placeholder="En az 6 karakter" required autocomplete="new-password">
+              <button type="button" class="action" data-toggle="newPassword"><i class="fas fa-eye-slash"></i></button>
+            </div>
+          </div>
+          <div>
+            <label>Yeni Şifre (Tekrar)</label>
+            <div class="input with-action">
+              <i class="fas fa-lock"></i>
+              <input id="newPassword2" type="password" placeholder="Şifreyi tekrar girin" required autocomplete="new-password">
+              <button type="button" class="action" data-toggle="newPassword2"><i class="fas fa-eye-slash"></i></button>
+            </div>
+          </div>
+          <button type="submit" class="btn" id="btn3">
+            <i class="fas fa-key"></i> Şifremi Güncelle
+          </button>
+          <button type="button" class="btn-back" onclick="goStep(2)">
+            <i class="fas fa-arrow-left"></i> Geri Dön
+          </button>
+        </form>
+      </div>
+
+      <!-- ADIM 4: Başarı -->
+      <div class="step-panel" id="step4">
+        <div style="text-align:center; padding: 8px 0;">
+          <div class="success-icon">
+            <i class="fas fa-check"></i>
+          </div>
+          <div style="font-size:18px; font-weight:800; color:#f8fafc; margin-bottom:8px;">Şifreniz Güncellendi!</div>
+          <div style="font-size:13px; color:var(--text-muted); margin-bottom:24px;">Yeni şifrenizle giriş yapabilirsiniz.</div>
+          <button class="btn" onclick="location.href='/giris-yap'">
+            <i class="fas fa-right-to-bracket"></i> Giriş Yap
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+(function(){
+  var currentEmail = '';
+  var verifiedCode = '';
+  var timerInterval = null;
+
+  // Göster/gizle toggle
+  document.querySelectorAll('.action[data-toggle]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var input = document.getElementById(this.getAttribute('data-toggle'));
+      if (!input) return;
+      var icon = this.querySelector('i');
+      if (input.type === 'password') { input.type = 'text'; icon.classList.replace('fa-eye-slash','fa-eye'); }
+      else { input.type = 'password'; icon.classList.replace('fa-eye','fa-eye-slash'); }
+    });
+  });
+
+  // Kod inputları arasında geçiş
+  var codeInputs = document.querySelectorAll('.code-input');
+  codeInputs.forEach(function(inp, idx){
+    inp.addEventListener('input', function(){
+      this.value = this.value.replace(/[^0-9]/g,'');
+      if (this.value && idx < codeInputs.length - 1) codeInputs[idx+1].focus();
+    });
+    inp.addEventListener('keydown', function(e){
+      if (e.key === 'Backspace' && !this.value && idx > 0) codeInputs[idx-1].focus();
+    });
+    inp.addEventListener('paste', function(e){
+      e.preventDefault();
+      var pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g,'').slice(0,6);
+      pasted.split('').forEach(function(ch, i){ if(codeInputs[i]) codeInputs[i].value = ch; });
+      if(codeInputs[Math.min(pasted.length, 5)]) codeInputs[Math.min(pasted.length, 5)].focus();
+    });
+  });
+
+  function getCode() {
+    return Array.from(codeInputs).map(function(i){ return i.value; }).join('');
+  }
+
+  function startTimer(seconds) {
+    clearInterval(timerInterval);
+    var remaining = seconds;
+    var display = document.getElementById('timerDisplay');
+    function tick(){
+      var m = Math.floor(remaining/60);
+      var s = remaining % 60;
+      display.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+      if (remaining <= 0) { clearInterval(timerInterval); display.textContent = 'Süre doldu'; }
+      remaining--;
+    }
+    tick();
+    timerInterval = setInterval(tick, 1000);
+  }
+
+  function goStep(n) {
+    document.querySelectorAll('.step-panel').forEach(function(p){ p.classList.remove('active'); });
+    document.getElementById('step' + n).classList.add('active');
+    updateDots(n);
+  }
+
+  function updateDots(activeStep) {
+    for(var i=1; i<=3; i++){
+      var dot = document.getElementById('dot'+i);
+      dot.classList.remove('active','done');
+      if(i < activeStep) dot.classList.add('done');
+      else if(i === activeStep) dot.classList.add('active');
+    }
+    for(var j=1; j<=2; j++){
+      var line = document.getElementById('line'+j);
+      line.classList.remove('done');
+      if(j < activeStep) line.classList.add('done');
+    }
+  }
+
+  function setLoading(btnId, loading){
+    var btn = document.getElementById(btnId);
+    if(!btn) return;
+    btn.disabled = loading;
+    if(loading) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Lütfen bekleyin...';
+  }
+
+  // ADIM 1: E-posta gönder
+  document.getElementById('form1').addEventListener('submit', async function(e){
+    e.preventDefault();
+    var email = document.getElementById('emailInput').value.trim();
+    if(!email){ Swal.fire({icon:'warning',title:'Eksik Bilgi',text:'Lütfen e-posta adresinizi girin.',confirmButtonColor:'#f59e0b',background:'#14172a',color:'#fff'}); return; }
+    setLoading('btn1', true);
+    try{
+      var res = await fetch('/api/auth/forgot-password', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email})});
+      var data = await res.json();
+      if(res.ok){
+        currentEmail = email;
+        document.getElementById('codeInfoText').textContent = email + ' adresine gönderilen 6 haneli kodu girin.';
+        codeInputs.forEach(function(i){ i.value=''; });
+        startTimer(15*60);
+        goStep(2);
+        setTimeout(function(){ codeInputs[0].focus(); }, 300);
+      } else {
+        Swal.fire({icon:'error',title:'Hata',text:data.error||'Bir hata oluştu.',confirmButtonColor:'#7c3aed',background:'#14172a',color:'#fff'});
+      }
+    } catch(err){
+      Swal.fire({icon:'error',title:'Sunucu Hatası',text:'Backend bağlantısı başarısız.',confirmButtonColor:'#ef4444',background:'#14172a',color:'#fff'});
+    }
+    document.getElementById('btn1').disabled = false;
+    document.getElementById('btn1').innerHTML = '<i class="fas fa-paper-plane"></i> Doğrulama Kodu Gönder';
+  });
+
+  // ADIM 2: Kodu doğrula
+  document.getElementById('form2').addEventListener('submit', async function(e){
+    e.preventDefault();
+    var code = getCode();
+    if(code.length < 6){ Swal.fire({icon:'warning',title:'Eksik Kod',text:'Lütfen 6 haneli kodu eksiksiz girin.',confirmButtonColor:'#f59e0b',background:'#14172a',color:'#fff'}); return; }
+    setLoading('btn2', true);
+    try{
+      var res = await fetch('/api/auth/verify-reset-code', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email: currentEmail, code})});
+      var data = await res.json();
+      if(res.ok){
+        verifiedCode = code;
+        clearInterval(timerInterval);
+        goStep(3);
+      } else {
+        Swal.fire({icon:'error',title:'Hatalı Kod',text:data.error||'Doğrulama başarısız.',confirmButtonColor:'#7c3aed',background:'#14172a',color:'#fff'});
+      }
+    } catch(err){
+      Swal.fire({icon:'error',title:'Sunucu Hatası',text:'Backend bağlantısı başarısız.',confirmButtonColor:'#ef4444',background:'#14172a',color:'#fff'});
+    }
+    document.getElementById('btn2').disabled = false;
+    document.getElementById('btn2').innerHTML = '<i class="fas fa-check"></i> Kodu Doğrula';
+  });
+
+  // ADIM 3: Yeni şifre
+  document.getElementById('form3').addEventListener('submit', async function(e){
+    e.preventDefault();
+    var np = document.getElementById('newPassword').value;
+    var np2 = document.getElementById('newPassword2').value;
+    if(np.length < 6){ Swal.fire({icon:'warning',title:'Kısa Şifre',text:'Şifre en az 6 karakter olmalıdır.',confirmButtonColor:'#f59e0b',background:'#14172a',color:'#fff'}); return; }
+    if(np !== np2){ Swal.fire({icon:'warning',title:'Şifreler Uyuşmuyor',text:'Girdiğiniz şifreler birbirleriyle eşleşmiyor.',confirmButtonColor:'#f59e0b',background:'#14172a',color:'#fff'}); return; }
+    setLoading('btn3', true);
+    try{
+      var res = await fetch('/api/auth/reset-password', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email: currentEmail, code: verifiedCode, newPassword: np})});
+      var data = await res.json();
+      if(res.ok){
+        clearInterval(timerInterval);
+        document.querySelector('.steps-indicator').style.display = 'none';
+        goStep(4);
+      } else {
+        Swal.fire({icon:'error',title:'Hata',text:data.error||'Şifre güncellenemedi.',confirmButtonColor:'#7c3aed',background:'#14172a',color:'#fff'});
+      }
+    } catch(err){
+      Swal.fire({icon:'error',title:'Sunucu Hatası',text:'Backend bağlantısı başarısız.',confirmButtonColor:'#ef4444',background:'#14172a',color:'#fff'});
+    }
+    document.getElementById('btn3').disabled = false;
+    document.getElementById('btn3').innerHTML = '<i class="fas fa-key"></i> Şifremi Güncelle';
+  });
+
+})();
+</script>
+</body>
+</html>

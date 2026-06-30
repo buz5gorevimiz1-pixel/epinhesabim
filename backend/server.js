@@ -793,7 +793,7 @@ app.put('/api/admin/reject-product/:id', verifyAdmin, async (req, res) => {
 
 app.put('/api/admin/product-status/:id', verifyAdmin, async (req, res) => {
   try {
-    const { status, saleStatus, vitrin, featured } = req.body;
+    const { status, saleStatus, vitrin, featured, guncelIlan } = req.body;
     const update = {};
 
     if (typeof status !== 'undefined') {
@@ -818,6 +818,10 @@ app.put('/api/admin/product-status/:id', verifyAdmin, async (req, res) => {
 
     if (typeof featured !== 'undefined') {
       update.featured = !!featured;
+    }
+
+    if (typeof guncelIlan !== 'undefined') {
+      update.guncelIlan = !!guncelIlan;
     }
 
     const product = await Product.findByIdAndUpdate(req.params.id, update, { new: true });
@@ -1124,6 +1128,8 @@ app.get('/api/listings', async (req, res) => {
 
     if (pool === 'featured') {
       query = { status: 'active', $or: [{ vitrin: true }, { featured: true }] };
+    } else if (pool === 'guncel') {
+      query = { status: 'active', guncelIlan: true };
     } else if (pool === 'ordinary') {
       query.vitrin = { $ne: true };
       query.featured = { $ne: true };
@@ -1134,7 +1140,7 @@ app.get('/api/listings', async (req, res) => {
     sortObj[sort] = order === 'asc' ? 1 : -1;
 
     if (mongoConnected) {
-      const unlimited = Boolean(category || game === 'pubg' || pool === 'featured' || pool === 'ordinary');
+      const unlimited = Boolean(category || game === 'pubg' || pool === 'featured' || pool === 'guncel' || pool === 'ordinary');
       let findQuery = Product.find(query).sort(sortObj).skip(skip);
       if (!unlimited) {
         findQuery = findQuery.limit(parseInt(limit) || 20);
@@ -1166,6 +1172,8 @@ app.get('/api/listings', async (req, res) => {
     }
     if (pool === 'featured') {
       filtered = filtered.filter(p => p.vitrin || p.featured);
+    } else if (pool === 'guncel') {
+      filtered = filtered.filter(p => p.guncelIlan);
     } else if (pool === 'ordinary') {
       filtered = filtered.filter(p => !p.vitrin && !p.featured);
     }
@@ -2309,6 +2317,93 @@ app.put('/api/admin/update-role/:id', verifySuperAdmin, async (req, res) => {
     console.error('Update role error:', err);
     res.status(500).json({ error: 'Rol güncellenemedi.' });
   }
+});
+
+// ── ŞİFRE SIFIRLAMA ──
+const crypto = require('crypto');
+const resetCodes = new Map(); // { email: { code, expiresAt } }
+
+app.post('/api/auth/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'E-posta gerekli.' });
+
+    if (mongoConnected) {
+      const user = await User.findOne({ email: email.toLowerCase().trim() });
+      if (!user) return res.status(404).json({ error: 'Bu e-posta ile kayıtlı hesap bulunamadı.' });
+
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const expiresAt = Date.now() + 15 * 60 * 1000; // 15 dakika
+      resetCodes.set(email.toLowerCase().trim(), { code, expiresAt, userId: user._id.toString() });
+
+      console.log(`[Şifre Sıfırlama] ${email} → Kod: ${code}`);
+      return res.json({ success: true, message: 'Doğrulama kodu oluşturuldu. (Geliştirme modunda konsola yazdırıldı.)' });
+    }
+    return res.status(503).json({ error: 'Veritabanı bağlantısı yok.' });
+  } catch (err) {
+    console.error('forgot-password error:', err);
+    res.status(500).json({ error: 'Sunucu hatası.' });
+  }
+});
+
+app.post('/api/auth/verify-reset-code', async (req, res) => {
+  try {
+    const { email, code } = req.body;
+    if (!email || !code) return res.status(400).json({ error: 'E-posta ve kod gerekli.' });
+    const record = resetCodes.get(email.toLowerCase().trim());
+    if (!record) return res.status(400).json({ error: 'Kod bulunamadı veya süresi doldu.' });
+    if (Date.now() > record.expiresAt) {
+      resetCodes.delete(email.toLowerCase().trim());
+      return res.status(400).json({ error: 'Kodun süresi doldu. Lütfen tekrar isteyin.' });
+    }
+    if (record.code !== code.trim()) return res.status(400).json({ error: 'Doğrulama kodu hatalı.' });
+    return res.json({ success: true, message: 'Kod doğrulandı.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Sunucu hatası.' });
+  }
+});
+
+app.post('/api/auth/reset-password', async (req, res) => {
+  try {
+    const { email, code, newPassword } = req.body;
+    if (!email || !code || !newPassword) return res.status(400).json({ error: 'Tüm alanlar gerekli.' });
+    if (newPassword.length < 6) return res.status(400).json({ error: 'Şifre en az 6 karakter olmalı.' });
+
+    const record = resetCodes.get(email.toLowerCase().trim());
+    if (!record) return res.status(400).json({ error: 'Kod bulunamadı veya süresi doldu.' });
+    if (Date.now() > record.expiresAt) {
+      resetCodes.delete(email.toLowerCase().trim());
+      return res.status(400).json({ error: 'Kodun süresi doldu. Lütfen tekrar isteyin.' });
+    }
+    if (record.code !== code.trim()) return res.status(400).json({ error: 'Doğrulama kodu hatalı.' });
+
+    if (mongoConnected) {
+      const newHash = await bcrypt.hash(newPassword, 10);
+      await User.findByIdAndUpdate(record.userId, { passwordHash: newHash });
+      resetCodes.delete(email.toLowerCase().trim());
+      return res.json({ success: true, message: 'Şifreniz başarıyla güncellendi.' });
+    }
+    return res.status(503).json({ error: 'Veritabanı bağlantısı yok.' });
+  } catch (err) {
+    console.error('reset-password error:', err);
+    res.status(500).json({ error: 'Sunucu hatası.' });
+  }
+});
+
+app.get('/sifre-sifirla', (req, res) => {
+  res.sendFile(require('path').join(__dirname, '../frodent/sifre-sifirla.html'));
+});
+
+app.get('/sayfa/gizlilik-politikasi', (req, res) => {
+  res.sendFile(require('path').join(__dirname, '../frodent/gizlilik-politikasi.html'));
+});
+
+app.get('/sayfa/kvkk-aydinlatma-metni', (req, res) => {
+  res.sendFile(require('path').join(__dirname, '../frodent/kvkk-aydinlatma-metni.html'));
+});
+
+app.get('/sayfa/mesafeli-satis-sozlesmesi', (req, res) => {
+  res.sendFile(require('path').join(__dirname, '../frodent/mesafeli-satis-sozlesmesi.html'));
 });
 
 // NEW MODULAR AUTH ROUTES (Admin Panel)

@@ -1340,6 +1340,7 @@
                             '<option value="" selected disabled>İlan Rolü</option>' +
                             '<option value="vitrin">Vitrin İlanı Yap</option>' +
                             '<option value="featured">Öne Çıkanlar Yap</option>' +
+                            '<option value="guncelIlan">Güncel İlan Yap</option>' +
                             '<option value="none">Kaldır (Sıradan İlan Yap)</option>' +
                         '</select>' +
                     '</div>' +
@@ -1648,17 +1649,21 @@
     async function setProductRole(id, title, role) {
         if (!role) return;
         const body = role === 'vitrin'
-            ? { vitrin: true, featured: false }
+            ? { vitrin: true, featured: false, guncelIlan: false }
             : role === 'featured'
-                ? { vitrin: false, featured: true }
-                : { vitrin: false, featured: false };
+                ? { vitrin: false, featured: true, guncelIlan: false }
+                : role === 'guncelIlan'
+                    ? { vitrin: false, featured: false, guncelIlan: true }
+                    : { vitrin: false, featured: false, guncelIlan: false };
         try {
             await apiCall('/product-status/' + id, { method: 'PUT', body: JSON.stringify(body) });
             const message = role === 'vitrin'
                 ? title + ' vitrin ilanı yapıldı'
                 : role === 'featured'
                     ? title + ' öne çıkanlar arasına eklendi'
-                    : title + ' sıradan ilan yapıldı';
+                    : role === 'guncelIlan'
+                        ? title + ' güncel ilan yapıldı'
+                        : title + ' sıradan ilan yapıldı';
             addNotification('Başarılı', message, 'fa-star', 'success');
             loadPendingProducts();
             closeModal('productModal');

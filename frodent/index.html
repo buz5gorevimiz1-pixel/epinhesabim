@@ -5630,6 +5630,40 @@ document.addEventListener('DOMContentLoaded', function() {
         50% { opacity: 0.75; box-shadow: 0 0 20px rgba(255, 30, 30, 0.95), 0 0 30px rgba(255, 100, 0, 0.6); }
       }
 
+      /* Güncel İlan rozeti - sağ üst köşe, parlak cyan yanıp sönen */
+      .ipguncel-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: linear-gradient(135deg, #06b6d4, #0ea5e9);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 800;
+        padding: 4px 9px;
+        border-radius: 99px;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        box-shadow: 0 0 16px rgba(6, 182, 212, 0.9), 0 0 6px rgba(6, 182, 212, 0.5);
+        z-index: 20;
+        pointer-events: none;
+        animation: guncelBadgePulse 1.2s ease-in-out infinite;
+        white-space: nowrap;
+      }
+      @keyframes guncelBadgePulse {
+        0%, 100% {
+          opacity: 1;
+          box-shadow: 0 0 16px rgba(6, 182, 212, 0.9), 0 0 6px rgba(6, 182, 212, 0.5);
+        }
+        50% {
+          opacity: 0.55;
+          box-shadow: 0 0 30px rgba(6, 182, 212, 1), 0 0 50px rgba(56, 229, 255, 0.7);
+        }
+      }
+      .ipcard.guncel {
+        border: 1px solid rgba(6, 182, 212, 0.6) !important;
+        box-shadow: 0 0 12px rgba(6, 182, 212, 0.15);
+      }
+
       /* İlan Pazarı ile aynı kart stili (ana sayfa) */
       .ipgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px;align-items:stretch}
       @media(max-width:1100px){.ipgrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -6253,6 +6287,103 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         </section>
         
+        <!-- Güncel İlanlar -->
+        <section class="tabs-section guncel-section" id="guncel-ilanlar" style="padding-top:0;">
+          <div class="container">
+            <div class="tabs-header" style="gap:12px;align-items:center;">
+              <div class="tabs-left">
+                <span style="display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:#e2d9f8;padding:6px 0;">
+                  <i class="fas fa-crown" style="color:#a78bfa;font-size:15px;"></i>
+                  Güncel İlanlar
+                </span>
+              </div>
+              <a href="ilan-pazari.html" class="tabs-all-btn" style="text-decoration:none;"><i class="fas fa-store"></i>&nbsp;İlan Pazarı</a>
+            </div>
+            <div class="ipgrid" id="guncel-ilanlar-kutusu" style="margin-top:16px;">
+              <div style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:10px;color:#a78bfa;padding:40px;font-size:15px;">
+                <i class="fas fa-spinner fa-spin"></i><span>Yükleniyor...</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <style>
+        .guncel-section { margin-bottom: 0 !important; }
+        .guncel-ilan-bos2 {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #6b7280;
+            padding: 40px;
+            font-size: 14px;
+        }
+        </style>
+
+        <script>
+        (function() {
+            function renderGuncelIlanlar(products) {
+                var kutu = document.getElementById('guncel-ilanlar-kutusu');
+                if (!kutu) return;
+                if (!products || products.length === 0) {
+                    kutu.innerHTML = '<div class="guncel-ilan-bos2"><i class="fas fa-inbox" style="font-size:28px;display:block;margin-bottom:8px;"></i>Henüz güncel ilan bulunmuyor.</div>';
+                    return;
+                }
+                kutu.innerHTML = products.slice(0, 12).map(function(p) {
+                    var fiyat = (p.price || 0).toLocaleString('tr-TR', {minimumFractionDigits: 2}) + ' TL';
+                    var img = p.image || 'assets/img/placeholder.jpg';
+                    var href = '/ilan/' + (p.id || p._id);
+                    var baslik = (p.title || 'İlan').replace(/</g,'&lt;');
+                    var kat = (p.category || '').replace(/</g,'&lt;');
+                    var satici = (p.sellerName || 'Satıcı').replace(/</g,'&lt;');
+                    var vitrinBadge = p.vitrin ? '<div class="ipvitrin-badge">Vitrin İlanı</div>' : '';
+                    var onecikanBadge = p.featured ? '<div class="iponecikan-badge">Öne Çıkanlar</div>' : '';
+                    var guncelBadge = p.guncelIlan ? '<div class="ipguncel-badge">Güncel İlan</div>' : '';
+                    var vitrinClass = p.vitrin ? ' vitrin' : '';
+                    var onecikanClass = p.featured ? ' onecikan' : '';
+                    var guncelClass = p.guncelIlan ? ' guncel' : '';
+                    return '<a class="ipcard' + vitrinClass + onecikanClass + guncelClass + '" href="' + href + '">' +
+                        '<div class="ipthumb">' +
+                            '<img src="' + img + '" alt="' + baslik + '" onerror="this.onerror=null;this.src=\'assets/img/placeholder.jpg\'">' +
+                            '<div class="ipprice">' + fiyat + '</div>' +
+                            vitrinBadge + onecikanBadge + guncelBadge +
+                        '</div>' +
+                        '<div class="ipbody">' +
+                            '<p class="iptitle">' + baslik + '</p>' +
+                            '<p class="ipsub">' + kat + '</p>' +
+                            '<div class="ipmeta">' +
+                                '<div class="ipdel"><i class="fas fa-bolt" style="color:#ff8a00;margin-right:4px;"></i> Manuel Teslimat</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="ipfoot">' +
+                            '<div class="ipstore">' +
+                                '<span class="ipav"><img src="assets/img/avatar-1.png" alt="' + satici + '"></span>' +
+                                '<span class="ipname">' + satici + '</span>' +
+                            '</div>' +
+                        '</div>' +
+                    '</a>';
+                }).join('');
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                fetch('/api/listings?pool=guncel&sort=createdAt&order=desc&limit=12')
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        var list = Array.isArray(data) ? data : (data.listings || []);
+                        var kutu = document.getElementById('guncel-ilanlar-kutusu');
+                        if (!list.length) {
+                            if (kutu) kutu.innerHTML = '<div class="guncel-ilan-bos2"><i class="fas fa-inbox" style="font-size:28px;display:block;margin-bottom:8px;"></i>Henüz güncel ilan bulunmuyor.</div>';
+                            return;
+                        }
+                        list = list.map(function(p) { return Object.assign({}, p, { id: p._id || p.id }); });
+                        renderGuncelIlanlar(list);
+                    })
+                    .catch(function() {
+                        var kutu = document.getElementById('guncel-ilanlar-kutusu');
+                        if (kutu) kutu.innerHTML = '<div class="guncel-ilan-bos2">İlanlar yüklenemedi.</div>';
+                    });
+            });
+        })();
+        </script>
+
         <!-- Sosyal Medya lanları -->
         <section class="social-media-section">
             <div class="container">
